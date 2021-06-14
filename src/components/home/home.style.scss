@@ -9,3 +9,159 @@
       transform-origin: top left
     }
 }
+.otherAddr{
+    display: flex;
+    flex-Direction: row;
+    width: 100%;
+    align-items: center;
+    padding-bottom: 8px;
+    & .MuiOutlinedInput-input{
+      padding: 10px 14px;
+    }
+    & .MuiInputLabel-outlined{
+      transform: translate(14px, 13px) scale(1);
+    }
+    & .MuiInputLabel-outlined.MuiInputLabel-shrink{
+      transform: translate(14px, -6px) scale(0.75);
+    }
+    & .MuiFormControl-root.MuiTextField-root{
+      width: 100%;
+    }
+}
+.mainAddr{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    & > div > div > div{
+      padding: 0px !important;
+    }
+    & > div > div > label{
+      transform: translate(14px, 13px) scale(1);
+    }
+    & .MuiOutlinedInput-input{
+      padding: 10px 14px;
+    }
+    & .MuiInputLabel-outlined{
+      transform: translate(14px, 13px) scale(1);
+    }
+    & .MuiInputLabel-outlined.MuiInputLabel-shrink{
+      transform: translate(14px, -6px) scale(0.75);
+    }
+}
+.addrComment{
+    width: 100%;
+    margin-right: 8px; 
+    display: flex;
+    flex-direction: column;
+    & > div:last-child{
+      width: 33%!important;
+    }
+    & > div{
+      margin-top: 8px;
+    }
+    & input.MuiInputBase-input.MuiInputBase-input.MuiOutlinedInput-input{
+      padding: 7px 14px;
+    }
+    & .MuiOutlinedInput-multiline{
+      padding: 7px 14px;
+    }
+    & .MuiInputLabel-outlined{
+      transform: translate(14px, 9px) scale(1);
+    }
+    & .MuiInputLabel-outlined.MuiInputLabel-shrink{
+      transform: translate(14px, -6px) scale(0.75);
+    }
+    & .MuiFormControl-root.MuiTextField-root{
+      width: 100%;
+    }
+}
+.formPred{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    padding-bottom: 8px;
+    & .MuiOutlinedInput-input{
+      padding: 10px 14px;
+    }
+    & .MuiInputLabel-outlined{
+      transform: translate(14px, 13px) scale(1);
+    }
+    & .MuiInputLabel-outlined.MuiInputLabel-shrink{
+      transform: translate(14px, -6px) scale(0.75);
+    }
+    & > div{
+      width: 50%;
+      margin-left: 0px
+    }
+}
+.blockTotalOrder{
+    width: 100%;
+    margin-right: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.formControl{
+    margin: 8px;
+    min-width: 120px;
+}
+.boxPic{
+    background-color: #e5e5e5;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    &:hover{
+        background-color: #CC0033;
+        color: #fff;
+    }
+    &.active{
+        background-color: #CC0033;
+        color: #fff;
+    }
+    & span:first-child{
+        text-align: center;
+    }
+    & span:last-child{
+        text-align: center;
+    }
+}
+.container{
+    padding-top: 16px;
+    & button.MuiTab-root{
+      padding: 0px 12px;
+      min-height: auto;
+    }
+    & .MuiTabs-scroller{
+      height: fit-content;
+    }
+    & .MuiTabs-root{
+      min-height: auto;
+    }
+}
+.chooseDomTrue{
+    width: 100%;
+    & button.active{
+      background-color: #CC0033;
+      color: #fff;
+    }
+    & button:not(.active){
+      background-color: #fff;
+      border: 1px solid #CC0033;
+      color: #CC0033;
+    }
+    & > button{
+      width: 50%;
+    }
+    & span{
+      font-size: 0.8rem!important;
+      width: 100%;
+      text-transform: none;
+      white-space: nowrap;
+    }
+    & .MuiButtonGroup-groupedContainedHorizontal:not(:last-child){
+      border-right: none
+    }
+}

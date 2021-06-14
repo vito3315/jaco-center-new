@@ -141,19 +141,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     right: 0
   },
-  container: {
-    paddingTop: theme.spacing(2),
-    '& button.MuiTab-root': {
-      padding: '0px 12px',
-      minHeight: 'auto'
-    },
-    '& .MuiTabs-scroller': {
-      height: 'fit-content'
-    },
-    '& .MuiTabs-root': {
-      minHeight: 'auto'
-    },
-  },
+  
   size1: {
     fontSize: '0.8rem'
   },
@@ -164,180 +152,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
-  mainAddr: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    '& > div > div > div': {
-      padding: '0px !important'
-    },
-    '& > div > div > label': {
-      transform: 'translate(14px, 13px) scale(1)'
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '10px 14px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 13px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
-  },
-  otherAddr: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    paddingBottom: 8,
-    '& .MuiOutlinedInput-input': {
-      padding: '10px 14px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 13px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
-    '& .MuiFormControl-root.MuiTextField-root': {
-      width: '100%'
-    },
-  },
-  driverInfo: {
-    '& input.MuiInputBase-input.MuiInputBase-input.MuiOutlinedInput-input': {
-      padding: '7px 14px'
-    },
-    '& .MuiOutlinedInput-multiline': {
-      padding: '7px 14px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 9px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
-    '& .MuiFormControl-root.MuiTextField-root': {
-      width: '100%'
-    }
-  },
-  formPred: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    paddingBottom: 8,
-    '& .MuiOutlinedInput-input': {
-      padding: '10px 14px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 13px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
-    '& > div': {
-      width: '50%',
-      marginLeft: 0
-    }
-  },
-  chooseDomTrue: {
-    width: '100%',
-    '& button.active': {
-      backgroundColor: '#CC0033',
-      color: '#fff'
-    },
-    '& button:not(.active)': {
-      backgroundColor: '#fff',
-      border: '1px solid #CC0033',
-      color: '#CC0033'
-    },
-    '& button': {
-      width: '50%'
-    },
-    '& span': {
-      fontSize: '0.8rem!important',
-      width: '100%',
-      textTransform: 'none',
-      whiteSpace: 'nowrap'
-    },
-    '& .MuiButtonGroup-groupedContainedHorizontal:not(:last-child)': {
-      borderRight: 'none'
-    }
-  },
-  boxPic: {
-    backgroundColor: '#e5e5e5',
-    padding: '6px 12px',
-    marginBottom: 10,
-    cursor: 'pointer',
-    '&:hover': {
-        backgroundColor: '#CC0033',
-        color: '#fff'
-    },
-    '&.active': {
-        backgroundColor: '#CC0033',
-        color: '#fff'
-    },
-    '& span:first-child': {
-        textAlign: 'center'
-    },
-    '& span:last-child': {
-        textAlign: 'center'
-    }
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  blockTotalOrder: {
-    width: '100%',
-    marginRight: 8,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  containerHeader: {
-    paddingTop: theme.spacing(2),
-    justifyContent: 'flex-end',
-    '& .MuiOutlinedInput-input': {
-      padding: '5px 10px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 8px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
-  },
   
-  addrComment: {
-    width: '100%', 
-    marginRight: 8, 
-    display: 'flex', 
-    flexDirection: 'column',
-    '& > div:last-child': {
-      width: '33%!important'
-    },
-    '& > div': {
-      marginTop: 8
-    },
-    '& input.MuiInputBase-input.MuiInputBase-input.MuiOutlinedInput-input': {
-      padding: '7px 14px'
-    },
-    '& .MuiOutlinedInput-multiline': {
-      padding: '7px 14px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 9px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
-    '& .MuiFormControl-root.MuiTextField-root': {
-      width: '100%'
-    }
-  }
+  
+  
+  
+  
+  
 }));
 
 function TabPanel(props) {
@@ -420,7 +240,7 @@ class BlockItems extends React.Component {
         
         { this.state.cats.map((cat, key) =>
           <TabPanel value={this.state.activeCat} index={key} key={key}>
-            <Grid container spacing={2} className={this.state.classes.container} style={{ paddingTop: 0 }}>
+            <Grid container spacing={2} className='container' style={{ paddingTop: 0 }}>
               { cat.items.map( (item, k) =>
                 <Grid key={k} item xs={2}>
                   <Paper className={this.state.classes.paperCat}>
@@ -619,7 +439,7 @@ class BlockAddr extends React.Component {
   render(){
     return (
       <Grid container spacing={3}>
-        <div className={this.state.classes.mainAddr}>
+        <div className='mainAddr'>
           <Autocomplete
             freeSolo
             id="newAddrStreet"
@@ -639,7 +459,7 @@ class BlockAddr extends React.Component {
             onBlur={this.checkNewAddr.bind(this)}
           />
         </div>
-        <div className={this.state.classes.otherAddr}>
+        <div className='otherAddr'>
           <TextField 
             label="Подъезд" 
             variant="outlined" 
@@ -666,54 +486,18 @@ class BlockAddr extends React.Component {
           />  
         </div>
         <div style={{ width: '100%', marginRight: 8 }}>
-          <ButtonGroup disableElevation variant="contained" className={this.state.classes.chooseDomTrue}>
+          <ButtonGroup disableElevation variant="contained" className='chooseDomTrue'>
             <Button className={ this.state.newAddrDom === true ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, true) }>Домофон работает</Button>
             <Button className={ this.state.newAddrDom === false ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, false) }>Домофон не работает</Button>
           </ButtonGroup>
         </div>
-        <div className={this.state.classes.addrComment}>
+        <div className='addrComment'>
           <TextField 
             label="Комментарий курьеру" 
             variant="outlined" 
             multiline
             rowsMax={2}
             variant="outlined"
-            //style={{ margin: '16px 8px 8px 8px', flex: 1 }}
-            //value={this.state.newAddrHome} 
-            //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
-            //onBlur={this.checkNewAddr.bind(this)}
-          />
-          <TextField 
-            label="Сдача" 
-            variant="outlined" 
-            //style={{ margin: '16px 8px 8px 8px', flex: 1 }}
-            //value={this.state.newAddrHome} 
-            //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
-            //onBlur={this.checkNewAddr.bind(this)}
-          />
-        </div>
-      </Grid>
-    )
-  }
-}
-
-class BlockComment extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      
-    };
-  }
-  
-  render(){
-    return (
-      <Grid container spacing={3}>
-        <div className={this.state.classes.mainAddr}>
-          <TextField 
-            label="Комментарий курьеру" 
-            variant="outlined" 
             //style={{ margin: '16px 8px 8px 8px', flex: 1 }}
             //value={this.state.newAddrHome} 
             //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
@@ -764,9 +548,9 @@ class BlockPic extends React.Component {
   
   render(){
     return (
-      <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className={this.state.classes.container}>
+      <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container'>
         { this.state.pic_point.map( (item, key) =>
-          <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#CC0033' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className={this.state.classes.boxPic}>{item.addr}</Button>
+          <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#CC0033' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
         )}
       </Grid>
     )
@@ -899,7 +683,7 @@ class BlockPred extends React.Component {
   render(){
     return (
       <>
-        <Grid container spacing={3} className={this.state.classes.container}>
+        <Grid container spacing={3} className='container'>
           <Tabs
             value={this.state.typeTime}
             onChange={this.changeTypeTime}
@@ -914,13 +698,13 @@ class BlockPred extends React.Component {
         </Grid>
           
         { this.state.typeTime == 0 ?
-          <Grid container spacing={3} className={this.state.classes.container}>
+          <Grid container spacing={3} className='container'>
             <Typography component="span" style={{ padding: '8px 0px', fontSize: '1rem' }}>{this.state.textAvgTime}</Typography>
           </Grid>
             :
-          <Grid container spacing={3} className={this.state.classes.container}>
-            <div className={this.state.classes.formPred}>
-              <FormControl variant="outlined" className={this.state.classes.formControl}>
+          <Grid container spacing={3} className='container'>
+            <div className='formPred'>
+              <FormControl variant="outlined" className='formControl'>
                 <InputLabel id="demo-simple-select-outlined-label">Дата</InputLabel>
                 <Select
                   labelId="demo-simple-select-outlined-label"
@@ -934,7 +718,7 @@ class BlockPred extends React.Component {
                   )}
                 </Select>
               </FormControl>
-              <FormControl variant="outlined" className={this.state.classes.formControl}>
+              <FormControl variant="outlined" className='formControl'>
                 <InputLabel id="demo-simple-select-outlined-label">Время</InputLabel>
                 <Select
                   labelId="demo-simple-select-outlined-label"
@@ -1030,7 +814,7 @@ class CreateOrder extends React.Component {
         <Grid item xs={8} style={{ padding: '24px 8px 0px 16px' }}>
           <BlockTable classes={this.state.classes} />
         </Grid>
-        <Grid item xs={4} style={{ padding: '16px', marginTop: -35 }} className={this.state.classes.container}>
+        <Grid item xs={4} style={{ padding: '16px', marginTop: -35 }} className='container'>
           <Tabs
             value={this.state.typeOrder}
             onChange={this.changeTab}
@@ -1080,8 +864,8 @@ class CreateOrder extends React.Component {
           
           
           
-          <Grid container spacing={3} className={this.state.classes.container}>
-            <form className={this.state.classes.blockTotalOrder} noValidate autoComplete="off" style={{ width: '100%', marginRight: 8, marginTop: 3 }}>
+          <Grid container spacing={3} className='container'>
+            <form className='blockTotalOrder' noValidate autoComplete="off" style={{ width: '100%', marginRight: 8, marginTop: 3 }}>
               
               <Typography variant="h6" component="span">К оплате: 100 р</Typography>
             
