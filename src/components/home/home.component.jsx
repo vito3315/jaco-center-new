@@ -203,6 +203,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
       transform: 'translate(14px, -6px) scale(0.75)'
     },
+    '& .MuiFormControl-root.MuiTextField-root': {
+      width: '100%'
+    },
   },
   driverInfo: {
     '& input.MuiInputBase-input.MuiInputBase-input.MuiOutlinedInput-input': {
