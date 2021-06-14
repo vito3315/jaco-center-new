@@ -17,10 +17,10 @@ const routes = require( './routes' );
 // serve static assets
 app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=10800')
     next()
-})
+})*/
 
 // for any other requests, send `index.html` as a response
 app.use( '*', async ( req, res ) => {
@@ -50,8 +50,8 @@ app.use( '*', async ( req, res ) => {
         //const helmet = Helmet.renderStatic();
         
         
-        indexHTML = indexHTML.replace('<!-- title -->', `${componentData.title}`);
-        indexHTML = indexHTML.replace('<!-- description -->', `<meta name="description" content="${componentData.description}" />`);
+        //indexHTML = indexHTML.replace('<!-- title -->', `${componentData.title}`);
+        //indexHTML = indexHTML.replace('<!-- description -->', `<meta name="description" content="${componentData.description}" />`);
         //indexHTML = indexHTML.replace('<h1 class="MuiTypography-root MuiTypography-h5"></h1>', `<h1 class="MuiTypography-root MuiTypography-h5">${componentData.page_h}</h1>`);
         
         /*indexHTML = indexHTML.replace(
