@@ -310,20 +310,7 @@ const useStyles = makeStyles((theme) => ({
       transform: 'translate(14px, -6px) scale(0.75)'
     },
   },
-  headerInput: {
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-    '& .MuiInputLabel-formControl': {
-      //transform: 'translate(0, 20px) scale(1)'
-    },
-    '& label + .MuiInput-formControl': {
-      marginTop: 10
-    },
-    '& .MuiInputLabel-shrink': {
-      transform: 'translate(0, 6px) scale(0.75)',
-      transformOrigin: 'top left'
-    },
-  },
+  
   addrComment: {
     width: '100%', 
     marginRight: 8, 
@@ -1158,7 +1145,7 @@ function Header() {
           <IconButton edge="start" onClick={toggleDrawer('left', true)} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Grid container className={classes.headerInput}>
+          <Grid container className='headerInput'>
             <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'baseline' }}>
               <TextField label="Промокод" style={{ marginRight: 4, marginLeft: 4}} />
               <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>

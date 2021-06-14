@@ -1,0 +1,11 @@
+.headerInput{
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    & label + .MuiInput-formControl{
+      margin-top: 10px
+    }
+    & .MuiInputLabel-shrink{
+      transform: translate(0, 6px) scale(0.75);
+      transform-origin: top left
+    }
+}
