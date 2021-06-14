@@ -668,7 +668,7 @@ class BlockComment extends React.Component {
           <TextField 
             label="Комментарий курьеру" 
             variant="outlined" 
-            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            //style={{ margin: '16px 8px 8px 8px', flex: 1 }}
             //value={this.state.newAddrHome} 
             //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
             //onBlur={this.checkNewAddr.bind(this)}
@@ -676,7 +676,7 @@ class BlockComment extends React.Component {
           <TextField 
             label="Сдача" 
             variant="outlined" 
-            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            //style={{ margin: '16px 8px 8px 8px', flex: 1 }}
             //value={this.state.newAddrHome} 
             //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
             //onBlur={this.checkNewAddr.bind(this)}
