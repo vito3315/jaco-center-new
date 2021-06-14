@@ -1143,9 +1143,9 @@ function Header() {
         </Toolbar>
       </AppBar>
       
-      <form className={classes.root} noValidate autoComplete="off">
-        <TextField  label="Outlined" variant="outlined" />
-      </form>
+      
+        <TextField  label="Outlined" />
+      
       
       <Drawer anchor={'left'} open={state.left} onClose={toggleDrawer('left', false)}>
         <div
