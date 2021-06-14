@@ -1093,7 +1093,7 @@ function Header() {
           </IconButton>
           <Grid container spacing={3} className={classes.containerHeader}>
             <Grid item xs={6} style={{ paddingTop: 5 }}>
-              <form className={classes.headerPromo} noValidate autoComplete="off" style={{ marginRight: 8 }}>
+              
                 <TextField 
                   label="Промокод" 
                   variant="outlined" 
@@ -1104,10 +1104,10 @@ function Header() {
                 />
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
-              </form>
+              
             </Grid>
             <Grid item xs={3} style={{ paddingTop: 5 }}>
-              <form className={classes.headerPhone} noValidate autoComplete="off" style={{ marginRight: 8 }}>
+              
                 <TextField 
                   label="Телефон клиента" 
                   variant="outlined" 
@@ -1116,7 +1116,7 @@ function Header() {
                   //onChange={ event => this.setState({ newAddrET: event.target.value }) }
                   onBlur={chechAddr()}
                 />
-              </form>
+              
             </Grid>
           </Grid>
         </Toolbar>
