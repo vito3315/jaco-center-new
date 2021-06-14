@@ -75,7 +75,7 @@ export class App extends React.Component {
     }
 
     componentDidMount = () => {
-        autorun(() => {
+        /*autorun(() => {
             this.setState({
                 activePage: itemsStore.getPage()
             })
@@ -83,15 +83,9 @@ export class App extends React.Component {
             this.setState({
                 cityName: itemsStore.getCity()
             })
-        })
+        })*/
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-            this.state.activePage !== nextState.activePage ||
-            this.state.cityName !== nextState.cityName
-        );
-    }
     
     render() {
         //{!itemsStore.getToken() && this.state.cityName ? <Redirect push to={"/"+this.state.cityName+"/"} /> : <Profile />}
@@ -99,7 +93,7 @@ export class App extends React.Component {
             <Provider { ...stores }>
                 <div className="home">
                                
-                    <Header />        
+                    <Home />        
                     
                     <Switch>
                         <Route
