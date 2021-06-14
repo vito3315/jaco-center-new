@@ -93,7 +93,7 @@ export class App extends React.Component {
             <Provider { ...stores }>
                 <div className="home">
                                
-                    <Home />        
+                    <Header />        
                     
                     <Switch>
                         <Route
