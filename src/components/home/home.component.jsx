@@ -1121,7 +1121,7 @@ function Header() {
             <Grid item xs={6} style={{ paddingTop: 5 }}>
               
             <form className={classes.root} noValidate autoComplete="off">
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+              <TextField  label="Outlined" variant="outlined" />
             </form>
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
@@ -1135,13 +1135,17 @@ function Header() {
                   style={{ marginRight: 4, marginLeft: 4}}
                   //value={this.state.newAddrET} 
                   //onChange={ event => this.setState({ newAddrET: event.target.value }) }
-                  onBlur={chechAddr()}
+                  //onBlur={chechAddr()}
                 />
               
             </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
+      
+      <form className={classes.root} noValidate autoComplete="off">
+        <TextField  label="Outlined" variant="outlined" />
+      </form>
       
       <Drawer anchor={'left'} open={state.left} onClose={toggleDrawer('left', false)}>
         <div
