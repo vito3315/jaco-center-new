@@ -118,10 +118,11 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     flexGrow: 1,
-    margin: -8
+    //margin: -8
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginTop: 16,
+    marginLeft: 0
   },
   title: {
     flexGrow: 1,
@@ -311,6 +312,19 @@ const useStyles = makeStyles((theme) => ({
     },
     '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
       transform: 'translate(14px, -6px) scale(0.75)'
+    },
+  },
+  headerInput: {
+    justifyContent: 'flex-end',
+    '& .MuiInputLabel-formControl': {
+      //transform: 'translate(0, 20px) scale(1)'
+    },
+    '& label + .MuiInput-formControl': {
+      marginTop: 10
+    },
+    '& .MuiInputLabel-shrink': {
+      transform: 'translate(0, 6px) scale(0.75)',
+      transformOrigin: 'top left'
     },
   }
 }));
@@ -1113,28 +1127,25 @@ function Header() {
   return (
     <div className={classes.root}>
       <AppBar position="static" style={{ backgroundColor: '#fff', color: '#000' }}>
-        <Toolbar style={{ minHeight: 48 }}>
+        <Toolbar style={{  }}>
           <IconButton edge="start" className={classes.menuButton} onClick={toggleDrawer('left', true)} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Grid container >
-            <Grid item xs={6} style={{ paddingTop: 5 }}>
-              
-                <TextField  label="Промокод" />
-                <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
-                <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
-              
+          <Grid container className={classes.headerInput}>
+            <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'baseline' }}>
+              <TextField label="Промокод" style={{ marginRight: 4, marginLeft: 4}} variant="outlined"/>
+              <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
+              <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
             </Grid>
             <Grid item xs={3} style={{ paddingTop: 5 }}>
-              
-                <TextField 
-                  label="Телефон клиента" 
-                  style={{ marginRight: 4, marginLeft: 4}}
-                  //value={this.state.newAddrET} 
-                  //onChange={ event => this.setState({ newAddrET: event.target.value }) }
-                  //onBlur={chechAddr()}
-                />
-              
+              <TextField 
+                label="Телефон клиента" 
+                style={{ marginRight: 4, marginLeft: 4}}
+                variant="outlined"
+                //value={this.state.newAddrET} 
+                //onChange={ event => this.setState({ newAddrET: event.target.value }) }
+                onBlur={chechAddr()}
+              />
             </Grid>
           </Grid>
         </Toolbar>
