@@ -120,10 +120,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     //margin: -8
   },
-  menuButton: {
-    marginTop: 16,
-    marginLeft: 0
-  },
   title: {
     flexGrow: 1,
   },
@@ -316,6 +312,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerInput: {
     justifyContent: 'flex-end',
+    marginBottom: 20,
     '& .MuiInputLabel-formControl': {
       //transform: 'translate(0, 20px) scale(1)'
     },
@@ -1127,13 +1124,13 @@ function Header() {
   return (
     <div className={classes.root}>
       <AppBar position="static" style={{ backgroundColor: '#fff', color: '#000' }}>
-        <Toolbar style={{  }}>
-          <IconButton edge="start" className={classes.menuButton} onClick={toggleDrawer('left', true)} color="inherit" aria-label="menu">
+        <Toolbar style={{ minHeight: 48, height: 48 }}>
+          <IconButton edge="start" onClick={toggleDrawer('left', true)} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Grid container className={classes.headerInput}>
             <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'baseline' }}>
-              <TextField label="Промокод" style={{ marginRight: 4, marginLeft: 4}} variant="outlined"/>
+              <TextField label="Промокод" style={{ marginRight: 4, marginLeft: 4}} />
               <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
               <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
             </Grid>
@@ -1141,7 +1138,6 @@ function Header() {
               <TextField 
                 label="Телефон клиента" 
                 style={{ marginRight: 4, marginLeft: 4}}
-                variant="outlined"
                 //value={this.state.newAddrET} 
                 //onChange={ event => this.setState({ newAddrET: event.target.value }) }
                 onBlur={chechAddr()}
