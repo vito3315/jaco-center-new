@@ -172,21 +172,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
-    '& > div > div > div': {
-      padding: '0px !important'
-    },
-    '& > div > div > label': {
-      transform: 'translate(14px, 13px) scale(1)'
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '10px 14px'
-    },
-    '& .MuiInputLabel-outlined': {
-      transform: 'translate(14px, 13px) scale(1)'
-    },
-    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    },
   },
   otherAddr: {
     display: 'flex',
