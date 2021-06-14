@@ -91,7 +91,7 @@ export class App extends React.Component {
         //{!itemsStore.getToken() && this.state.cityName ? <Redirect push to={"/"+this.state.cityName+"/"} /> : <Profile />}
         return (
             <Provider { ...stores }>
-                <div className="home">
+                
                                
                     <Header />        
                     
@@ -110,7 +110,7 @@ export class App extends React.Component {
                     
                     
                     
-                </div>
+                
             </Provider>
         );
     }
