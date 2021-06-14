@@ -1032,7 +1032,7 @@ class CreateOrder extends React.Component {
           
           { this.state.date_pred.length > 0 ? <BlockPred classes={this.state.classes} date_pred={this.state.date_pred} /> : null }
           
-          { this.state.typeOrder == 0 ? <BlockAddr classes={this.state.classes} all_addr={this.state.all_addr} /> : null }
+          <BlockAddr classes={this.state.classes} all_addr={this.state.all_addr} />
           
           <Grid container spacing={3} className={this.state.classes.container}>
             <form className={this.state.classes.blockTotalOrder} noValidate autoComplete="off" style={{ width: '100%', marginRight: 8, marginTop: 3 }}>
