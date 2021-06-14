@@ -172,6 +172,21 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
+    '& > div > div > div': {
+      padding: '0px !important'
+    },
+    '& > div > div > label': {
+      transform: 'translate(14px, 13px) scale(1)'
+    },
+    '& .MuiOutlinedInput-input': {
+      padding: '10px 14px'
+    },
+    '& .MuiInputLabel-outlined': {
+      transform: 'translate(14px, 13px) scale(1)'
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)'
+    },
   },
   otherAddr: {
     display: 'flex',
@@ -179,8 +194,35 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     alignItems: 'center',
     paddingBottom: 8,
+    '& .MuiOutlinedInput-input': {
+      padding: '10px 14px'
+    },
+    '& .MuiInputLabel-outlined': {
+      transform: 'translate(14px, 13px) scale(1)'
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)'
+    },
+    '& .MuiFormControl-root.MuiTextField-root': {
+      width: '100%'
+    },
   },
   driverInfo: {
+    '& input.MuiInputBase-input.MuiInputBase-input.MuiOutlinedInput-input': {
+      padding: '7px 14px'
+    },
+    '& .MuiOutlinedInput-multiline': {
+      padding: '7px 14px'
+    },
+    '& .MuiInputLabel-outlined': {
+      transform: 'translate(14px, 9px) scale(1)'
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)'
+    },
+    '& .MuiFormControl-root.MuiTextField-root': {
+      width: '100%'
+    }
   },
   formPred: {
     display: 'flex',
@@ -188,9 +230,43 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     alignItems: 'center',
     paddingBottom: 8,
+    '& .MuiOutlinedInput-input': {
+      padding: '10px 14px'
+    },
+    '& .MuiInputLabel-outlined': {
+      transform: 'translate(14px, 13px) scale(1)'
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)'
+    },
+    '& > div': {
+      width: '50%',
+      marginLeft: 0
+    }
   },
   chooseDomTrue: {
     width: '100%',
+    '& button.active': {
+      backgroundColor: '#CC0033',
+      color: '#fff'
+    },
+    '& button:not(.active)': {
+      backgroundColor: '#fff',
+      border: '1px solid #CC0033',
+      color: '#CC0033'
+    },
+    '& button': {
+      width: '50%'
+    },
+    '& span': {
+      fontSize: '0.8rem!important',
+      width: '100%',
+      textTransform: 'none',
+      whiteSpace: 'nowrap'
+    },
+    '& .MuiButtonGroup-groupedContainedHorizontal:not(:last-child)': {
+      borderRight: 'none'
+    }
   },
   boxPic: {
     backgroundColor: '#e5e5e5',
@@ -227,6 +303,15 @@ const useStyles = makeStyles((theme) => ({
   containerHeader: {
     paddingTop: theme.spacing(2),
     justifyContent: 'flex-end',
+    '& .MuiOutlinedInput-input': {
+      padding: '5px 10px'
+    },
+    '& .MuiInputLabel-outlined': {
+      transform: 'translate(14px, 8px) scale(1)'
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)'
+    },
   }
 }));
 
@@ -560,6 +645,42 @@ class BlockAddr extends React.Component {
             <Button className={ this.state.newAddrDom === true ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, true) }>Домофон работает</Button>
             <Button className={ this.state.newAddrDom === false ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, false) }>Домофон не работает</Button>
           </ButtonGroup>
+        </div>
+      </Grid>
+    )
+  }
+}
+
+class BlockComment extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      classes: this.props.classes,
+      
+    };
+  }
+  
+  render(){
+    return (
+      <Grid container spacing={3}>
+        <div className={this.state.classes.otherAddr}>
+          <TextField 
+            label="Комментарий курьеру" 
+            variant="outlined" 
+            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            //value={this.state.newAddrHome} 
+            //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
+            //onBlur={this.checkNewAddr.bind(this)}
+          />
+          <TextField 
+            label="Сдача" 
+            variant="outlined" 
+            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            //value={this.state.newAddrHome} 
+            //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
+            //onBlur={this.checkNewAddr.bind(this)}
+          />
         </div>
       </Grid>
     )
@@ -909,32 +1030,9 @@ class CreateOrder extends React.Component {
                 </div>
           }
           
-          {this.state.date_pred.length > 0 ? <BlockPred classes={this.state.classes} date_pred={this.state.date_pred} /> : null}
+          { this.state.date_pred.length > 0 ? <BlockPred classes={this.state.classes} date_pred={this.state.date_pred} /> : null }
           
-          { this.state.typeOrder == 0 ?
-            <Grid container spacing={3}>
-              <div className={this.state.classes.mainAddr}>
-                <TextField 
-                  label="Комментарий курьеру" 
-                  variant="outlined" 
-                  style={{ margin: '16px 8px 8px 8px', flex: 1 }}
-                  //value={this.state.newAddrHome} 
-                  //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
-                  //onBlur={this.checkNewAddr.bind(this)}
-                />
-                <TextField 
-                  label="Сдача" 
-                  variant="outlined" 
-                  style={{ margin: '16px 8px 8px 8px', flex: 1 }}
-                  //value={this.state.newAddrHome} 
-                  //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
-                  //onBlur={this.checkNewAddr.bind(this)}
-                />
-              </div>
-            </Grid>  
-              :
-            null
-          }
+          { this.state.typeOrder == 0 ? <BlockComment classes={this.state.classes} /> : null }
           
           <Grid container spacing={3} className={this.state.classes.container}>
             <form className={this.state.classes.blockTotalOrder} noValidate autoComplete="off" style={{ width: '100%', marginRight: 8, marginTop: 3 }}>
