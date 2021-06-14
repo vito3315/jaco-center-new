@@ -664,7 +664,7 @@ class BlockComment extends React.Component {
   render(){
     return (
       <Grid container spacing={3}>
-        <div className={this.state.classes.otherAddr}>
+        <div className={this.state.classes.mainAddr}>
           <TextField 
             label="Комментарий курьеру" 
             variant="outlined" 
