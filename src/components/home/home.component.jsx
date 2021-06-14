@@ -323,6 +323,33 @@ const useStyles = makeStyles((theme) => ({
       transform: 'translate(0, 6px) scale(0.75)',
       transformOrigin: 'top left'
     },
+  },
+  addrComment: {
+    width: '100%', 
+    marginRight: 8, 
+    display: 'flex', 
+    flexDirection: 'column',
+    '& > div:last-child': {
+      width: '33%!important'
+    },
+    '& > div': {
+      marginTop: 8
+    },
+    '& input.MuiInputBase-input.MuiInputBase-input.MuiOutlinedInput-input': {
+      padding: '7px 14px'
+    },
+    '& .MuiOutlinedInput-multiline': {
+      padding: '7px 14px'
+    },
+    '& .MuiInputLabel-outlined': {
+      transform: 'translate(14px, 9px) scale(1)'
+    },
+    '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)'
+    },
+    '& .MuiFormControl-root.MuiTextField-root': {
+      width: '100%'
+    }
   }
 }));
 
@@ -657,10 +684,13 @@ class BlockAddr extends React.Component {
             <Button className={ this.state.newAddrDom === false ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, false) }>Домофон не работает</Button>
           </ButtonGroup>
         </div>
-        <div style={{ width: '100%', marginRight: 8 }}>
+        <div className={this.state.classes.addrComment}>
           <TextField 
             label="Комментарий курьеру" 
             variant="outlined" 
+            multiline
+            rowsMax={2}
+            variant="outlined"
             //style={{ margin: '16px 8px 8px 8px', flex: 1 }}
             //value={this.state.newAddrHome} 
             //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
