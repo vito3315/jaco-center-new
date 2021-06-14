@@ -1032,7 +1032,7 @@ class CreateOrder extends React.Component {
           
           { this.state.date_pred.length > 0 ? <BlockPred classes={this.state.classes} date_pred={this.state.date_pred} /> : null }
           
-          <BlockAddr classes={this.state.classes} all_addr={this.state.all_addr} />
+          <BlockComment classes={this.state.classes} />
           
           <Grid container spacing={3} className={this.state.classes.container}>
             <form className={this.state.classes.blockTotalOrder} noValidate autoComplete="off" style={{ width: '100%', marginRight: 8, marginTop: 3 }}>
@@ -1102,14 +1102,9 @@ function Header() {
           <Grid container spacing={3} className={classes.containerHeader}>
             <Grid item xs={6} style={{ paddingTop: 5 }}>
               
-                <TextField 
-                  label="Промокод" 
-                  variant="outlined" 
-                  style={{ marginRight: 4, marginLeft: 4}}
-                  //value={this.state.newAddrET} 
-                  //onChange={ event => this.setState({ newAddrET: event.target.value }) }
-                  //onBlur={this.saveDataCustomAddr.bind(this)}
-                />
+            <form className={classes.root} noValidate autoComplete="off">
+              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+            </form>
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
               
