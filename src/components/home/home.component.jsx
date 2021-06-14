@@ -1099,7 +1099,7 @@ function Header() {
           <IconButton edge="start" className={classes.menuButton} onClick={toggleDrawer('left', true)} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Grid container spacing={3} className={classes.containerHeader}>
+          <Grid container >
             <Grid item xs={6} style={{ paddingTop: 5 }}>
               
             <form className={classes.root} noValidate autoComplete="off">
