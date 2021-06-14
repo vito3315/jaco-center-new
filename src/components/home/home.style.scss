@@ -109,23 +109,23 @@
     min-width: 120px;
 }
 .boxPic{
-    background-color: #e5e5e5;
-    padding: 6px 12px;
-    margin-bottom: 10px;
-    cursor: pointer;
+    background-color: #e5e5e5!important;
+    padding: 6px 12px!important;
+    margin-bottom: 10px!important;
+    cursor: pointer!important;
     &:hover{
-        background-color: #CC0033;
-        color: #fff;
+        background-color: #CC0033!important;
+        color: #fff!important;
     }
     &.active{
-        background-color: #CC0033;
-        color: #fff;
+        background-color: #CC0033!important;
+        color: #fff!important;
     }
     & span:first-child{
-        text-align: center;
+        text-align: center!important;
     }
     & span:last-child{
-        text-align: center;
+        text-align: center!important;
     }
 }
 .container{
