@@ -1120,9 +1120,7 @@ function Header() {
           <Grid container >
             <Grid item xs={6} style={{ paddingTop: 5 }}>
               
-            <form className={classes.root} noValidate autoComplete="off">
-              <TextField  label="Outlined" variant="outlined" />
-            </form>
+                <TextField  label="Промокод" />
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8 }}>?</Button>
                 <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }}>Х</Button>
               
@@ -1131,7 +1129,6 @@ function Header() {
               
                 <TextField 
                   label="Телефон клиента" 
-                  variant="outlined" 
                   style={{ marginRight: 4, marginLeft: 4}}
                   //value={this.state.newAddrET} 
                   //onChange={ event => this.setState({ newAddrET: event.target.value }) }
@@ -1144,7 +1141,7 @@ function Header() {
       </AppBar>
       
       
-        <TextField  label="Outlined" />
+        
       
       
       <Drawer anchor={'left'} open={state.left} onClose={toggleDrawer('left', false)}>
