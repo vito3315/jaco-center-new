@@ -997,31 +997,26 @@ class CreateOrder extends React.Component {
           {this.state.date_pred.length > 0 ? <BlockPred classes={this.state.classes} date_pred={this.state.date_pred} /> : null}
           
           { this.state.typeOrder == 0 ?
-            <Grid container spacing={3} className={this.state.classes.container}>
-              <form className={this.state.classes.driverInfo} noValidate autoComplete="off" style={{ width: '100%', marginRight: 8 }}>
-                <div>
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="Комментарий курьеру"
-                    multiline
-                    rowsMax={2}
-                    //value={value}
-                    //onChange={handleChange}
-                    variant="outlined"
-                  />
-                </div>
-                <div style={{ width: '50%', marginLeft: '50%', marginTop: 8 }}>
-                  <TextField 
-                    label="Сдача" 
-                    variant="outlined" 
-                    style={{ marginRight: 4}}
-                    //value={this.state.newAddrPD} 
-                    //onChange={ event => this.setState({ newAddrPD: event.target.value }) }
-                    //onBlur={this.saveDataCustomAddr.bind(this)}
-                  />
-                </div>
-              </form>
-            </Grid>
+            <Grid container spacing={3}>
+              <div className={this.state.classes.mainAddr}>
+                <TextField 
+                  label="Комментарий курьеру" 
+                  variant="outlined" 
+                  style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+                  //value={this.state.newAddrHome} 
+                  //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
+                  //onBlur={this.checkNewAddr.bind(this)}
+                />
+                <TextField 
+                  label="Сдача" 
+                  variant="outlined" 
+                  style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+                  //value={this.state.newAddrHome} 
+                  //onChange={ event => this.setState({ newAddrHome: event.target.value }) }
+                  //onBlur={this.checkNewAddr.bind(this)}
+                />
+              </div>
+            </Grid>  
               :
             null
           }
