@@ -2,17 +2,27 @@ import { makeAutoObservable } from 'mobx';
 import moment from "moment";
 const queryString = require('query-string');
 
+import { configure } from "mobx"
+
+configure({
+  enforceActions: "never",
+})
+
 class ItemsStore {
   // Don't need decorators now
+  
+  
+  
   items = '';
   itemsPromo = '';
+  promoName = '';
   allItems = '';
   allItemsCat = '';
   banners = '';
   AllPrice = 0;
   sum_div = 0;
   
-  cityName = '';
+  cityName = 0;
   cityNameRU = '';
   
   promo = null;
@@ -25,6 +35,10 @@ class ItemsStore {
   free_items = '';
   cart_data = '';
     
+  typeOrder = 0;
+  
+  clientNumber = '';
+  
   setSumDiv = (items) => {
     this.sum_div = parseInt( items );
   };
@@ -109,7 +123,7 @@ class ItemsStore {
       headers: {
           'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-          type: 'get_promo_web', 
+          type: 'get_promo', 
           city_id: itemsStore.getCity(),
           promo_name: promoName
       })
@@ -483,14 +497,6 @@ class ItemsStore {
     }
   }
 
-  setBanners = (items) => {
-    this.banners = JSON.stringify(items);
-  };
-
-  getBanners(){
-    return this.banners.length == 0 ? [] : JSON.parse(this.banners, true);
-  };
-  
   setItemsPromo = (items) => {
     this.itemsPromo = JSON.stringify(items);
   };
@@ -616,6 +622,62 @@ class ItemsStore {
     }
   }
 
+  AddCountItem(id, NewCount){
+    let my_cart = itemsStore.getItems();
+    let all_items = itemsStore.getAllItems();
+    let promo = itemsStore.getPromo();
+    
+    if( all_items.length > 0 ){
+      let cart_info = my_cart.find( (item) => item.item_id == id );
+      let count_ = 0;
+      
+      if( cart_info ){
+        count_ = cart_info.count;
+      }
+      
+      let item_info = all_items.find( (item) => item.id == id );
+      
+      if(item_info){
+        let count = NewCount,
+            price = item_info['price'];
+          
+        let max_count = itemsStore.check_max_count( parseInt(id) );    
+        
+        if( parseInt(max_count) >= count ){
+          let check_in_cart = my_cart.some( (item) => item.item_id == id );
+            if( !check_in_cart ){
+              my_cart.push({
+                name: item_info.name,
+                item_id: id,
+                count: count,
+                one_price: price,
+                all_price: count * price
+              })
+            }else{
+              my_cart.forEach((item, key) => {
+                if( item.item_id == id ){
+                  my_cart[key]['count'] = count;
+                  my_cart[key]['all_price'] = count * price;
+                }
+              });
+            }
+          
+          itemsStore.setItems(my_cart);
+          
+          if( promo ){
+            itemsStore.checkPromo();
+          }
+          
+          return count;
+        }
+        
+        return count - 1;
+      }
+    }else{
+      return 0;
+    }
+  }
+  
   MinusItem(id){
     let my_cart = itemsStore.getItems();
     let all_items = itemsStore.getAllItems();
@@ -657,6 +719,47 @@ class ItemsStore {
     }
   }
 
+  delItem(id){
+    let my_cart = itemsStore.getItems();
+    let all_items = itemsStore.getAllItems();
+    let promo = itemsStore.getPromo();
+    
+    if( all_items.length > 0 ){
+      let cart_info = my_cart.find( (item) => item.item_id == id );
+      
+      if( !cart_info ){
+        return 0;
+      }
+      
+      let item_info = all_items.find( (item) => item.id == id ),
+          count = 0,
+          price = item_info['price'];
+      
+      if( count <= 0 ){
+        count = 0;
+      }    
+          
+      if( count >= 0 ){
+        my_cart.map( (item, key) => {
+          if( item.item_id == id ){
+            my_cart[key]['count'] = count;
+            my_cart[key]['all_price'] = count * price;
+          }
+        } )
+        
+        itemsStore.setItems(my_cart)
+      }
+    
+      if( promo ){
+        itemsStore.checkPromo();
+      }
+      
+      return count;
+    }else{
+      return 0;
+    }
+  }
+  
   check_need_dops(){
     let my_cart = itemsStore.getItems();
     let all_items = itemsStore.getAllItems();

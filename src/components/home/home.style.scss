@@ -1,6 +1,10 @@
+@mixin fons($size: 1rem) {
+  font-size: $size !important;
+}
+
 .headerInput{
     justify-content: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
     & label + .MuiInput-formControl{
       margin-top: 10px
     }
@@ -91,9 +95,13 @@
     & .MuiInputLabel-outlined.MuiInputLabel-shrink{
       transform: translate(14px, -6px) scale(0.75);
     }
-    & > div{
-      width: 50%;
-      margin-left: 0px
+    & > div:first-child{
+      width: 60%;
+      margin-right: 8px;
+    }
+    & > div:last-child{
+      width: 40%;
+      margin-right: 8px;
     }
 }
 .blockTotalOrder{
@@ -109,7 +117,7 @@
     min-width: 120px;
 }
 .boxPic{
-    background-color: #e5e5e5!important;
+    background-color: #e5e5e5;
     padding: 6px 12px!important;
     margin-bottom: 10px!important;
     cursor: pointer!important;
@@ -164,4 +172,108 @@
     & .MuiButtonGroup-groupedContainedHorizontal:not(:last-child){
       border-right: none
     }
+}
+.MuiList-root.MuiList-padding{
+  & > div:hover{
+    background-color: #CC0033;
+    color: #fff;
+  }
+  & .Mui-selected{
+    background-color: #CC0033;
+    color: #fff;
+  }
+}
+.MuiTable-root.MuiTable-stickyHeader{
+  & .MuiTableCell-root{
+    padding: 0px 16px;
+  }
+}
+.MuiAppBar-colorPrimary{
+  background-color: #fff!important;
+  color: #000!important;
+  & .Mui-selected{
+    background-color: #CC0033;
+    color: #fff;
+  }
+}
+.MuiTab-textColorPrimary.Mui-selected{
+  color: #CC0033!important;
+}
+.PrivateTabIndicator-colorPrimary-14{
+  background-color: #CC0033!important;
+}
+.blockTotalOrder .MuiButton-containedPrimary{
+  background-color: #CC0033!important;
+}
+.InputMask{
+  border: 1px solid #000;
+  border-radius: 4px;
+  //@include fons(1.1rem, $Ubuntu);
+  letter-spacing: 0.6px;
+  padding: 9px 15px 9px 15px;
+  &:focus{
+      outline: inherit!important;
+  }
+}
+.MuiTabs-indicator{
+  background-color: #CC0033 !important;
+}
+
+.DialogOrderCheckDialog .MuiDialog-paperFullWidth{
+  width: calc(100% - 24px)!important;
+  margin: 12px!important;
+}
+.orderCheckTitle{
+  @include fons(1.3rem);
+  padding: 16px;
+  padding-bottom: 0;
+  text-align: center;
+}
+.closeDialog{
+  font-size: 1.5rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 15px;
+  color: #CC0033;
+  cursor: pointer;
+}
+.tableOrderCheck{
+  border-collapse: collapse;
+  width: 100%;
+  & tbody{
+      border-bottom: 2px solid #96969A;
+      & tr:not(:last-child){
+          border-bottom: 1px solid #96969A;
+      }
+      & td{
+          padding: 5px 0;
+      }
+  }
+  & .namePrice.orderCheckText{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+  }
+}
+.orderCheckText{
+  @include fons(1rem);
+  padding-bottom: 10px;
+  &.bold{
+      font-weight: bold;
+  }
+}
+.tableOrderCheck .orderCheckText{
+  padding-bottom: 0px;
+}
+.nameSdacha.orderCheckText{
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  padding-bottom: 10px;
+  margin: 0;
+}
+.CardInCardItem{
+  background-color: #CC0033!important;
+  color: #fff!important;
 }
