@@ -1828,7 +1828,7 @@ class CreateOrder extends React.Component {
       })
     }
   }
-  //{this.state.newOrder.timePred}
+  
   render() {
     return (
       <Grid container spacing={0}>
@@ -1866,7 +1866,7 @@ class CreateOrder extends React.Component {
                 this.state.clientAddr.length > 0 ? <BlockAddrMy classes={this.state.classes} clientAddr={this.state.clientAddr} /> : null
           }
           
-          { this.state.activeTab == 0 || this.state.activeTab == 2 ?
+          { (this.state.activeTab == 0 || this.state.activeTab == 2) && this.state.all_addr.length > 0 ?
             <Grid container spacing={3} style={{ marginTop: 12 }}>
               <div className='addrComment'>
                 <TextField 
