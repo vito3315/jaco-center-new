@@ -3,21 +3,15 @@ import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import { Home } from '../home';
 
-import { Header } from '../header';
+import { Orders } from '../orders';
 
 import Grid from '@material-ui/core/Grid';
 
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
-
-const queryString = require('query-string');
 
 import { Provider } from 'mobx-react';
 import itemsStore from '../../stores/items-store';
 const stores = { itemsStore };
-
-import { autorun } from "mobx"
-
 
 function Status({ code, children }) {
   return (
@@ -75,42 +69,28 @@ export class App extends React.Component {
     }
 
     componentDidMount = () => {
-        /*autorun(() => {
-            this.setState({
-                activePage: itemsStore.getPage()
-            })
-            
-            this.setState({
-                cityName: itemsStore.getCity()
-            })
-        })*/
+        
     }
 
     
     render() {
-        //{!itemsStore.getToken() && this.state.cityName ? <Redirect push to={"/"+this.state.cityName+"/"} /> : <Profile />}
         return (
             <Provider { ...stores }>
-                
-                               
-                    <Header />        
-                    
-                    <Switch>
-                        <Route
-                            path='/'
-                            exact={ true }
-                            component={ Home }
-                        />
-                        <Route
-                            component={ NotFound }
-                        />
-                    </Switch>
-                    
-                
-                    
-                    
-                    
-                
+                <Switch>
+                    <Route
+                        path='/'
+                        exact={ true }
+                        component={ Home }
+                    />
+                    <Route
+                        path='/orders'
+                        exact={ true }
+                        component={ Orders }
+                    />
+                    <Route
+                        component={ NotFound }
+                    />
+                </Switch>
             </Provider>
         );
     }

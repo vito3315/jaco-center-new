@@ -277,3 +277,26 @@
   background-color: #CC0033!important;
   color: #fff!important;
 }
+.DialogErrText{
+  @include fons(1rem);
+  text-align: center;
+}
+.DialogChooseNewAddr div.BtnBorder, 
+.DialogChoosePicDialog div.BtnBorder,
+.DialogErr div.BtnBorder{
+    width: 100%;
+    margin: 14px 0px;
+    & button{
+        width: 100%;
+    }
+}
+.DialogErr .MuiDialog-paper{
+    min-width: 300px;
+}
+.DialogErr div.BtnBorder{
+    margin: 14px 14px;
+}
+.btnClear{
+  background-color: #CC0033!important;
+  color: #fff!important;
+}

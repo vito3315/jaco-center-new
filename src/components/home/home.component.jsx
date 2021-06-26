@@ -11,6 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
+import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -71,14 +73,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import InputMask from "react-input-mask";
 
 const queryString = require('query-string');
-
-let globalData = {
-  typeOrder: 0,
-  //typeTime: 0,
-  orderPic: 0,
-  addr: {},
-  time: {}
-}
 
 const useStyles = makeStyles((theme) => ({
   root2: {
@@ -1198,7 +1192,7 @@ class BlockPred extends React.Component {
       body: queryString.stringify({
         type: 'get_times_pred_web',  
         point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
-        type_order: globalData.typeOrder+1,
+        type_order: cartData.orderType+1,
         date: cartData.date,
         cart: JSON.stringify( my_cart ),
       })
@@ -1410,6 +1404,12 @@ class CreateOrder extends React.Component {
       classes: this.props.classes,
       
       newOrder: null,
+      
+      errorOpen: false,
+      error: {
+        title: '',
+        text: ''
+      },
       
       orderCheck: false,
       spiner: false,
@@ -1690,7 +1690,6 @@ class CreateOrder extends React.Component {
         spiner: true
       })
       
-      //let payFull = this.state.renderPay.find( (item) => item.type == this.state.orderPay );
       let new_cart = [];
       let cartItems = itemsStore.getItems();
       
@@ -1705,20 +1704,6 @@ class CreateOrder extends React.Component {
         }
       })
         
-      console.log( {
-        timePred: JSON.stringify( { value: parseInt( cartData.orderTimes ) == 0 ? 0 : cartData.orderPredDay + ' ' + cartData.orderPredTime } ),
-          typeOrder: cartData.orderType,
-          addrPic: cartData.orderPic,
-          comment: cartData.orderComment,
-          sdacha: cartData.orderSdacha,
-          addrDev: cartData.orderAddr ? JSON.stringify(cartData.orderAddr) : '', 
-          //pay: payFull.title, //
-          payFull: JSON.stringify({ type: 'cash' }), 
-          cart: JSON.stringify(new_cart),
-          promo_name: localStorage.getItem('promo_name'),
-          number: itemsStore.clientNumber
-      } )
-      
       fetch('https://jacofood.ru/src/php/test_app.php', {
         method: 'POST',
         headers: {
@@ -1726,7 +1711,7 @@ class CreateOrder extends React.Component {
         body: queryString.stringify({
           type: 'createOrder', 
           city_id: itemsStore.getCity(),
-          user_id: 0,
+          user_id: -1,
         
           timePred: JSON.stringify( { value: parseInt( cartData.orderTimes ) == 0 ? 0 : cartData.orderPredDay + ' ' + cartData.orderPredTime } ),
           typeOrder: cartData.orderType,
@@ -1752,81 +1737,86 @@ class CreateOrder extends React.Component {
           this.clickOrderStart = false;
         }, 500)
         
-        this.setState({
-          newOrder: {
-            cart: json.my_cart,
-            order_id: json.order_id,
-            point_name: json.point_name,
-            time_wait: json.time_wait_order,
-            typeOrder: parseInt(cartData.orderType) == 0 ? 'Доставка' : 'Самовывоз',
-            number: itemsStore.clientNumber,
-            comment: parseInt(cartData.orderType) == 0 ? cartData.orderComment : '',
-            sdacha: parseInt(cartData.orderType) == 0 ? cartData.orderSdacha : '',
-            timePred: parseInt( cartData.orderTimes ) == 0 ? '' : cartData.orderPredDay + ' ' + cartData.orderPredTime,
-            addr: parseInt(cartData.orderType) == 0 ? cartData.orderAddr : {},
-            promoName: localStorage.getItem('promo_name')
-          }
-        })
-        
-        setTimeout( () => {
+        if( json.st ){
           this.setState({
-            orderCheck: true
+            newOrder: {
+              cart: json.my_cart,
+              order_id: json.order_id,
+              point_id: json.point_id,
+              point_name: json.point_name,
+              time_wait: json.time_wait_order,
+              typeOrder: parseInt(cartData.orderType) == 0 ? 'Доставка' : 'Самовывоз',
+              number: itemsStore.clientNumber,
+              comment: parseInt(cartData.orderType) == 0 ? cartData.orderComment : '',
+              sdacha: parseInt(cartData.orderType) == 0 ? cartData.orderSdacha : '',
+              timePred: parseInt( cartData.orderTimes ) == 0 ? '' : cartData.orderPredDay + ' ' + cartData.orderPredTime,
+              addr: parseInt(cartData.orderType) == 0 ? cartData.orderAddr : {},
+              promoName: localStorage.getItem('promo_name')
+            }
           })
           
-          console.log( this.state.newOrder )
-          
-        }, 500 )
-        
-        console.log( 
-          {
-            cart: json.my_cart,
-            order_id: json.order_id,
-            point_name: json.point_name,
-            typeOrder: parseInt(cartData.orderType) == 0 ? 'Доставка' : 'Самовывоз',
-            number: itemsStore.clientNumber,
-            comment: parseInt(cartData.orderType) == 0 ? cartData.orderComment : '',
-            sdacha: parseInt(cartData.orderType) == 0 ? cartData.orderSdacha : '',
-            timePred: parseInt( cartData.orderTimes ) == 0 ? '' : cartData.orderPredDay + ' ' + cartData.orderPredTime,
-            addr: parseInt(cartData.orderType) == 0 ? cartData.orderAddr : {},
-            
-            
-            cartData: cartData
-          }
-        )
-        
-        /*setTimeout(()=>{
-            this.clickOrderStart = false;    
-        }, 300)
-        
-        setTimeout(()=>{
+          setTimeout( () => {
             this.setState({
-                spiner: false
+              orderCheck: true
             })
-            
-            if( json.st ){
-                this.setState({
-                    orderCheck: true,
-                    newOrderData: json
-                })
-                
-                this.startOrderIntervalTimer = setTimeout(()=>{
-                    this.setState({
-                        orderCheck: false,
-                        newOrderData: null
-                    })
-                }, this.startOrderInterval * 1000)
-            }else{
-                this.setState({
-                    error: {
-                        title: 'Предупреждение', 
-                        text: json.text_err
-                    },
-                    errorOpen: true
-                })
-            }
-        }, 1000)*/
+          }, 500 )
+          
+          this.startOrderIntervalTimer = setTimeout(()=>{
+            this.setState({
+              orderCheck: false,
+              newOrderData: null
+            })
+          }, this.startOrderInterval * 1000)
+        }else{
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: json.text_err
+            },
+            errorOpen: true
+          })
+        }
       })
     }
+  }
+  
+  trueOrder(){
+    fetch('https://jacofood.ru/src/php/test_app.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+        type: 'trueOrder', 
+        city_id: itemsStore.getCity(),
+        //user_id: -1,
+        
+        order_id: this.state.newOrder.order_id,
+        point_id: this.state.newOrder.point_id,
+      })
+    }).then(res => res.json()).then(json => {
+      if( json['st'] == false ){
+        this.setState({
+          error: {
+            title: 'При подтверждении оплаты произошла ошибка', 
+            text: json.text_err
+          },
+          errorOpen: true
+        })
+      }else{
+        this.setState({
+          error: {
+            title: 'Подтверждение заказа', 
+            text: 'Заказ успешно оформлен'
+          },
+          errorOpen: true,
+          orderCheck: false,
+          newOrderData: null
+        })
+        itemsStore.clear = true;
+        
+        clearTimeout(this.startOrderIntervalTimer);
+      }
+    });
   }
   
   render() {
@@ -1918,6 +1908,23 @@ class CreateOrder extends React.Component {
             null
           }
         </Grid>
+      
+        <Dialog
+          open={this.state.errorOpen}
+          onClose={() => this.setState({ errorOpen: false })}
+          className="DialogErr"
+        >
+          <Typography variant="h5" component="span" className="orderCheckTitle">{this.state.error.title}</Typography>
+          <CloseIcon className="closeDialog" color="inherit" onClick={() => this.setState({ errorOpen: false })} />
+          <DialogContent>
+            <DialogContentText className="DialogErrText">{this.state.error.text}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorder" onClick={() => this.setState({ errorOpen: false })}>
+              <Button variant="contained" className="BtnCardMain CardInCardItem">Хорошо</Button>
+            </ButtonGroup>
+          </DialogActions>
+        </Dialog>
       
         { this.state.orderCheck === true ?
           <Dialog
@@ -2028,7 +2035,7 @@ class CreateOrder extends React.Component {
               </table>
               </DialogContent>
               <DialogActions style={{ padding: '12px 24px', paddingBottom: 24 }}>
-                <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorder" style={{ width: '100%' }} onClick={ () => {} }>
+                <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorder" style={{ width: '100%' }} onClick={ this.trueOrder.bind(this) }>
                   <Button variant="contained" style={{ width: '100%' }} className="BtnCardMain CardInCardItem">Подтвердить заказ</Button>
                 </ButtonGroup>
               </DialogActions>
@@ -2092,6 +2099,15 @@ class Header extends React.Component {
       }, 500 )
       
     }
+    
+    autorun(() => {
+      if( itemsStore.clear === true ){
+        
+        this.clear();
+        
+        itemsStore.clear = false;
+      }
+    })
   }
   
   saveNumber(event){
@@ -2234,8 +2250,8 @@ class Header extends React.Component {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'baseline' }}>
-                <TextField label="Промокод" value={ this.state.promo_name } onChange={ event => this.setState({ promo_name: event.target.value }) } onBlur={this.checkPromo.bind(this)} style={{ marginRight: 4, marginLeft: 4}} />
+              <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'center' }}>
+                <TextField label="Промокод" value={ this.state.promo_name } onChange={ event => this.setState({ promo_name: event.target.value }) } onBlur={this.checkPromo.bind(this)} style={{ marginRight: 4, marginLeft: 4, marginBottom: 6}} />
                 
                 <HtmlTooltip
                   placement="bottom"
@@ -2248,7 +2264,9 @@ class Header extends React.Component {
                   <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8, backgroundColor: this.state.promoST === false && this.state.orderPromoText.length == 0 ? 'gray' : this.state.promoST === false && this.state.orderPromoText.length > 0 ? 'red' : 'green' }}>?</Button>
                 </HtmlTooltip>
                 
-                <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30 }} onClick={ this.clear.bind(this) } >Х</Button>
+                <Button variant="contained" color="primary" className="btnClear" style={{ padding: '2px 6px', minWidth: 30 }} onClick={ this.clear.bind(this) } >
+                  <CloseIcon />
+                </Button>
               </Grid>
               <Grid item xs={3} style={{ paddingTop: 14 }}>
                 <InputMask 
@@ -2277,12 +2295,25 @@ class Header extends React.Component {
             //onKeyDown={this.toggleDrawer(this, 'left', false)}
           >
             <List>
-              {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
+              <ListItem button>
+                <Link
+                  to={ '/' }
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Typography variant="body1">Оформить заказ</Typography>
+                </Link>
+              </ListItem>
+              <ListItem button>
+              <Link
+                  to={ '/orders' }
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Typography variant="body1">Список заказов</Typography>
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <ListItemText primary={'111'} />
+              </ListItem>
             </List>
             <Divider />
             <List>

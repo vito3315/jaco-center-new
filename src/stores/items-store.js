@@ -39,6 +39,8 @@ class ItemsStore {
   
   clientNumber = '';
   
+  clear = false;
+  
   setSumDiv = (items) => {
     this.sum_div = parseInt( items );
   };
