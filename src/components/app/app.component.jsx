@@ -79,31 +79,32 @@ export class App extends React.Component {
             return (
                 <Auth />
             )
-        }
+        }else{
         
-        return (
-            <Provider { ...stores }>
-                <Switch>
-                    <Route
-                        path='/'
-                        exact={ true }
-                        component={ Home }
-                    />
-                    <Route
-                        path='/orders'
-                        exact={ true }
-                        component={ Orders }
-                    />
-                    <Route
-                        path='/ordercook'
-                        exact={ true }
-                        component={ ordercook }
-                    />
-                    <Route
-                        component={ NotFound }
-                    />
-                </Switch>
-            </Provider>
-        );
+            return (
+                <Provider { ...stores }>
+                    <Switch>
+                        <Route
+                            path='/'
+                            exact={ true }
+                            component={ Home }
+                        />
+                        <Route
+                            path='/orders'
+                            exact={ true }
+                            component={ Orders }
+                        />
+                        <Route
+                            path='/ordercook'
+                            exact={ true }
+                            component={ ordercook }
+                        />
+                        <Route
+                            component={ NotFound }
+                        />
+                    </Switch>
+                </Provider>
+            );
+        }
     }
 }
