@@ -1127,6 +1127,7 @@ class BlockPred extends React.Component {
     
     this.state = {
       classes: this.props.classes,
+      point_id: 0,
       
       textAvgTime: 'Среднее время: ~',
       
@@ -1162,12 +1163,31 @@ class BlockPred extends React.Component {
       console.log( '_thisEdit', this._thisEdit )
       
       if( this._isMounted ){
+        
+        if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
+          if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
+            this.loadTimeWait();
+            this.setState({
+              point_id: this.state.point_id
+            })
+          }
+        }
+        
+        if( cartData.orderType == 1 && cartData.orderPic ){
+          if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
+            this.loadTimeWait();
+            this.setState({
+              point_id: cartData.orderPic
+            })
+          }
+        }
+        
         if( !this._thisEdit ){
           
           console.log( '2' )
           
           this.startData();
-          this.loadTimeWait();
+          
         }
       }
     })
@@ -1250,6 +1270,7 @@ class BlockPred extends React.Component {
       body: queryString.stringify({
         type: 'load_time_wait',  
         point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
+        type_order: cartData.orderType,
         city_id: itemsStore.getCity(),
       })
     }).then(res => res.json()).then(json => {

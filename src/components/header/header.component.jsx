@@ -107,16 +107,21 @@ export class Header extends React.Component {
   saveNumber(event){
     
     let number = event.target.value;
-            
-    number = number.split(' ').join('');
-    number = number.split('(').join('');
-    number = number.split(')').join('');
-    number = number.split('-').join('');
-    
-    number = number.slice(1);
-    
-    itemsStore.clientNumber = '8' + number;
-    localStorage.setItem('clientNumber', '8' + number)
+          
+    if( number.length > 0 ){
+      number = number.split(' ').join('');
+      number = number.split('(').join('');
+      number = number.split(')').join('');
+      number = number.split('-').join('');
+      
+      number = number.slice(1);
+      
+      itemsStore.clientNumber = '8' + number;
+      localStorage.setItem('clientNumber', '8' + number)
+    }else{
+      itemsStore.clientNumber = '';
+      localStorage.setItem('clientNumber', '')
+    }
   }
     
   checkPromo(event){
@@ -274,7 +279,7 @@ export class Header extends React.Component {
                 <Grid item xs={3} style={{ paddingTop: 14 }}>
                   <InputMask 
                     className="InputMask"
-                    mask="8 (999) 999-99-99" 
+                    mask="9 (999) 999-99-99" 
                     placeholder="8 (999) 999-99-99" 
                     style={{ marginRight: 4, marginLeft: 4}}
                     value={this.state.number} 
