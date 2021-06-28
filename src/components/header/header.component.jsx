@@ -239,7 +239,7 @@ export class Header extends React.Component {
             { this.state.page == 'createOrder' ?
               <Grid container className='headerInput'>
                 
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <FormControl className={this.state.classes.formControl}>
                     <InputLabel style={{ paddingBottom: 2 }}>Город</InputLabel>
                     <Select
