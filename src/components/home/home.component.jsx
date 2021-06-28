@@ -1863,7 +1863,7 @@ class CreateOrder extends React.Component {
   
   render() {
     return (
-      <Grid container spacing={0}>
+      <Grid container spacing={0} style={{ width: '100vw', height: '100vh' }}>
         
         <Backdrop open={this.state.spiner} style={{ zIndex: 99, color: '#fff' }}>
           <CircularProgress color="inherit" />
