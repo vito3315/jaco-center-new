@@ -66,7 +66,7 @@ export class Auth extends React.Component {
         itemsStore.setToken(json.token, json.name);
        
         setTimeout( () => {
-          window.location.reload();
+          window.location.href = '/';
         }, 500 )
         
       }else{

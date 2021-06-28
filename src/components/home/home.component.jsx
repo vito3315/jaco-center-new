@@ -1043,13 +1043,16 @@ class BlockPic extends React.Component {
           setTimeout( () => {
             let choosePoint = this.state.pic_point.find( (item) => parseInt(item.id) == parseInt(cartData.orderPic) );
         
-            if( choosePoint ){
-              this.choosePic(choosePoint)
-            }else{
-              this.setState({
-                orderPic: 0,
-                picPointInfo: null
-              })
+            if( this.state.orderPic != choosePoint ){
+            
+              if( choosePoint ){
+                this.choosePic(choosePoint)
+              }else{
+                this.setState({
+                  orderPic: 0,
+                  picPointInfo: null
+                })
+              }
             }
           }, 500 )
         }
@@ -1153,9 +1156,18 @@ class BlockPred extends React.Component {
     autorun(() => {
       let cartData = itemsStore.getCartData();
       let test = itemsStore.cart_data;
+      
+      console.log( '1' )
+      console.log( '_isMounted', this._isMounted )
+      console.log( '_thisEdit', this._thisEdit )
+      
       if( this._isMounted ){
         if( !this._thisEdit ){
+          
+          console.log( '2' )
+          
           this.startData();
+          this.loadTimeWait();
         }
       }
     })
@@ -1490,6 +1502,7 @@ class CreateOrder extends React.Component {
     this._isMounted = true;
     
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
+    this.checkLogin();
     
     let cartData = itemsStore.getCartData();
     

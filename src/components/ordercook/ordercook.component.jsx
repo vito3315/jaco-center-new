@@ -255,6 +255,7 @@ class OrderCook extends React.Component {
     })
     
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
+    this.checkLogin();
     
     fetch('https://jacofood.ru/src/php/test_app.php', {
       method: 'POST',
