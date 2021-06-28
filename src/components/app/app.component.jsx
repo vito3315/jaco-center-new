@@ -42,30 +42,8 @@ export class App extends React.Component {
     constructor(props) {
         super(props);
         
-        this.state = {      
-            categoryItems: [],  
-            cartItems: [],
-            activePage: '',
-            is_load: false,
-            openCity: false,
-            cityName: '',
-            testData: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            cityList: [],
+        this.state = {    
             
-            openLogin: false,
-            userLogin: '',
-            userLoginFormat: '',
-            userCode: '',
-            
-            stage_1: true,
-            stage_2: false,
-            
-            timerSMS: 59,
-            errPhone: '',
-            errSMS: '',
-            userName: '',
-            
-            soc_link: null
         };
     }
 
@@ -75,36 +53,35 @@ export class App extends React.Component {
 
     render() {
         
-        if( !itemsStore.getToken() ){
-            return (
-                <Auth />
-            )
-        }else{
+        return (
+            <Provider { ...stores }>
+                <Switch>
+                    <Route
+                        path='/'
+                        exact={ true }
+                        component={ Home }
+                    />
+                    <Route
+                        path='/orders'
+                        exact={ true }
+                        component={ Orders }
+                    />
+                    <Route
+                        path='/ordercook'
+                        exact={ true }
+                        component={ ordercook }
+                    />
+                    <Route
+                        path='/auth'
+                        exact={ true }
+                        component={ Auth }
+                    />
+                    <Route
+                        component={ NotFound }
+                    />
+                </Switch>
+            </Provider>
+        );
         
-            return (
-                <Provider { ...stores }>
-                    <Switch>
-                        <Route
-                            path='/'
-                            exact={ true }
-                            component={ Home }
-                        />
-                        <Route
-                            path='/orders'
-                            exact={ true }
-                            component={ Orders }
-                        />
-                        <Route
-                            path='/ordercook'
-                            exact={ true }
-                            component={ ordercook }
-                        />
-                        <Route
-                            component={ NotFound }
-                        />
-                    </Switch>
-                </Provider>
-            );
-        }
     }
 }

@@ -1478,7 +1478,8 @@ class CreateOrder extends React.Component {
         localStorage.removeItem('token');
         clearInterval(this.interval)
         setTimeout( () => {
-          window.location.reload();
+          //window.location.reload();
+          window.location.href = '/auth'
         }, 500 )
       }
     })
