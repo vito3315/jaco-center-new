@@ -1,23 +1,26 @@
 const { Home } = require( '../src/components/home' );
 const { NotFound } = require( '../src/components/app' );
-/*const { Item } = require( '../src/components/item' );
-const { Contact } = require( '../src/components/contact' );
-const { Actii } = require( '../src/components/actii' );
-const { Profile } = require( '../src/components/profile' );
-
-const { Cart } = require( '../src/components/cart' );
-
-const { PageAbout } = require( '../src/components/pageAbout' );
-const { PageJob } = require( '../src/components/pageJob' );
-const { PageInstPay } = require( '../src/components/pageInstPay' );
-const { PageOferta } = require( '../src/components/pageOferta' );
-const { PagePolitika } = require( '../src/components/pagePolitika' );*/
+const { Orders } = require( '../src/components/orders' );
+const { ordercook } = require( '../src/components/ordercook' );
+const { Auth } = require( '../src/components/auth' );
 
 module.exports = [
     {
         path: '/',
         exact: true,
         component: Home,
+        code: 200
+    },
+    {
+        path: '/orders',
+        exact: true,
+        component: Orders,
+        code: 200
+    },
+    {
+        path: '/ordercook',
+        exact: true,
+        component: ordercook,
         code: 200
     },
     {
