@@ -596,7 +596,7 @@ class BlockAddrCustom extends React.Component {
           city_id: itemsStore.getCity(),
           street: street,
           home: this.state.newAddrHome,
-          user_id: -1
+          user_id: itemsStore.getToken()
         })
       }).then(res => res.json()).then(json => {
         if( !json.st ){
@@ -1537,7 +1537,7 @@ class CreateOrder extends React.Component {
       body: queryString.stringify({
         type: 'get_by_mi', 
         city_id: itemsStore.getCity(),
-        user_id: 0
+        user_id: itemsStore.getToken()
       })
     }).then(res => res.json()).then(json => {
       this.setState({
@@ -1588,7 +1588,7 @@ class CreateOrder extends React.Component {
             body: queryString.stringify({
               type: 'get_by_mi', 
               city_id: thisCity,
-              user_id: 0
+              user_id: itemsStore.getToken()
             })
           }).then(res => res.json()).then(json => {
             this.setState({
@@ -1753,7 +1753,7 @@ class CreateOrder extends React.Component {
         body: queryString.stringify({
           type: 'createOrder', 
           city_id: itemsStore.getCity(),
-          user_id: -1,
+          user_id: itemsStore.getToken(),
         
           timePred: JSON.stringify( { value: parseInt( cartData.orderTimes ) == 0 ? 0 : cartData.orderPredDay + ' ' + cartData.orderPredTime } ),
           typeOrder: cartData.orderType,

@@ -391,7 +391,7 @@ class OrdersStat extends React.Component {
           'Content-Type':'application/x-www-form-urlencoded'},
         body: queryString.stringify({
           type: 'close_order', 
-          user_id: -1,
+          user_id: itemsStore.getToken(),
           order_id: this.state.showOrder.order.order_id,
           point_id: this.state.showOrder.order.point_id,
           ans: deltype.label
