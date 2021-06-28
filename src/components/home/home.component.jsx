@@ -1753,6 +1753,7 @@ class CreateOrder extends React.Component {
           'Content-Type':'application/x-www-form-urlencoded'},
         body: queryString.stringify({
           type: 'createOrder', 
+          typeCreate: 'center',
           city_id: itemsStore.getCity(),
           user_id: itemsStore.getToken(),
         
