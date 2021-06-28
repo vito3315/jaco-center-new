@@ -1,28 +1,16 @@
 import * as React from "react"
 import clsx from 'clsx';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
-import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 
+import AppBar from '@material-ui/core/AppBar';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -38,17 +26,15 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import itemsStore from '../../stores/items-store';
 import { autorun } from "mobx"
 
-import DraftsIcon from '@material-ui/icons/Drafts';
-import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -58,7 +44,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -66,11 +51,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
-
-
-import InputMask from "react-input-mask";
+import { Header } from '../header';
 
 const queryString = require('query-string');
 
@@ -192,10 +174,14 @@ class BlockItems extends React.Component {
   constructor(props) {
     super(props);
     
+    console.log( this.props.allItems ) 
+    
     this.state = {
       classes: this.props.classes,
+      allItems: this.props.allItems,
       activeCat: 0,
       cats: this.props.cats,
+      thisItem: ''
     };
   }
   
@@ -229,9 +215,35 @@ class BlockItems extends React.Component {
     itemsStore.AddItem(item_id);
   }
   
+  addItemCustmo(event, value){
+    
+    event.preventDefault();
+    
+    let additem = this.state.allItems.find( (item) => item.name == value );
+    this.addToCart(additem.id);
+  }
+  
   render(){
     return (
       <>
+        
+        <Autocomplete
+          freeSolo
+          size="small"
+          //id="newAddrStreet"
+          style={{ width: '30%', marginLeft: 16, marginBottom: 8 }}
+          //defaultValue={this.state.defValStreet} 
+          
+          //value={this.state.thisItem} 
+          onChange={ this.addItemCustmo.bind(this) }
+          
+          //onBlur={this.checkNewAddr.bind(this)}
+          options={this.state.allItems.map((option) => option.name)}
+          renderInput={(params) => (
+            <TextField {...params} label="Все позиции" margin="normal" variant="outlined" />
+          )}
+        />
+      
         <AppBar position="static">
           <Tabs value={this.state.activeCat} onChange={this.changeCat} aria-label="simple tabs example">
             { this.state.cats.map((item, key) =>
@@ -505,7 +517,7 @@ class BlockTable extends React.Component {
   render(){
     return (
       <Paper style={{ widows: '100%' }}>
-        <TableContainer style={{ maxHeight: 300 }}>
+        <TableContainer style={{ maxHeight: 350 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -1193,7 +1205,7 @@ class BlockPred extends React.Component {
         type: 'get_times_pred_web',  
         point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
         type_order: cartData.orderType+1,
-        date: cartData.date,
+        date: this.state.date,
         cart: JSON.stringify( my_cart ),
       })
     }).then(res => res.json()).then(json => {
@@ -1397,11 +1409,14 @@ class CreateOrder extends React.Component {
   startOrderInterval = 90;
   startOrderIntervalTimer = null;
   
+  interval = null;
+  
   constructor(props) {
     super(props);
     
     this.state = {
       classes: this.props.classes,
+      allItems: [],
       
       newOrder: null,
       
@@ -1444,10 +1459,36 @@ class CreateOrder extends React.Component {
   
   componentWillUnmount(){
     this._isMounted = false;
+    clearInterval(this.interval)
+  }
+  
+  checkLogin(){
+    fetch('https://jacofood.ru/src/php/test_app.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+        type: 'check_login_center', 
+        token: itemsStore.getToken()
+      })
+    }).then(res => res.json()).then(json => {
+      if( json === true ){
+        
+      }else{
+        localStorage.removeItem('token');
+        clearInterval(this.interval)
+        setTimeout( () => {
+          window.location.reload();
+        }, 500 )
+      }
+    })
+    .catch(err => { });
   }
   
   componentDidMount = () => {
     this._isMounted = true;
+    
+    this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     
     let cartData = itemsStore.getCartData();
     
@@ -1482,6 +1523,7 @@ class CreateOrder extends React.Component {
       this.setState({
         cats: json.arr,
         cityList: json.city_list,
+        allItems: json.all_items
       })
       itemsStore.setAllItemsCat(json.arr);
       itemsStore.setAllItems(json.all_items);
@@ -1828,7 +1870,7 @@ class CreateOrder extends React.Component {
         </Backdrop>
         
         <Grid item xs={8} style={{ paddingRight: 16 }}>
-          { this.state.cityList.length > 0 ? <Header classes={this.state.classes} cityList={this.state.cityList} /> : null }
+          { this.state.cityList.length > 0 ? <Header classes={this.state.classes} cityList={this.state.cityList} page="createOrder" /> : null }
         </Grid>
         <Grid item xs={8} style={{ padding: '24px 8px 0px 16px' }}>
           <BlockTable classes={this.state.classes} />
@@ -1902,8 +1944,8 @@ class CreateOrder extends React.Component {
           
         </Grid>
         <Grid item xs={12} style={{ padding: '16px 0px 0px 0px' }}>
-          {this.state.cats.length > 0 ?
-            <BlockItems classes={this.state.classes} cats={this.state.cats} />
+          {this.state.cats.length > 0 && this.state.allItems.length > 0 ?
+            <BlockItems classes={this.state.classes} cats={this.state.cats} allItems={this.state.allItems} />
               :
             null
           }
@@ -2046,287 +2088,6 @@ class CreateOrder extends React.Component {
       
       
       </Grid>
-    )
-  }
-}
-
-class Header extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      cityList: this.props.cityList,
-      city: itemsStore.getCity(),
-      
-      number: '',
-      
-      orderPromoText: '',
-      promo_name: '',
-      promoST: false,
-      
-      top: false,
-      left: false,
-      bottom: false,
-      right: false,
-    };
-  }
-  
-  componentDidMount = () => {
-    this._isMounted = true;
-    
-    let defValue = '';
-  
-    if( localStorage.getItem('clientNumber') ){
-      defValue = localStorage.getItem('clientNumber');
-      itemsStore.clientNumber = defValue;
-      
-      this.setState({
-        number: defValue
-      })
-    }
-    
-    if( localStorage.getItem('promo_name') ){
-      let promo = localStorage.getItem('promo_name');
-      
-      setTimeout( ()=>{
-        this.setState({
-          promo_name: promo
-        })
-        
-        this.checkPromo( {target: {value: promo}} )
-      }, 500 )
-      
-    }
-    
-    autorun(() => {
-      if( itemsStore.clear === true ){
-        
-        this.clear();
-        
-        itemsStore.clear = false;
-      }
-    })
-  }
-  
-  saveNumber(event){
-    
-    let number = event.target.value;
-            
-    number = number.split(' ').join('');
-    number = number.split('(').join('');
-    number = number.split(')').join('');
-    number = number.split('-').join('');
-    
-    number = number.slice(1);
-    
-    itemsStore.clientNumber = '8' + number;
-    localStorage.setItem('clientNumber', '8' + number)
-  }
-  
-  checkPromo(event){
-    
-    let promo = event.target.value;
-    
-    fetch('https://jacofood.ru/src/php/test_app.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'get_promo', 
-        city_id: itemsStore.getCity(),
-        promo_name: promo
-      })
-    }).then(res => res.json()).then(json => {
-      itemsStore.setPromo( JSON.stringify(json), promo );
-      let check_promo = itemsStore.checkPromo();
-        
-      if( check_promo.st === false ){
-        localStorage.removeItem('promo_name')
-      }
-      
-      if( promo.length == 0 ){
-        this.setState({
-          orderPromoText: '',
-          promoST: false
-        })
-      }else{
-        this.setState({
-          orderPromoText: check_promo.text,
-          promoST: check_promo.st
-        })
-      }
-    })
-  }
-  
-  toggleDrawer2(anchor, open, event){
-    this.setState({
-      [anchor]: open
-    })
-  };
-  
-  clear(){
-    itemsStore.clientNumber = '';
-    localStorage.removeItem('clientNumber')
-    
-    itemsStore.setItems([]);
-    
-    let data = {
-      orderType: '0',
-      orderAddr: '',
-      orderPic: 0,
-      orderComment: '',
-      
-      orderTimes: 0,
-      orderPredDay: '',
-      orderPredTime: '',
-      
-      orderPay: '',
-      orderSdacha: '',
-    };
-    
-    itemsStore.saveCartData(data);
-    
-    this.checkPromo({ target: {value: ''} })
-    
-    this.setState({
-      number: '',
-      promo_name: '',
-      orderPromoText: '',
-    })
-  }
-  
-  changeCity(event){
-    let city = event.target.value;
-    
-    this.setState({ city: city });
-    itemsStore.setCity(city)
-    
-    localStorage.setItem('cityID', city)
-    
-    let data = {
-      orderType: '0',
-      orderAddr: '',
-      orderPic: 0,
-      orderComment: '',
-      
-      orderTimes: 0,
-      orderPredDay: '',
-      orderPredTime: '',
-      
-      orderPay: '',
-      orderSdacha: '',
-    };
-    
-    itemsStore.saveCartData(data);
-    
-    setTimeout( () => {
-      location.reload();
-    }, 500 )
-  }
-  
-  render() {
-    return (
-      <div className={this.state.classes.root}>
-        <AppBar position="static" style={{ backgroundColor: '#fff', color: '#000' }}>
-          <Toolbar style={{ minHeight: 48, height: 48 }}>
-            <IconButton edge="start" onClick={this.toggleDrawer2.bind(this, 'left', true)} color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-            <Grid container className='headerInput'>
-              
-              <Grid item xs={3}>
-                <FormControl className={this.state.classes.formControl}>
-                  <InputLabel style={{ paddingBottom: 2 }}>Город</InputLabel>
-                  <Select
-                    style={{ marginTop: 9 }}
-                    value={this.state.city}
-                    onChange={ this.changeCity.bind(this) }
-                  >
-                    { this.state.cityList.map( (item, key) =>
-                      <MenuItem key={key} value={item.id}>{item.name}</MenuItem>
-                    ) }
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'center' }}>
-                <TextField label="Промокод" value={ this.state.promo_name } onChange={ event => this.setState({ promo_name: event.target.value }) } onBlur={this.checkPromo.bind(this)} style={{ marginRight: 4, marginLeft: 4, marginBottom: 6}} />
-                
-                <HtmlTooltip
-                  placement="bottom"
-                  title={
-                    <React.Fragment>
-                      <Typography color="inherit" className={this.state.classes.size1}>{this.state.orderPromoText}</Typography>
-                    </React.Fragment>
-                  }
-                >
-                  <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8, backgroundColor: this.state.promoST === false && this.state.orderPromoText.length == 0 ? 'gray' : this.state.promoST === false && this.state.orderPromoText.length > 0 ? 'red' : 'green' }}>?</Button>
-                </HtmlTooltip>
-                
-                <Button variant="contained" color="primary" className="btnClear" style={{ padding: '2px 6px', minWidth: 30 }} onClick={ this.clear.bind(this) } >
-                  <CloseIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={3} style={{ paddingTop: 14 }}>
-                <InputMask 
-                  className="InputMask"
-                  mask="8 (999) 999-99-99" 
-                  placeholder="8 (999) 999-99-99" 
-                  style={{ marginRight: 4, marginLeft: 4}}
-                  value={this.state.number} 
-                  onChange={ (event) => this.setState({ number: event.target.value }) }
-                  onBlur={this.saveNumber.bind(this)}
-                />
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-        
-        
-          
-        
-        
-        <Drawer anchor={'left'} open={this.state.left} onClose={this.toggleDrawer2.bind(this, 'left', false)}>
-          <div
-            className={clsx(this.state.classes.list)}
-            role="presentation"
-            //onClick={this.toggleDrawer2(this, 'left', false)}
-            //onKeyDown={this.toggleDrawer(this, 'left', false)}
-          >
-            <List>
-              <ListItem button>
-                <Link
-                  to={ '/' }
-                  style={{ textDecoration: 'none' }}
-                >
-                  <Typography variant="body1">Оформить заказ</Typography>
-                </Link>
-              </ListItem>
-              <ListItem button>
-              <Link
-                  to={ '/orders' }
-                  style={{ textDecoration: 'none' }}
-                >
-                  <Typography variant="body1">Список заказов</Typography>
-                </Link>
-              </ListItem>
-              <ListItem button>
-                <ListItemText primary={'111'} />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
-            </List>
-          </div>
-        </Drawer>      
-      </div>
     )
   }
 }

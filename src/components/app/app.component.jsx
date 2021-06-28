@@ -2,8 +2,9 @@ import React from 'react';
 import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import { Home } from '../home';
-
 import { Orders } from '../orders';
+import { ordercook } from '../ordercook';
+import { Auth } from '../auth';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -72,8 +73,14 @@ export class App extends React.Component {
         
     }
 
-    
     render() {
+        
+        if( !itemsStore.getToken() ){
+            return (
+                <Auth />
+            )
+        }
+        
         return (
             <Provider { ...stores }>
                 <Switch>
@@ -86,6 +93,11 @@ export class App extends React.Component {
                         path='/orders'
                         exact={ true }
                         component={ Orders }
+                    />
+                    <Route
+                        path='/ordercook'
+                        exact={ true }
+                        component={ ordercook }
                     />
                     <Route
                         component={ NotFound }

@@ -558,8 +558,31 @@ class ItemsStore {
   
   setAllItems = (items) => {
     this.allItems = JSON.stringify(items);
+    
+    this.checkCart();
   };
 
+  checkCart(){
+    let cart = this.getItems();
+    let allItems = this.getAllItems();
+    let new_cart = [];
+    
+    cart.forEach(item => {
+      
+      let originalItem = allItems.find( (it) => parseInt(it.id) == parseInt(item.item_id) )
+      
+      new_cart.push({
+        name: item.name,
+        item_id: item.item_id,
+        count: item.count,
+        one_price: parseInt( originalItem.price ),
+        all_price: parseInt( originalItem.price ) * parseInt( item.count )
+      })
+    });
+    
+    this.setItems( new_cart );
+  }
+  
   getItems(){
     return this.items.length == 0 ? [] : JSON.parse(this.items, true);
   };
@@ -910,6 +933,7 @@ class ItemsStore {
     if (typeof window !== 'undefined') {
       if( localStorage.getItem('my_cart') ){
         let cart = JSON.parse(localStorage.getItem('my_cart'));
+        let allItems = this.getAllItems();
         let new_cart = [];
         
         cart.forEach(item => {
@@ -936,8 +960,6 @@ class ItemsStore {
         }, 300)
       }
     }
-    
-    
     
     makeAutoObservable (this);
   }

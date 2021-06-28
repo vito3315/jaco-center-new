@@ -1,27 +1,12 @@
 import * as React from "react"
 import clsx from 'clsx';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
-import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
-
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -29,26 +14,15 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import InfoIcon from '@material-ui/icons/Info';
-
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import itemsStore from '../../stores/items-store';
-import { autorun } from "mobx"
-
-import DraftsIcon from '@material-ui/icons/Drafts';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import CloseIcon from '@material-ui/icons/Close';
 
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -58,16 +32,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 import Dialog from '@material-ui/core/Dialog';
 
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
 
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -85,14 +55,12 @@ import DateFnsUtils from '@date-io/date-fns';
 //import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import InputMask from "react-input-mask";
-
 const queryString = require('query-string');
 
+import { Header } from '../header';
 
 const useStyles = makeStyles((theme) => ({
   root2: {
@@ -198,86 +166,6 @@ function a11yProps(index) {
   };
 }
 
-class Header extends React.Component {
-  _isMounted = false;
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      
-      top: false,
-      left: false,
-      bottom: false,
-      right: false,
-    };
-  }
-  
-  componentDidMount = () => {
-    this._isMounted = true;
-  }
-  
-  toggleDrawer2(anchor, open, event){
-    this.setState({
-      [anchor]: open
-    })
-  };
-  
-  render() {
-    return (
-      <div className={this.state.classes.root}>
-        <AppBar position="static" style={{ backgroundColor: '#fff', color: '#000' }}>
-          <Toolbar style={{ minHeight: 48, height: 48 }}>
-            <IconButton edge="start" onClick={this.toggleDrawer2.bind(this, 'left', true)} color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        
-        
-          
-        
-        
-        <Drawer anchor={'left'} open={this.state.left} onClose={this.toggleDrawer2.bind(this, 'left', false)}>
-          <div
-            className={clsx(this.state.classes.list)}
-            role="presentation"
-            //onClick={this.toggleDrawer2(this, 'left', false)}
-            //onKeyDown={this.toggleDrawer(this, 'left', false)}
-          >
-            <List>
-              <ListItem button>
-                <Link
-                  to={ '/' }
-                  style={{ textDecoration: 'none' }}
-                >
-                  <Typography variant="body1">Оформить заказ</Typography>
-                </Link>
-              </ListItem>
-              <ListItem button>
-                <ListItemText primary={'Список заказов'} />
-              </ListItem>
-              <ListItem button>
-                <ListItemText primary={'111'} />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
-            </List>
-          </div>
-        </Drawer>      
-      </div>
-    )
-  }
-}
-
 function formatDate(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
@@ -293,6 +181,8 @@ function formatDate(date) {
 }
 
 class OrdersStat extends React.Component {
+  interval = null;
+  
   constructor(props) {
     super(props);
         
@@ -328,7 +218,37 @@ class OrdersStat extends React.Component {
     };
   }
     
+  componentWillUnmount(){
+    clearInterval(this.interval)
+  }
+  
+  checkLogin(){
+    fetch('https://jacofood.ru/src/php/test_app.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+        type: 'check_login_center', 
+        token: itemsStore.getToken()
+      })
+    }).then(res => res.json()).then(json => {
+      if( json === true ){
+        
+      }else{
+        localStorage.removeItem('token');
+        clearInterval(this.interval)
+        setTimeout( () => {
+          window.location.reload();
+        }, 500 )
+      }
+    })
+    .catch(err => { });
+  }
+  
   componentDidMount = () => {
+    
+    this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
+    
     fetch('https://jacofood.ru/src/php/test_app.php', {
       method: 'POST',
       headers: {
@@ -345,24 +265,26 @@ class OrdersStat extends React.Component {
       itemsStore.setAllItems(json.all_items);
       
       this.getPoints();
-    })
-    .catch(err => { });
+    }).catch(err => { });
   }
     
   handleDateChange(date){
-    
-    console.log( date )
-    
     this.setState({
-      selectedDate: date
+      selectedDate: formatDate(date)
     })
+    
+    setTimeout( () => {
+      this.getOrders();
+    }, 500 )
   };
   
   changeCity(event){
     let city = event.target.value;
     
     this.setState({ selectedCity: city });
-    this.getPoints();
+    setTimeout( () => {
+      this.getPoints();  
+    },500 )
   }
   
   getPoints(){
@@ -377,7 +299,12 @@ class OrdersStat extends React.Component {
     }).then(res => res.json()).then(json => {
       this.setState({
         points: json,
+        point: json[0]
       })
+      
+      setTimeout( () => {
+        this.getOrders();
+      }, 500 )
     })
     .catch(err => { });
   }
@@ -451,7 +378,44 @@ class OrdersStat extends React.Component {
   }
   
   closeOrderTrue(){
+    let deltype = this.state.radiogroup_options.find( (item) => item.id == this.state.typeDel );
+        
+    if( deltype.id == '4' ){
+      deltype.label = this.state.textDel;
+    }
     
+    if (confirm("Отменить заказ #"+this.state.showOrder.order.order_id)) {
+      fetch('https://jacofood.ru/src/php/test_app.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+        body: queryString.stringify({
+          type: 'close_order', 
+          user_id: -1,
+          order_id: this.state.showOrder.order.order_id,
+          point_id: this.state.showOrder.order.point_id,
+          ans: deltype.label
+        })
+      }).then(res => res.json()).then(json => {
+        
+        console.log( json )
+        
+        setTimeout(() => {
+          if( json['st'] ){
+            this.setState({
+              delOrder: false,
+              openDialog: false,
+            });
+            
+            this.getOrders();
+          }else{
+            
+            alert( json['text'] );
+            
+          }
+        }, 300);
+      });
+    }
   }
   
   changeAddr = (event) => {
@@ -515,6 +479,28 @@ class OrdersStat extends React.Component {
     this.setState({ textDel: event.target.value })
   }
   
+  changeNumber(event){
+    let orders = document.querySelectorAll('.order');
+    
+    var order = event.target.value;
+		
+		if( order.length == 0 ){
+			orders.forEach( item => {
+        item.classList.remove("dis_none");
+			});
+		}else{
+      orders.forEach( item => {
+        let number = item.getAttribute('datanumber');
+        
+				if( number.indexOf(order) >= 0 ){
+          item.classList.remove("dis_none");
+				}else{
+          item.classList.add("dis_none");
+        }
+      });
+    }
+  }
+  
   render() {
     return (
       <Grid container spacing={0}>
@@ -524,7 +510,7 @@ class OrdersStat extends React.Component {
         </Backdrop>
         
         <Grid item xs={12}>
-          { this.state.cityList.length > 0 ? <Header classes={this.state.classes} /> : null }
+          { this.state.cityList.length > 0 ? <Header classes={this.state.classes} cityList={this.state.cityList} page="statOrder" /> : null }
         </Grid>
         <Grid item xs={4}>
           
@@ -549,7 +535,7 @@ class OrdersStat extends React.Component {
                 format="yyyy-MM-dd"
                 margin="normal"
                 id="date-picker-inline"
-                label="Date picker inline"
+                label="Дата"
                 value={this.state.selectedDate}
                 onChange={this.handleDateChange.bind(this)}
                 KeyboardButtonProps={{
@@ -559,6 +545,15 @@ class OrdersStat extends React.Component {
             </Grid>
           </MuiPickersUtilsProvider>
         
+        </Grid>
+        
+        <Grid item xs={3}>
+          <TextField 
+            label="Номер телефона" 
+            //variant="inlined" 
+            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            onBlur={this.changeNumber.bind(this)}
+          />
         </Grid>
         
         <Grid item xs={12}>
@@ -595,8 +590,8 @@ class OrdersStat extends React.Component {
                   <TableBody>
                     
                     { this.state.orders.map( (item, key) =>
-                      <TableRow key={key}  style={ item.is_delete == 1 ? { backgroundColor: 'red', color: '#fff' } : {} }>
-                        <TableCell style={{ color: 'inherit' }} onClick={ this.getOrder.bind(this, item.id) }>{item.id}</TableCell>
+                      <TableRow key={key} className="order" id={item.id} datanumber={item.number} style={ item.is_delete == 1 ? { backgroundColor: 'red', color: '#fff' } : {} }>
+                        <TableCell style={{ color: 'inherit', cursor: 'pointer' }} onClick={ this.getOrder.bind(this, item.id) }>{item.id}</TableCell>
                         <TableCell style={{ color: 'inherit' }}>{item.type_user}</TableCell>
                         <TableCell style={{ color: 'inherit' }}>{item.number}</TableCell>
                         <TableCell style={{ color: 'inherit' }}>{item.street} {item.home}</TableCell>
