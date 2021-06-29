@@ -610,7 +610,7 @@ class BlockAddrCustom extends React.Component {
         })
       }).then(res => res.json()).then(json => {
         if( !json.st ){
-            
+            alert( json.text )
         }else{
           this.setState({
             newAddrInfo: json.res
@@ -662,6 +662,9 @@ class BlockAddrCustom extends React.Component {
       
         let test = itemsStore.cart_data;
         
+        console.log( 'custom', cartData )
+        
+        
         if( cartData.orderType || cartData.orderType == 0 ){
           this.setState({
             newAddrStreet: cartData.orderAddr && cartData.orderAddr.street ? cartData.orderAddr.street : '',
@@ -669,7 +672,7 @@ class BlockAddrCustom extends React.Component {
             pd: cartData.orderAddr && cartData.orderAddr.pd ? cartData.orderAddr.pd : '',
             et: cartData.orderAddr && cartData.orderAddr.et ? cartData.orderAddr.et : '',
             kv: cartData.orderAddr && cartData.orderAddr.kv ? cartData.orderAddr.kv : '',
-            newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.fake_dom) == 1 ? false : true,
+            newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 1 ? false : true,
           })
           
           let allPrice = itemsStore.getAllPrice();
@@ -727,23 +730,27 @@ class BlockAddrCustom extends React.Component {
   saveData(){
     let cartData = itemsStore.getCartData();
     
+    console.log( '555', this.state.newAddrInfo )
+    
+    let addrInfo = this.state.newAddrInfo ? this.state.newAddrInfo : cartData.orderAddr;
+    
     setTimeout(()=>{
         let data = {
             orderType: 0,
             orderAddr: {
               id: -1,
               //city_name: itemsStore.getCityRU(),
-              street: this.state.newAddrInfo ? this.state.newAddrInfo.street : '',
-              home: this.state.newAddrInfo ? this.state.newAddrInfo.home : '',
+              street: addrInfo.street ? addrInfo.street : '',
+              home: addrInfo.home ? addrInfo.home : '',
               kv: this.state.kv,
               pd: this.state.pd,
               et: this.state.et,
               dom_true: this.state.newAddrDom ? 0 : 1,
-              free_drive: this.state.newAddrInfo ? this.state.newAddrInfo.free_drive : 0,
-              sum_div: this.state.newAddrInfo ? this.state.newAddrInfo.sum_div : 0,
-              point_id: this.state.newAddrInfo ? this.state.newAddrInfo.point_id : 0,
-              xy: this.state.newAddrInfo ? this.state.newAddrInfo.xy : '',
-              pay_active: this.state.newAddrInfo ? this.state.newAddrInfo.pay_active : 0,
+              free_drive: addrInfo.free_drive ? addrInfo.free_drive : 0,
+              sum_div: addrInfo.sum_div ? addrInfo.sum_div : 0,
+              point_id: addrInfo.point_id ? addrInfo.point_id : 0,
+              xy: addrInfo.xy ? addrInfo.xy : '',
+              pay_active: addrInfo.pay_active ? addrInfo.pay_active : 0,
             },
             orderPic: cartData && cartData.orderPic ? cartData.orderPic : 0,
             orderComment: cartData && cartData.orderComment ? cartData.orderComment : '',
@@ -861,12 +868,16 @@ class BlockAddrMy extends React.Component {
       itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
     }
     
+    console.log( 'addr item', item )
+    
     if( key != this.state.chooseAddr ){
       this.setState({
         chooseAddr: key
       })
       
       let cartData = itemsStore.getCartData();
+      
+      
       
       if( cartData.orderType || cartData.orderType == 0 ){
           
@@ -1170,11 +1181,12 @@ class BlockPred extends React.Component {
       
       if( this._isMounted ){
         
-        console.log( cartData )
+        console.log( 'test', cartData )
         
         if( (cartData.orderType == 0 && !cartData.orderAddr.point_id) || (cartData.orderType == 1 && cartData.orderPic == 0) ){
           this.startData();
-          console.log( 'clear111' )
+          console.log( 'clear111', (cartData.orderType == 0 && !cartData.orderAddr.point_id), (cartData.orderType == 1 && cartData.orderPic == 0) )
+          console.log( 'clear222', cartData.orderAddr.point_id, (cartData.orderType == 1 && cartData.orderPic == 0) )
         }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
