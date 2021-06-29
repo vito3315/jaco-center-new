@@ -216,7 +216,9 @@ class OrdersStat extends React.Component {
         {id: '4', label: 'Другое', value: 0 },
       ],
       textDel: '',
-      typeDel: -1
+      typeDel: -1,
+      
+      number: ''
     };
   }
     
@@ -342,6 +344,10 @@ class OrdersStat extends React.Component {
         this.setState({
           orders: json.orders,
         })
+        
+        setTimeout( () => {
+          this.changeNumber()
+        }, 100 )
       })
       .catch(err => { });
     }, 500 )
@@ -484,10 +490,10 @@ class OrdersStat extends React.Component {
     this.setState({ textDel: event.target.value })
   }
   
-  changeNumber(event){
+  changeNumber(){
     let orders = document.querySelectorAll('.order');
     
-    var order = event.target.value;
+    var order = this.state.number;
 		
 		if( order.length == 0 ){
 			orders.forEach( item => {
@@ -561,6 +567,8 @@ class OrdersStat extends React.Component {
             label="Номер телефона" 
             //variant="inlined" 
             style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            value={ this.state.number }
+            onChange={ (event) => this.setState({ number: event.target.value }) }
             onBlur={this.changeNumber.bind(this)}
           />
         </Grid>
@@ -656,6 +664,11 @@ class OrdersStat extends React.Component {
                   { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
                       <Typography variant="h6" component="span">Промокод: {this.state.showOrder.order.promo_name}</Typography>
                   }
+                  
+                  { this.state.showOrder.order.comment == null || this.state.showOrder.order.comment.length == 0 ? null :
+                      <Typography variant="h6" component="span">Комментарий: {this.state.showOrder.order.comment}</Typography>
+                  }
+                  
                   { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
                       <Typography variant="h6" component="span" className="noSpace">{this.state.showOrder.order.promo_text}</Typography>
                   }
