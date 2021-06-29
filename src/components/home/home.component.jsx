@@ -217,12 +217,20 @@ class BlockItems extends React.Component {
     itemsStore.AddItem(item_id);
   }
   
-  addItemCustmo(event, value){
-    
-    event.preventDefault();
-    
+  addItemCustom(event, value){
     let additem = this.state.allItems.find( (item) => item.name == value );
     this.addToCart(additem.id);
+    
+    this.setState({
+      thisItem: additem.name
+    })
+    
+    setTimeout( () => {
+      this.setState({
+        thisItem: ''
+      })
+    }, 100 )
+    
   }
   
   render(){
@@ -236,10 +244,10 @@ class BlockItems extends React.Component {
           style={{ width: '30%', marginLeft: 16, marginBottom: 8 }}
           //defaultValue={this.state.defValStreet} 
           
-          //value={this.state.thisItem} 
-          onChange={ this.addItemCustmo.bind(this) }
+          value={this.state.thisItem} 
+          onChange={ this.addItemCustom.bind(this) }
           
-          //onBlur={this.checkNewAddr.bind(this)}
+          //onBlur={this.clearFace.bind(this)}
           options={this.state.allItems.map((option) => option.name)}
           renderInput={(params) => (
             <TextField {...params} label="Все позиции" margin="normal" variant="outlined" />
