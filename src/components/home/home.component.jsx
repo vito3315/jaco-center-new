@@ -1160,9 +1160,10 @@ class BlockPred extends React.Component {
       let cartData = itemsStore.getCartData();
       let test = itemsStore.cart_data;
       
-      console.log( '1' )
-      console.log( '_isMounted', this._isMounted )
-      console.log( '_thisEdit', this._thisEdit )
+      if( itemsStore.clear ){
+        this.startData();
+        itemsStore.clear = false;
+      }
       
       if( this._isMounted ){
         
@@ -1355,8 +1356,6 @@ class BlockPred extends React.Component {
           setTimeout( () => {
             if( cartData.orderPredTime ){
               let check = this.state.timePred.filter( (item) => item.value == cartData.orderPredTime );
-              
-              console.log( 'check_time', check )
               
               if( check.length == 0 ){
                 this.changeTypeTime( null, 0 )
