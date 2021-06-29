@@ -97,6 +97,8 @@ export class Header extends React.Component {
     autorun(() => {
       if( itemsStore.clear === true ){
         
+        console.log( 'header clear' )
+        
         this.clear();
         
         itemsStore.clear = false;

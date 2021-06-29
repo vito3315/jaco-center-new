@@ -1160,12 +1160,14 @@ class BlockPred extends React.Component {
       let cartData = itemsStore.getCartData();
       let test = itemsStore.cart_data;
       
-      if( itemsStore.clear ){
-        this.startData();
-        itemsStore.clear = false;
-      }
-      
       if( this._isMounted ){
+        
+        console.log( cartData )
+        
+        if( (cartData.orderType == 0 && !cartData.orderAddr.point_id) || (cartData.orderType == 1 && cartData.orderPic == 0) ){
+          this.startData();
+          console.log( 'clear111' )
+        }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
           if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
@@ -1173,6 +1175,8 @@ class BlockPred extends React.Component {
             this.setState({
               point_id: this.state.point_id
             })
+            
+            //this.startData();
           }
         }
         
@@ -1182,6 +1186,7 @@ class BlockPred extends React.Component {
             this.setState({
               point_id: cartData.orderPic
             })
+            //this.startData();
           }
         }
         
