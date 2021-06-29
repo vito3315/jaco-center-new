@@ -8,6 +8,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 
+import {Helmet} from "react-helmet";
+
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -507,6 +509,10 @@ class OrdersStat extends React.Component {
   render() {
     return (
       <Grid container spacing={0}>
+        
+        <Helmet>
+          <title>Оформленные заказы</title>
+        </Helmet>
         
         <Backdrop open={this.state.spiner} style={{ zIndex: 99, color: '#fff' }}>
           <CircularProgress color="inherit" />

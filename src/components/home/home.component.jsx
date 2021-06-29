@@ -6,6 +6,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import {Helmet} from "react-helmet";
+
 import Grid from '@material-ui/core/Grid';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -1900,6 +1902,10 @@ class CreateOrder extends React.Component {
   render() {
     return (
       <Grid container spacing={0} style={{ width: '100vw', height: '100vh' }}>
+        
+        <Helmet>
+          <title>Оформление заказа</title>
+        </Helmet>
         
         <Backdrop open={this.state.spiner} style={{ zIndex: 99, color: '#fff' }}>
           <CircularProgress color="inherit" />

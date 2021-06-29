@@ -8,6 +8,8 @@ import CachedIcon from '@material-ui/icons/Cached';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 
+import {Helmet} from "react-helmet";
+
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -340,6 +342,10 @@ class OrderCook extends React.Component {
   render() {
     return (
       <Grid container spacing={0}>
+        
+        <Helmet>
+          <title>Заказы на кухне</title>
+        </Helmet>
         
         <Backdrop open={this.state.spiner} style={{ zIndex: 99, color: '#fff' }}>
           <CircularProgress color="inherit" />
