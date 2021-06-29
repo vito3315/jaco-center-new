@@ -2048,6 +2048,9 @@ class CreateOrder extends React.Component {
                   :
                 null
               }
+              
+              <Typography variant="h5" component="span" className="orderCheckText">Номер телефона: {this.state.newOrder.number}</Typography>
+              
               { this.state.newOrder.promoName ?
                 <Typography variant="h5" component="span" className="orderCheckText">Промокод: {this.state.newOrder.promoName}</Typography>
                   :
