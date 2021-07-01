@@ -730,7 +730,7 @@ class BlockAddrCustom extends React.Component {
   saveData(){
     let cartData = itemsStore.getCartData();
     
-    console.log( '555', this.state.newAddrInfo )
+    console.log( 'saveCartData BlockAddrCustom', this.state.newAddrInfo )
     
     let addrInfo = this.state.newAddrInfo ? this.state.newAddrInfo : cartData.orderAddr;
     
@@ -900,6 +900,8 @@ class BlockAddrMy extends React.Component {
           
         };
       
+        console.log( 'saveCartData BlockAddrMy 1' )
+        
         itemsStore.saveCartData(data);
         
       }else{
@@ -922,6 +924,8 @@ class BlockAddrMy extends React.Component {
           orderSdacha: ''        
         };
       
+        console.log( 'saveCartData BlockAddrMy 2' )
+        
         itemsStore.saveCartData(data);
       }
     }
@@ -1003,6 +1007,7 @@ class BlockAddrMy extends React.Component {
         
       };
       
+      console.log( 'saveCartData BlockAddrMy 3' )
       itemsStore.saveCartData(data);
     }, 500)
 }
@@ -1067,6 +1072,9 @@ class BlockPic extends React.Component {
             if( this.state.orderPic != choosePoint ){
             
               if( choosePoint ){
+                
+                console.log( 'update PIC' )
+                
                 this.choosePic(choosePoint)
               }else{
                 this.setState({
@@ -1123,6 +1131,8 @@ class BlockPic extends React.Component {
         orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
           
       };
+      
+      console.log( 'saveCartData BlockPic' )
       
       itemsStore.saveCartData(data);
     }, 500)
@@ -1184,9 +1194,9 @@ class BlockPred extends React.Component {
         console.log( 'test', cartData )
         
         if( (cartData.orderType == 0 && !cartData.orderAddr.point_id) || (cartData.orderType == 1 && cartData.orderPic == 0) ){
-          this.startData();
-          console.log( 'clear111', (cartData.orderType == 0 && !cartData.orderAddr.point_id), (cartData.orderType == 1 && cartData.orderPic == 0) )
-          console.log( 'clear222', cartData.orderAddr.point_id, (cartData.orderType == 1 && cartData.orderPic == 0) )
+          //this.startData();
+          //console.log( 'clear111', (cartData.orderType == 0 && !cartData.orderAddr.point_id), (cartData.orderType == 1 && cartData.orderPic == 0) )
+          //console.log( 'clear222', cartData.orderAddr.point_id, (cartData.orderType == 1 && cartData.orderPic == 0) )
         }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
@@ -1345,6 +1355,8 @@ class BlockPred extends React.Component {
         orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
           
       };
+      
+      console.log( 'saveCartData BlockPred' )
       
       itemsStore.saveCartData(data);
     }, 500)
@@ -1721,12 +1733,27 @@ class CreateOrder extends React.Component {
     
     let type = parseInt(newValue) == 0 || parseInt(newValue) == 1 ? parseInt(newValue) : 0;
     
-    this.setState({
+    console.log( 'new state', {
       activeTab: newValue,
-      typeOrder: type
+      typeOrder: parseInt(newValue) == 0 || parseInt(newValue) == 1 ? parseInt(newValue) : 0
+    } )
+    
+    //this.setState({
+      //activeTab: newValue,
+      //typeOrder: parseInt(newValue) == 0 || parseInt(newValue) == 1 ? parseInt(newValue) : 0
+    //});
+    
+    this.setState({
+      activeTab: newValue
     });
     
-    this.saveData();
+    setTimeout( () => {
+      
+      //console.log( 'new type order1', type )
+      console.log( 'new type order11', this.state.typeOrder, this.state.activeTab )
+      
+      this.saveData();  
+    }, 500 )
   }
   
   getAddr(){
@@ -1761,8 +1788,11 @@ class CreateOrder extends React.Component {
     let cartData = itemsStore.getCartData();
     
     setTimeout(()=>{
+      
+      console.log( 'new type order1', this.state.typeOrder )
+      
       let data = {
-        orderType: this.state.typeOrder,
+        orderType: parseInt(this.state.activeTab) == 0 || parseInt(this.state.activeTab) == 1 ? parseInt(this.state.activeTab) : 0,//this.state.typeOrder,
         orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
         
         orderPic: cartData && cartData.orderPic ? cartData.orderPic : '0',
@@ -1777,6 +1807,10 @@ class CreateOrder extends React.Component {
           
       };
       
+      console.log( 'new type order', data )
+      
+      console.log( 'saveCartData CreateOrder' )
+      
       itemsStore.saveCartData(data);
     }, 500)
   }
@@ -1788,6 +1822,8 @@ class CreateOrder extends React.Component {
       clearTimeout(this.startOrderIntervalTimer);
       
       let cartData = itemsStore.getCartData();
+      
+      console.log( 'startOrder', cartData )
       
       this.setState({ 
         spiner: true
@@ -1944,7 +1980,7 @@ class CreateOrder extends React.Component {
         <Grid item xs={4} style={{ padding: '16px', marginTop: -50 }} className='container'>
           <Tabs
             value={this.state.activeTab}
-            onChange={this.changeTab}
+            onChange={this.changeTab.bind(this)}
             indicatorColor="primary"
             textColor="primary"
             centered
