@@ -277,18 +277,6 @@ class BlockItems extends React.Component {
                         placement="top"
                         title={
                           <React.Fragment>
-                            <picture>
-                              <source 
-                                srcSet={"https://storage.yandexcloud.net/site-img/"+item.img_new+"300х200.webp?"+item.img_new_update} 
-                                type="image/webp" 
-                              />
-                              <img 
-                                src={"https://storage.yandexcloud.net/site-img/"+item.img_new+"300х200.jpg?"+item.img_new_update} 
-                                alt={item.name}
-                                title={item.name}
-                                style={{ height: 150, width: 'auto' }}
-                              />
-                            </picture>
                             <Typography color="inherit" className={this.state.classes.size1}>{item.tmp_desc}</Typography>
                             <Typography color="inherit" className={this.state.classes.size1}>{item.info_weight}</Typography>
                           </React.Fragment>
@@ -1142,7 +1130,7 @@ class BlockPic extends React.Component {
     return (
       <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container'>
         { this.state.pic_point.map( (item, key) =>
-          <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#CC0033' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
+          <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#6ab04c' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
         )}
       </Grid>
     )
@@ -1589,7 +1577,7 @@ class CreateOrder extends React.Component {
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        type: 'get_cat', 
+        type: 'get_cat_center', 
         city_id: itemsStore.getCity()
       })
     }).then(res => res.json()).then(json => {
@@ -1638,7 +1626,7 @@ class CreateOrder extends React.Component {
             headers: {
               'Content-Type':'application/x-www-form-urlencoded'},
             body: queryString.stringify({
-              type: 'get_cat', 
+              type: 'get_cat_center', 
               city_id: thisCity
             })
           }).then(res => res.json()).then(json => {
@@ -1781,16 +1769,13 @@ class CreateOrder extends React.Component {
     
     this.setState({ [type]: value });
     
-    this.saveData();
+    //this.saveData();
   }
   
   saveData(){
     let cartData = itemsStore.getCartData();
     
     setTimeout(()=>{
-      
-      console.log( 'new type order1', this.state.typeOrder )
-      
       let data = {
         orderType: parseInt(this.state.activeTab) == 0 || parseInt(this.state.activeTab) == 1 ? parseInt(this.state.activeTab) : 0,//this.state.typeOrder,
         orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
@@ -2011,14 +1996,14 @@ class CreateOrder extends React.Component {
                   variant="outlined"
                   value={ this.state.comment }
                   onChange={ this.changeData.bind(this, 'comment') }
-                  onBlur={ this.changeData.bind(this, 'comment') }
+                  onBlur={ this.saveData.bind(this) }
                 />
                 <TextField 
                   label="Сдача" 
                   variant="outlined" 
                   value={ this.state.sdacha }
                   onChange={ this.changeData.bind(this, 'sdacha') }
-                  onBlur={ this.changeData.bind(this, 'sdacha') }
+                  onBlur={ this.saveData.bind(this, 'sdacha') }
                 />
               </div>
             </Grid>

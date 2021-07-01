@@ -109,6 +109,39 @@ export class Header extends React.Component {
   saveNumber(event){
     
     let number = event.target.value;
+    let str = '';
+    
+    number = number+'';
+    
+    if( number.length > 0 ){
+      
+      number = number.split(' ').join('');
+      number = number.split('(').join('');
+      number = number.split(')').join('');
+      number = number.split('-').join('');
+      number = number.split('+').join('');
+      
+      if( number[0] == '7' || number[0] == 7 ){
+        str = number.split("");
+        str[0] = 8;
+        number = str.join("");
+      }
+      
+      if( number.length != 11 ){
+        alert('Номер введен в не верном формате!')
+        return;
+      }
+      
+    }
+    
+    this.setState({
+      number: number
+    })
+    
+    itemsStore.clientNumber = number;
+    localStorage.setItem('clientNumber', number)
+    
+    /*let number = event.target.value;
           
     if( number.length > 0 ){
       number = number.split(' ').join('');
@@ -123,7 +156,7 @@ export class Header extends React.Component {
     }else{
       itemsStore.clientNumber = '';
       localStorage.setItem('clientNumber', '')
-    }
+    }*/
   }
     
   checkPromo(event){
@@ -279,15 +312,15 @@ export class Header extends React.Component {
                   </Button>
                 </Grid>
                 <Grid item xs={3} style={{ paddingTop: 14 }}>
-                  <InputMask 
-                    className="InputMask"
-                    mask="9 (999) 999-99-99" 
-                    placeholder="8 (999) 999-99-99" 
-                    style={{ marginRight: 4, marginLeft: 4}}
-                    value={this.state.number} 
-                    onChange={ (event) => this.setState({ number: event.target.value }) }
-                    onBlur={this.saveNumber.bind(this)}
+                  <TextField 
+                    //label="Промокод" 
+                    placeholder="8 (999) 999-99-99"
+                    value={this.state.number}
+                    onChange={ event => this.setState({ number: event.target.value }) } 
+                    onBlur={this.saveNumber.bind(this)} 
+                    style={{ marginRight: 4, marginLeft: 4, marginBottom: 6}} 
                   />
+                  
                 </Grid>
               
               </Grid>

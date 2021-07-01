@@ -122,11 +122,11 @@
     margin-bottom: 10px!important;
     cursor: pointer!important;
     &:hover{
-        background-color: #CC0033!important;
+        background-color: #6ab04c!important;
         color: #fff!important;
     }
     &.active{
-        background-color: #CC0033!important;
+        background-color: #6ab04c!important;
         color: #fff!important;
     }
     & span:first-child{
@@ -152,13 +152,13 @@
 .chooseDomTrue{
     width: 100%;
     & button.active{
-      background-color: #CC0033;
+      background-color: #6ab04c;
       color: #fff;
     }
     & button:not(.active){
       background-color: #fff;
-      border: 1px solid #CC0033;
-      color: #CC0033;
+      border: 1px solid #6ab04c;
+      color: #6ab04c;
     }
     & > button{
       width: 50%;
@@ -175,11 +175,11 @@
 }
 .MuiList-root.MuiList-padding{
   & > div:hover{
-    background-color: #CC0033;
+    background-color: #6ab04c;
     color: #fff;
   }
   & .Mui-selected{
-    background-color: #CC0033;
+    background-color: #6ab04c;
     color: #fff;
   }
 }
@@ -192,18 +192,18 @@
   background-color: #fff!important;
   color: #000!important;
   & .Mui-selected{
-    background-color: #CC0033;
+    background-color: #6ab04c;
     color: #fff;
   }
 }
 .MuiTab-textColorPrimary.Mui-selected{
-  color: #CC0033!important;
+  color: #6ab04c!important;
 }
 .PrivateTabIndicator-colorPrimary-14{
-  background-color: #CC0033!important;
+  background-color: #6ab04c!important;
 }
 .blockTotalOrder .MuiButton-containedPrimary{
-  background-color: #CC0033!important;
+  background-color: #6ab04c!important;
 }
 .InputMask{
   border: 1px solid #000;
@@ -216,7 +216,7 @@
   }
 }
 .MuiTabs-indicator{
-  background-color: #CC0033 !important;
+  background-color: #6ab04c !important;
 }
 
 .DialogOrderCheckDialog .MuiDialog-paperFullWidth{
@@ -235,7 +235,7 @@
   top: 0px;
   right: 0px;
   padding: 15px;
-  color: #CC0033;
+  color: #6ab04c;
   cursor: pointer;
 }
 .tableOrderCheck{
@@ -274,7 +274,7 @@
   margin: 0;
 }
 .CardInCardItem{
-  background-color: #CC0033!important;
+  background-color: #6ab04c!important;
   color: #fff!important;
 }
 .DialogErrText{

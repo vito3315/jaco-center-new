@@ -260,7 +260,7 @@ class OrdersStat extends React.Component {
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        type: 'get_cat', 
+        type: 'get_cat_center', 
         city_id: 1
       })
     }).then(res => res.json()).then(json => {
@@ -656,7 +656,7 @@ class OrdersStat extends React.Component {
                   
                   { this.state.showOrder.order.number.length > 1 ? <Typography variant="h6" component="span">Телефон: {this.state.showOrder.order.number}</Typography> : null}
                   
-                  { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: '#CC0033' }}>{this.state.showOrder.order.delete_reason}</Typography> : null}
+                  { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: '#6ab04c' }}>{this.state.showOrder.order.delete_reason}</Typography> : null}
                   
                   { parseInt(this.state.showOrder.order.is_preorder) == 1 ? null :
                       <Typography variant="h6" component="span">{this.state.showOrder.order.text_time}{this.state.showOrder.order.time_to_client}</Typography>

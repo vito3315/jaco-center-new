@@ -264,7 +264,7 @@ class OrderCook extends React.Component {
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        type: 'get_cat', 
+        type: 'get_cat_center', 
         city_id: 1
       })
     }).then(res => res.json()).then(json => {
