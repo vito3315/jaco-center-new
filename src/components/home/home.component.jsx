@@ -1179,12 +1179,12 @@ class BlockPred extends React.Component {
       
       if( this._isMounted ){
         
-        console.log( 'test', cartData )
+        console.log( 'test', cartData, !cartData.orderAddr.point_id )
         
-        if( (cartData.orderType == 0 && !cartData.orderAddr.point_id) || (cartData.orderType == 1 && cartData.orderPic == 0) ){
-          //this.startData();
+        if( !cartData.orderAddr.point_id && cartData.orderPic == 0 ){
+          this.startData();
           //console.log( 'clear111', (cartData.orderType == 0 && !cartData.orderAddr.point_id), (cartData.orderType == 1 && cartData.orderPic == 0) )
-          //console.log( 'clear222', cartData.orderAddr.point_id, (cartData.orderType == 1 && cartData.orderPic == 0) )
+          console.log( 'clear222', cartData )
         }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
@@ -1358,7 +1358,6 @@ class BlockPred extends React.Component {
     if( cartData ){
       
       let date = cartData.orderPredDay;
-      
       let check = this.state.date_pred.filter( (item) => item.date < date );
       
       if( check.length == 0 ){
