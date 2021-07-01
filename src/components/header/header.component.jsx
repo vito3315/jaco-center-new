@@ -256,7 +256,7 @@ export class Header extends React.Component {
     itemsStore.saveCartData(data);
     
     setTimeout( () => {
-      location.reload();
+      //location.reload();
     }, 500 )
   }
     

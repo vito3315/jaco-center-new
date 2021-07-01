@@ -1025,6 +1025,8 @@ class BlockPic extends React.Component {
   constructor(props) {
     super(props);
     
+    console.log( 'start data 11' )
+    
     this.state = {
       classes: this.props.classes,
       pic_point: this.props.pic_point,
@@ -1182,29 +1184,34 @@ class BlockPred extends React.Component {
         console.log( 'test', cartData, !cartData.orderAddr.point_id )
         
         if( !cartData.orderAddr.point_id && cartData.orderPic == 0 ){
-          this.startData();
+          //this.startData();
+          
+          this.setState({
+            time: '',
+            date: ''
+          })
+          
           //console.log( 'clear111', (cartData.orderType == 0 && !cartData.orderAddr.point_id), (cartData.orderType == 1 && cartData.orderPic == 0) )
           console.log( 'clear222', cartData )
         }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
           if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
+            console.log( '1' )
             this.loadTimeWait();
             this.setState({
               point_id: this.state.point_id
             })
-            
-            //this.startData();
           }
         }
         
         if( cartData.orderType == 1 && cartData.orderPic ){
           if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
+            console.log( '3' )
             this.loadTimeWait();
             this.setState({
               point_id: cartData.orderPic
             })
-            //this.startData();
           }
         }
         
@@ -1218,6 +1225,7 @@ class BlockPred extends React.Component {
       }
     })
     
+    console.log( 'start data' )
     this.startData();
   }
   
@@ -1617,7 +1625,11 @@ class CreateOrder extends React.Component {
         if( parseInt(thisCity) != parseInt(this.state.cityID) ){
           
           this.setState({
-            cityID: thisCity
+            cityID: thisCity,
+            
+            pic_point: [],
+            all_addr: [],
+            date_pred: []
           })
           
           fetch('https://jacofood.ru/src/php/test_app.php', {
@@ -1651,6 +1663,9 @@ class CreateOrder extends React.Component {
               user_id: itemsStore.getToken()
             })
           }).then(res => res.json()).then(json => {
+            
+            console.log( 'load new pics' )
+            
             this.setState({
                 pic_point: json.get_addr_pic.points,
                 all_addr: json.get_addr,
