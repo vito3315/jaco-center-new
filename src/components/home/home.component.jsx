@@ -100,11 +100,14 @@ const useStyles = makeStyles((theme) => ({
   paperCat: {
     padding: theme.spacing(1),
     textAlign: 'center',
-    color: theme.palette.text.secondary,
+    color: '#000',
     position: 'relative',
     justifyContent: 'space-between',
     height: 'calc(100% - 15px)',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '& svg': {
+      color: theme.palette.text.secondary
+    }
   },
   paperCatInfo: {
     position: 'absolute',

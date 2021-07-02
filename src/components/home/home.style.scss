@@ -9,8 +9,8 @@ $mainColor: #CC0033;
   font-family: $family!important;
 }
 
-*:not(svg){
-  @include fontFamily($Ubuntu);
+td, td > *{
+  @include fons(1rem);
 }
 
 .headerInput{
