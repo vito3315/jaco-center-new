@@ -41,6 +41,21 @@ class ItemsStore {
   
   clear = false;
   
+  MyPromos = '';
+  updateMyPromos = '';
+  
+  setMyPromos = (items) => {
+    this.MyPromos = JSON.stringify( items );
+    
+    this.updateMyPromos = new Date();
+    
+    localStorage.setItem('MyPromos', JSON.stringify(items) );
+  };
+
+  getMyPromos(){
+    return this.MyPromos.length == 0 ? [] : JSON.parse(this.MyPromos, true);
+  };
+  
   setSumDiv = (items) => {
     this.sum_div = parseInt( items );
   };
@@ -958,6 +973,10 @@ class ItemsStore {
         setTimeout(()=>{
           this.getInfoPromo( localStorage.getItem('promo_name') )
         }, 300)
+      }
+      
+      if( localStorage.getItem('MyPromos') && localStorage.getItem('MyPromos').length > 0 ){
+        this.setMyPromos( JSON.parse(localStorage.getItem('MyPromos'), true) );
       }
     }
     

@@ -1,5 +1,16 @@
+$Ubuntu: 'Ubuntu';
+$Futuris: 'Futuris Bold';
+$mainColor: #CC0033;
+
 @mixin fons($size: 1rem) {
   font-size: $size !important;
+}
+@mixin fontFamily($family: $Ubuntu) {
+  font-family: $family!important;
+}
+
+*:not(svg){
+  @include fontFamily($Ubuntu);
 }
 
 .headerInput{

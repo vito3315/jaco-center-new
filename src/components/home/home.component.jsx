@@ -6,6 +6,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import moment from "moment";
+
 import {Helmet} from "react-helmet";
 
 import Grid from '@material-ui/core/Grid';
@@ -1877,6 +1879,21 @@ class CreateOrder extends React.Component {
         }, 500)
         
         if( json.st ){
+          
+          if( localStorage.getItem('promo_name') && localStorage.getItem('promo_name').length > 0 ){
+            let promo = localStorage.getItem('promo_name');
+            
+            let arr = itemsStore.getMyPromos();
+            
+            arr.push( {
+              date: moment(new Date()).format("YYYY-MM-DD"),
+              promo: promo
+            } );
+            
+            itemsStore.setMyPromos( arr );
+          }
+          
+          
           this.setState({
             newOrder: {
               cart: json.my_cart,

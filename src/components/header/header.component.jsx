@@ -8,6 +8,9 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import moment from "moment";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -54,6 +57,9 @@ export class Header extends React.Component {
       city: itemsStore.getCity(),
       page: this.props.page,
       
+      updateMyPromos: null,
+      MyPromos: [],
+      
       number: '',
       
       orderPromoText: '',
@@ -77,7 +83,7 @@ export class Header extends React.Component {
       itemsStore.clientNumber = defValue;
       
       this.setState({
-        number: defValue
+        number: defValue,
       })
     }
     
@@ -95,10 +101,41 @@ export class Header extends React.Component {
     }
     
     autorun(() => {
+      
+      if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
+        
+        let myPromos = itemsStore.getMyPromos();
+        let myPromosNew = [];
+        let checkDate = moment(new Date()).add(-7, 'days').format("YYYY-MM-DD");
+        
+        myPromos = myPromos.filter( (item) => item.date >= checkDate );
+        
+        console.log( 'myPromos 1', myPromos );
+        
+        myPromos.forEach( element => {
+          let check = myPromosNew.find( (item) => item.promo == element.promo )
+          
+          if( !check || check.length == 0 ){
+            element.count = 1;
+            
+            myPromosNew.push( element )
+          }else{
+            
+            myPromosNew.forEach( (item, key) => {
+              if( item.promo == element.promo ){
+                myPromosNew[key]['count'] ++;
+              }
+            } )
+          }
+        });
+        
+        this.setState({
+          updateMyPromos: itemsStore.updateMyPromos,
+          MyPromos: myPromosNew
+        })
+      }
+      
       if( itemsStore.clear === true ){
-        
-        console.log( 'header clear' )
-        
         this.clear();
         
         itemsStore.clear = false;
@@ -283,6 +320,7 @@ export class Header extends React.Component {
                   <FormControl className={this.state.classes.formControl}>
                     <InputLabel style={{ paddingBottom: 2 }}>Город</InputLabel>
                     <Select
+                    
                       style={{ marginTop: 9 }}
                       value={this.state.city}
                       onChange={ this.changeCity.bind(this) }
@@ -293,8 +331,27 @@ export class Header extends React.Component {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={6} style={{ paddingTop: 5, display: 'flex', alignItems: 'center' }}>
-                  <TextField label="Промокод" value={ this.state.promo_name } onChange={ event => this.setState({ promo_name: event.target.value }) } onBlur={this.checkPromo.bind(this)} style={{ marginRight: 4, marginLeft: 4, marginBottom: 6}} />
+                <Grid item xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+                  
+                  <Autocomplete
+                    freeSolo
+                    
+                    label="Промокод"
+                    variant="outlined"
+                    size="small"
+                    
+                    style={{ minWidth: 200, marginRight: 8 }}
+                    
+                    value={ this.state.promo_name } 
+                    onChange={ (event, val) => { console.log(val, event.target.value); this.setState({ promo_name: val }) } } 
+                    onBlur={this.checkPromo.bind(this)} 
+                    
+                    options={this.state.MyPromos.map((option) => option.promo)}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Промокод" margin="normal" variant="outlined" />
+                    )}
+                  />
+                  
                   
                   <HtmlTooltip
                     placement="bottom"
@@ -304,16 +361,20 @@ export class Header extends React.Component {
                       </React.Fragment>
                     }
                   >
-                    <Button variant="contained" color="primary" style={{ padding: '2px 6px', minWidth: 30, marginRight: 8, backgroundColor: this.state.promoST === false && this.state.orderPromoText.length == 0 ? 'gray' : this.state.promoST === false && this.state.orderPromoText.length > 0 ? 'red' : 'green' }}>?</Button>
+                    <Button variant="contained" color="primary" style={{ padding: '2px 6px', marginTop: 8, minWidth: 30, marginRight: 8, backgroundColor: this.state.promoST === false && this.state.orderPromoText.length == 0 ? 'gray' : this.state.promoST === false && this.state.orderPromoText.length > 0 ? 'red' : 'green' }}>?</Button>
                   </HtmlTooltip>
                   
-                  <Button variant="contained" color="primary" className="btnClear" style={{ padding: '2px 6px', minWidth: 30 }} onClick={ this.clear.bind(this) } >
+                  <Button variant="contained" color="primary" className="btnClear" style={{ padding: '2px 6px', minWidth: 30, marginTop: 8 }} onClick={ this.clear.bind(this) } >
                     <CloseIcon />
                   </Button>
                 </Grid>
                 <Grid item xs={3} style={{ paddingTop: 14 }}>
                   <TextField 
-                    //label="Промокод" 
+                    label="Телефон" 
+                    
+                    variant="outlined"
+                    size="small"
+                    
                     placeholder="8 (999) 999-99-99"
                     value={this.state.number}
                     onChange={ event => this.setState({ number: event.target.value }) } 
