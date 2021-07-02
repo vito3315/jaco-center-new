@@ -113,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
   },
   
   size1: {
-    fontSize: '0.8rem'
+    //fontSize: '0.8rem'
   },
   scrollTable: {
     maxHeight: 250,
