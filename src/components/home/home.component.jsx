@@ -1135,7 +1135,7 @@ class BlockPic extends React.Component {
   
   render(){
     return (
-      <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container'>
+      <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container' style={{ paddingRight: 8 }}>
         { this.state.pic_point.map( (item, key) =>
           <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#6ab04c' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
         )}
