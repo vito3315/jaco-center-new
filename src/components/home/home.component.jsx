@@ -1785,7 +1785,7 @@ class CreateOrder extends React.Component {
     
     this.setState({ [type]: value });
     
-    //this.saveData();
+    this.saveData();
   }
   
   saveData(){
@@ -1805,7 +1805,6 @@ class CreateOrder extends React.Component {
         
         orderPay: cartData && cartData.orderPay ? cartData.orderPay : '0',
         orderSdacha: this.state.sdacha,
-          
       };
       
       console.log( 'new type order', data )
@@ -1813,7 +1812,7 @@ class CreateOrder extends React.Component {
       console.log( 'saveCartData CreateOrder' )
       
       itemsStore.saveCartData(data);
-    }, 500)
+    }, 100)
   }
   
   startOrderNext(){
@@ -2027,14 +2026,14 @@ class CreateOrder extends React.Component {
                   variant="outlined"
                   value={ this.state.comment }
                   onChange={ this.changeData.bind(this, 'comment') }
-                  onBlur={ this.saveData.bind(this) }
+                  //onBlur={ this.saveData.bind(this) }
                 />
                 <TextField 
                   label="Сдача" 
                   variant="outlined" 
                   value={ this.state.sdacha }
                   onChange={ this.changeData.bind(this, 'sdacha') }
-                  onBlur={ this.saveData.bind(this, 'sdacha') }
+                  //onBlur={ this.saveData.bind(this, 'sdacha') }
                 />
               </div>
             </Grid>

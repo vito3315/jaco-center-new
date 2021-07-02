@@ -101,7 +101,6 @@ export class Header extends React.Component {
     }
     
     autorun(() => {
-      
       if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
         
         let myPromos = itemsStore.getMyPromos();
@@ -110,7 +109,7 @@ export class Header extends React.Component {
         
         myPromos = myPromos.filter( (item) => item.date >= checkDate );
         
-        console.log( 'myPromos 1', myPromos );
+        localStorage.setItem('MyPromos', JSON.stringify(myPromos) );
         
         myPromos.forEach( element => {
           let check = myPromosNew.find( (item) => item.promo == element.promo )
@@ -120,7 +119,6 @@ export class Header extends React.Component {
             
             myPromosNew.push( element )
           }else{
-            
             myPromosNew.forEach( (item, key) => {
               if( item.promo == element.promo ){
                 myPromosNew[key]['count'] ++;
@@ -128,6 +126,8 @@ export class Header extends React.Component {
             } )
           }
         });
+        
+        myPromosNew = myPromosNew.filter( (item) => item.count > 1 );
         
         this.setState({
           updateMyPromos: itemsStore.updateMyPromos,
