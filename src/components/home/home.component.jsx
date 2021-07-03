@@ -1163,12 +1163,8 @@ class BlockPred extends React.Component {
           })
         }
         
-        console.log( 'autorun', cartData.orderType )
-        
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
           if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
-            console.log( 'autorun load 1' )
-            
             if( parseInt(cartData.orderTimes) == 1 ){
               this.loadTimePred();
             }else{
@@ -1183,8 +1179,6 @@ class BlockPred extends React.Component {
         
         if( cartData.orderType == 1 && cartData.orderPic ){
           if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
-            console.log( 'autorun load 2' )
-            
             if( parseInt(cartData.orderTimes) == 1 ){
               this.loadTimePred();
             }else{
@@ -1198,7 +1192,6 @@ class BlockPred extends React.Component {
         }
         
         if( !this._thisEdit ){
-          console.log( 'autorun load 3' )
           this.startData();
         }
       }
@@ -1234,7 +1227,7 @@ class BlockPred extends React.Component {
                 orderTimes: '1'
             })*/
             
-            return;
+            //return;
         }
     }
     
@@ -1245,15 +1238,12 @@ class BlockPred extends React.Component {
         });
     });
     
-    
-    console.log( 'get_times_pred_web type', cartData.orderType+1 )
-    
     fetch('https://jacofood.ru/src/php/test_app.php', {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        type: 'get_times_pred_web',  
+        type: 'get_times_pred_center',  
         point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
         type_order: cartData.orderType+1,
         date: this.state.date,
@@ -1269,9 +1259,6 @@ class BlockPred extends React.Component {
                 errorOpen: true
             })*/
       }else{
-        
-        console.log( 'get_times_pred_web data', json.data )
-        
         this.setState({
           timePred: json.data
         })
