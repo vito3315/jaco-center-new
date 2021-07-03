@@ -1163,8 +1163,8 @@ class BlockPred extends React.Component {
           })
         }
         
-        if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
-          if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
+        if( cartData.orderType == 0 ){
+          //if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
             if( parseInt(cartData.orderTimes) == 1 ){
               this.loadTimePred();
             }else{
@@ -1172,13 +1172,13 @@ class BlockPred extends React.Component {
             }
             
             this.setState({
-              point_id: this.state.point_id
+              //point_id: this.state.point_id
             })
-          }
+          //}
         }
         
-        if( cartData.orderType == 1 && cartData.orderPic ){
-          if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
+        if( cartData.orderType == 1 ){
+          //if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
             if( parseInt(cartData.orderTimes) == 1 ){
               this.loadTimePred();
             }else{
@@ -1188,7 +1188,7 @@ class BlockPred extends React.Component {
             this.setState({
               point_id: cartData.orderPic
             })
-          }
+          //}
         }
         
         if( !this._thisEdit ){
