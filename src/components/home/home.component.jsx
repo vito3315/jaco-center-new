@@ -1157,10 +1157,7 @@ class BlockPred extends React.Component {
       if( this._isMounted ){
         
         if( !cartData.orderAddr.point_id && cartData.orderPic == 0 ){
-          this.setState({
-            time: '',
-            date: ''
-          })
+          
         }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
