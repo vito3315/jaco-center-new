@@ -660,8 +660,11 @@ class OrdersStat extends React.Component {
                   { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: 'red' }}>{this.state.showOrder.order.delete_reason}</Typography> : null}
                   
                   { parseInt(this.state.showOrder.order.is_preorder) == 1 ? null :
-                      <Typography variant="h6" component="span">{this.state.showOrder.order.text_time}{this.state.showOrder.order.time_to_client}</Typography>
+                    <Typography variant="h6" component="span">{this.state.showOrder.order.text_time}{this.state.showOrder.order.time_to_client}</Typography>
                   }
+                  
+                  <Typography variant="h6" component="span">{this.state.showOrder.order.textTime}</Typography>
+                  
                   { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
                       <Typography variant="h6" component="span">Промокод: {this.state.showOrder.order.promo_name}</Typography>
                   }
