@@ -335,7 +335,7 @@ class BlockTableItem extends React.Component {
     this._isMounted = true;
     
     autorun(() => {
-      if( this._isMounted === true ){
+      if( this._isMounted === true && this.state.item.item_id ){
         let my_cart = itemsStore.getItems();
         
         let this_item = my_cart.find( (item) => item.item_id == this.state.item.item_id );
@@ -1600,6 +1600,7 @@ class CreateOrder extends React.Component {
       })
       itemsStore.setAllItemsCat(json.arr);
       itemsStore.setAllItems(json.all_items);
+      itemsStore.setFreeItems(json.free_items);
     })
     .catch(err => { });
     
@@ -1655,6 +1656,7 @@ class CreateOrder extends React.Component {
             
             itemsStore.setAllItemsCat(json.arr);
             itemsStore.setAllItems(json.all_items);
+            itemsStore.setFreeItems(json.free_items);
           })
           .catch(err => { });
           
@@ -1826,14 +1828,14 @@ class CreateOrder extends React.Component {
       
       let cartData = itemsStore.getCartData();
       
-      console.log( 'startOrder', cartData )
-      
       this.setState({ 
         spiner: true
       })
       
       let new_cart = [];
       let cartItems = itemsStore.getItems();
+      
+      console.log( 'cartItems', cartItems )
       
       cartItems.forEach( (item) => {
         if( item.count > 0 ){
@@ -1870,8 +1872,6 @@ class CreateOrder extends React.Component {
         })
       }).then(res => res.json()).then(json => {
           
-        console.log( 'start', json )
-        
         setTimeout(()=>{
           this.setState({
               spiner: false
