@@ -1224,6 +1224,9 @@ class BlockPred extends React.Component {
         });
     });
     
+    
+    console.log( 'get_times_pred_web type', cartData.orderType+1 )
+    
     fetch('https://jacofood.ru/src/php/test_app.php', {
       method: 'POST',
       headers: {
@@ -1245,6 +1248,9 @@ class BlockPred extends React.Component {
                 errorOpen: true
             })*/
       }else{
+        
+        console.log( 'get_times_pred_web data', json.data )
+        
         this.setState({
           timePred: json.data
         })
