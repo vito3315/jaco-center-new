@@ -181,8 +181,6 @@ class BlockItems extends React.Component {
   constructor(props) {
     super(props);
     
-    console.log( this.props.allItems ) 
-    
     this.state = {
       classes: this.props.classes,
       allItems: this.props.allItems,
@@ -209,8 +207,6 @@ class BlockItems extends React.Component {
     autorun(() => {
       let cat = itemsStore.getAllItemsCat();
       itemsStore.getCity()
-      
-      console.log( cat )
       
       this.setState({
         cats: cat
@@ -655,9 +651,6 @@ class BlockAddrCustom extends React.Component {
       
         let test = itemsStore.cart_data;
         
-        console.log( 'custom', cartData )
-        
-        
         if( cartData.orderType || cartData.orderType == 0 ){
           this.setState({
             newAddrStreet: cartData.orderAddr && cartData.orderAddr.street ? cartData.orderAddr.street : '',
@@ -722,8 +715,6 @@ class BlockAddrCustom extends React.Component {
   
   saveData(){
     let cartData = itemsStore.getCartData();
-    
-    console.log( 'saveCartData BlockAddrCustom', this.state.newAddrInfo )
     
     let addrInfo = this.state.newAddrInfo ? this.state.newAddrInfo : cartData.orderAddr;
     
@@ -861,16 +852,12 @@ class BlockAddrMy extends React.Component {
       itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
     }
     
-    console.log( 'addr item', item )
-    
     if( key != this.state.chooseAddr ){
       this.setState({
         chooseAddr: key
       })
       
       let cartData = itemsStore.getCartData();
-      
-      
       
       if( cartData.orderType || cartData.orderType == 0 ){
           
@@ -893,10 +880,7 @@ class BlockAddrMy extends React.Component {
           
         };
       
-        console.log( 'saveCartData BlockAddrMy 1' )
-        
         itemsStore.saveCartData(data);
-        
       }else{
         let data = {
           
@@ -917,12 +901,9 @@ class BlockAddrMy extends React.Component {
           orderSdacha: ''        
         };
       
-        console.log( 'saveCartData BlockAddrMy 2' )
-        
         itemsStore.saveCartData(data);
       }
     }
-    
   }
   
   chooseAddr2(key, item, event){
@@ -972,8 +953,6 @@ class BlockAddrMy extends React.Component {
           setTimeout( () => {
             let keyAddr = this.state.clientAddr.findIndex( (item, key) => item.street == cartData.orderAddr.street && item.home == cartData.orderAddr.home );
               
-            console.log( cartData )
-            
             if( keyAddr != this.state.chooseAddr ){
               this.chooseAddr2(keyAddr, cartData.orderAddr)
             }
@@ -1000,7 +979,6 @@ class BlockAddrMy extends React.Component {
         
       };
       
-      console.log( 'saveCartData BlockAddrMy 3' )
       itemsStore.saveCartData(data);
     }, 500)
 }
@@ -1029,8 +1007,6 @@ class BlockPic extends React.Component {
   
   constructor(props) {
     super(props);
-    
-    console.log( 'start data 11' )
     
     this.state = {
       classes: this.props.classes,
@@ -1065,11 +1041,7 @@ class BlockPic extends React.Component {
             let choosePoint = this.state.pic_point.find( (item) => parseInt(item.id) == parseInt(cartData.orderPic) );
         
             if( this.state.orderPic != choosePoint ){
-            
               if( choosePoint ){
-                
-                console.log( 'update PIC' )
-                
                 this.choosePic(choosePoint)
               }else{
                 this.setState({
@@ -1126,8 +1098,6 @@ class BlockPic extends React.Component {
         orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
           
       };
-      
-      console.log( 'saveCartData BlockPic' )
       
       itemsStore.saveCartData(data);
     }, 500)
@@ -1186,23 +1156,15 @@ class BlockPred extends React.Component {
       
       if( this._isMounted ){
         
-        console.log( 'test', cartData, !cartData.orderAddr.point_id )
-        
         if( !cartData.orderAddr.point_id && cartData.orderPic == 0 ){
-          //this.startData();
-          
           this.setState({
             time: '',
             date: ''
           })
-          
-          //console.log( 'clear111', (cartData.orderType == 0 && !cartData.orderAddr.point_id), (cartData.orderType == 1 && cartData.orderPic == 0) )
-          console.log( 'clear222', cartData )
         }
         
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
           if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
-            console.log( '1' )
             this.loadTimeWait();
             this.setState({
               point_id: this.state.point_id
@@ -1212,7 +1174,6 @@ class BlockPred extends React.Component {
         
         if( cartData.orderType == 1 && cartData.orderPic ){
           if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
-            console.log( '3' )
             this.loadTimeWait();
             this.setState({
               point_id: cartData.orderPic
@@ -1221,16 +1182,11 @@ class BlockPred extends React.Component {
         }
         
         if( !this._thisEdit ){
-          
-          console.log( '2' )
-          
           this.startData();
-          
         }
       }
     })
     
-    console.log( 'start data' )
     this.startData();
   }
   
@@ -1280,9 +1236,6 @@ class BlockPred extends React.Component {
         cart: JSON.stringify( my_cart ),
       })
     }).then(res => res.json()).then(json => {
-      
-      console.log( json )
-      
       if( !json.st ){
             /*this.setState({
                 error: {
@@ -1356,8 +1309,6 @@ class BlockPred extends React.Component {
         orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
           
       };
-      
-      console.log( 'saveCartData BlockPred' )
       
       itemsStore.saveCartData(data);
     }, 500)
@@ -1652,8 +1603,6 @@ class CreateOrder extends React.Component {
               cityList: json.city_list,
             })
             
-            console.log( 'update', json.arr )
-            
             itemsStore.setAllItemsCat(json.arr);
             itemsStore.setAllItems(json.all_items);
             itemsStore.setFreeItems(json.free_items);
@@ -1670,9 +1619,6 @@ class CreateOrder extends React.Component {
               user_id: itemsStore.getToken()
             })
           }).then(res => res.json()).then(json => {
-            
-            console.log( 'load new pics' )
-            
             this.setState({
                 pic_point: json.get_addr_pic.points,
                 all_addr: json.get_addr,
@@ -1739,13 +1685,7 @@ class CreateOrder extends React.Component {
   }
   
   changeTab = (event, newValue) => {
-    
     let type = parseInt(newValue) == 0 || parseInt(newValue) == 1 ? parseInt(newValue) : 0;
-    
-    console.log( 'new state', {
-      activeTab: newValue,
-      typeOrder: parseInt(newValue) == 0 || parseInt(newValue) == 1 ? parseInt(newValue) : 0
-    } )
     
     //this.setState({
       //activeTab: newValue,
@@ -1757,10 +1697,6 @@ class CreateOrder extends React.Component {
     });
     
     setTimeout( () => {
-      
-      //console.log( 'new type order1', type )
-      console.log( 'new type order11', this.state.typeOrder, this.state.activeTab )
-      
       this.saveData();  
     }, 500 )
   }
@@ -1776,9 +1712,6 @@ class CreateOrder extends React.Component {
         login: this.state.clientNumber
       })
     }).then(res => res.json()).then(json => {
-      
-      console.log( json )
-      
       this.setState({
         clientAddr: json
       })
@@ -1812,10 +1745,6 @@ class CreateOrder extends React.Component {
         orderSdacha: this.state.sdacha,
       };
       
-      console.log( 'new type order', data )
-      
-      console.log( 'saveCartData CreateOrder' )
-      
       itemsStore.saveCartData(data);
     }, 100)
   }
@@ -1834,8 +1763,6 @@ class CreateOrder extends React.Component {
       
       let new_cart = [];
       let cartItems = itemsStore.getItems();
-      
-      console.log( 'cartItems', cartItems )
       
       cartItems.forEach( (item) => {
         if( item.count > 0 ){
