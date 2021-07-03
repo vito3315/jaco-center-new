@@ -1211,7 +1211,11 @@ class BlockPred extends React.Component {
     this._thisEdit = true;
     this.changeData('typeTime', {target: {value: newValue}})
     
-    this.loadTimeWait();
+    if( parseInt(newValue) == 0 ){
+      this.loadTimeWait();
+    }else{
+      this.loadTimePred();
+    }
   }
   
   loadTimePred(){

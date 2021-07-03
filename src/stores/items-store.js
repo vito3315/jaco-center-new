@@ -11,8 +11,6 @@ configure({
 class ItemsStore {
   // Don't need decorators now
   
-  
-  
   items = '';
   itemsPromo = '';
   promoName = '';
