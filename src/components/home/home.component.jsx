@@ -1163,8 +1163,11 @@ class BlockPred extends React.Component {
           })
         }
         
+        console.log( 'autorun', cartData.orderType )
+        
         if( cartData.orderType == 0 && cartData.orderAddr.point_id ){
           if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
+            console.log( 'autorun load 1' )
             this.loadTimeWait();
             this.setState({
               point_id: this.state.point_id
@@ -1174,6 +1177,7 @@ class BlockPred extends React.Component {
         
         if( cartData.orderType == 1 && cartData.orderPic ){
           if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
+            console.log( 'autorun load 2' )
             this.loadTimeWait();
             this.setState({
               point_id: cartData.orderPic
@@ -1182,6 +1186,7 @@ class BlockPred extends React.Component {
         }
         
         if( !this._thisEdit ){
+          console.log( 'autorun load 3' )
           this.startData();
         }
       }
