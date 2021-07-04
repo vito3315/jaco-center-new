@@ -224,7 +224,7 @@ class ItemsStore {
       if( !promo_info.status_promo ){
         return {
           st: false,
-          text: promo_info.promo_text.false
+          text: 'status_promo '+promo_info.promo_text.false
         }
       }
       
@@ -234,7 +234,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: promo_info.promo_text.false
+            text: 'limits.date '+promo_info.promo_text.false
           }
         }
       }
@@ -245,7 +245,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: promo_info.promo_text.false
+            text: 'limits.time '+promo_info.promo_text.false
           }
         }
       }
@@ -321,7 +321,7 @@ class ItemsStore {
         if( promo_info.limits.items.length != check ){
           return {
             st: false,
-            text: promo_info.promo_text.false
+            text: 'limits.items '+promo_info.promo_text.false
           }
         }
       }
@@ -506,7 +506,7 @@ class ItemsStore {
     }else{
       return {
         st: false,
-        text: promo_info.promo_text.false,
+        text: '!promo_info '+promo_info.promo_text.false,
         test: promo_info
       }
     }
