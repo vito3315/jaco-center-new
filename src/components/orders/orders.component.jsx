@@ -654,7 +654,17 @@ class OrdersStat extends React.Component {
                   <Typography variant="h6" component="span">{this.state.showOrder.order.type_order}: {this.state.showOrder.order.type_order_addr_new}</Typography>
                   <Typography variant="h6" component="span">{this.state.showOrder.order.time_order_name}: {this.state.showOrder.order.time_order}</Typography>
                   
-                  { this.state.showOrder.order.number.length > 1 ? <Typography variant="h6" component="span">Телефон: {this.state.showOrder.order.number}</Typography> : null}
+                  <Grid container spacing={0}>
+                    { this.state.showOrder.order.number.length > 1 ? 
+                      <Grid item xs={12}>
+                        <Typography variant="h6" component="b">Телефон: </Typography> 
+                        <Typography variant="h6" component="span">{this.state.showOrder.order.number}</Typography> 
+                      </Grid>
+                        : 
+                      null
+                    }
+                  </Grid>
+                  
                   
                   { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: 'red' }}>Удален: {this.state.showOrder.order.date_time_delete}</Typography> : null}
                   { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: 'red' }}>{this.state.showOrder.order.delete_reason}</Typography> : null}
@@ -665,18 +675,32 @@ class OrdersStat extends React.Component {
                   
                   <Typography variant="h6" component="span">{this.state.showOrder.order.textTime}</Typography>
                   
-                  { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
-                      <Typography variant="h6" component="span">Промокод: {this.state.showOrder.order.promo_name}</Typography>
-                  }
-                  
-                  { this.state.showOrder.order.comment == null || this.state.showOrder.order.comment.length == 0 ? null :
-                      <Typography variant="h6" component="span">Комментарий: {this.state.showOrder.order.comment}</Typography>
-                  }
-                  
-                  { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
-                      <Typography variant="h6" component="span" className="noSpace">{this.state.showOrder.order.promo_text}</Typography>
-                  }
-                  <Typography variant="h5" component="span" className="CardPriceItem">Сумма закза: {this.state.showOrder.order.sum_order} р</Typography>
+                  <Grid container spacing={0}>
+                    { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
+                      <>
+                        <Grid item xs={12}>
+                          <Typography variant="h6" component="b">Промокод: </Typography>
+                          <Typography variant="h6" component="span">{this.state.showOrder.order.promo_name}</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="h6" component="span" className="noSpace">{this.state.showOrder.order.promo_text}</Typography>
+                        </Grid>
+                      </>
+                    }
+                    
+                    { this.state.showOrder.order.comment == null || this.state.showOrder.order.comment.length == 0 ? null :
+                      <Grid item xs={12}>
+                        <Typography variant="h6" component="b">Комментарий: </Typography>
+                        <Typography variant="h6" component="span">{this.state.showOrder.order.comment}</Typography>
+                      </Grid>
+                    }
+                    
+                    <Grid item xs={12}>
+                      <Typography variant="h6" component="b">Сумма закза: </Typography>
+                      <Typography variant="h6" component="span">{this.state.showOrder.order.sum_order} р</Typography>
+                    </Grid>
+                    
+                  </Grid>
                   
                   <table className="tableOrderCheck">
                       <tbody>
@@ -688,8 +712,27 @@ class OrdersStat extends React.Component {
                                   <td>
                                       <Typography variant="h5" component="span">{item.count}</Typography>
                                   </td>
+                                  <td>
+                                      <Typography variant="h5" component="span">{item.price} р</Typography>
+                                  </td>
                               </tr>
                           )}
+                          
+                          { parseInt(this.state.showOrder.order.type_order_) == 1 ?
+                            <tr>
+                              <td>
+                                  <Typography variant="h5" component="span">Доставка</Typography>
+                              </td>
+                              <td>
+                                  <Typography variant="h5" component="span"></Typography>
+                              </td>
+                              <td>
+                                  <Typography variant="h5" component="span">{this.state.showOrder.order.sum_div} р</Typography>
+                              </td>
+                            </tr>
+                              :
+                            null
+                          }
                       </tbody>
                   </table>
                   

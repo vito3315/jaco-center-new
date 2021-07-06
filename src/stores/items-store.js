@@ -224,7 +224,7 @@ class ItemsStore {
       if( !promo_info.status_promo ){
         return {
           st: false,
-          text: 'status_promo '+promo_info.promo_text.false
+          text: 'Промокод не найден или уже активирован'
         }
       }
       
@@ -234,7 +234,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: 'limits.date '+promo_info.promo_text.false
+            text: 'Действует с '+promo_info.limits.date.min+' по '+promo_info.limits.date.max+' '+promo_info.promo_text.false
           }
         }
       }
@@ -245,7 +245,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: 'limits.time '+promo_info.promo_text.false
+            text: 'Действует с '+promo_info.limits.time.min+' по '+promo_info.limits.time.max+' '+promo_info.promo_text.false
           }
         }
       }
@@ -267,7 +267,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: 'Общая сумма вашего заказа превышает допустимую стоимость для применения промокода.'
+            text: 'Сумма от '+promo_info.limits.summ.min+' до '+promo_info.limits.summ.max+'  Общая сумма вашего заказа превышает допустимую стоимость для применения промокода.'
           }
         }
       }
@@ -290,9 +290,26 @@ class ItemsStore {
           (parseInt( promo_info.limits.type_order ) == 2 && type_order == 1) ){
           
         }else{
+          
+          let type_ = '';
+          
+          if( parseInt( promo_info.limits.type_order ) == 1 ){
+            type_ = 'Все типы заказов';
+          }else{
+            if( parseInt( promo_info.limits.type_order ) == 2 ){
+              type_ = 'Только самовывоз';
+            }else{
+              if( parseInt( promo_info.limits.type_order ) == 4 ){
+                type_ = 'Только доставка';
+              }else{
+                type_ = 'Только в зале';
+              }
+            }
+          }
+          
           return {
             st: false,
-            text: 'Тип заказа не применим для данного промокода. Пожалуйста, отредактируйте заказ.'
+            text: 'Действует '+type_
           }
         }
       }
@@ -301,7 +318,7 @@ class ItemsStore {
         if( parseInt( promo_info.limits.only_kassa ) == 1 ){
           return {
             st: false,
-            text: 'Указанный вами промокод действителен только при оплате на кассе. Пожалуйста, посетите для оформления заказа ближайшее к вам кафе.'
+            text: 'Указанный вами промокод действителен только при оплате на кассе.'
           }
         }
       }
@@ -309,19 +326,28 @@ class ItemsStore {
       if( promo_info.limits.items.length > 0 ){
         let check = 0;
         let this_item = null;
+        let this_item_check = null;
         
         promo_info.limits.items.map((need_item)=>{
           this_item = new_my_cart.find( (item) => item.item_id == need_item );
           
-          if( this_item ){
-            check ++;
+          let check = allItems.find( (item) => item.id == need_item );
+          
+          if( check && check.name ){
+            this_item_check += check.name+', '
+            
+            if( this_item ){
+              check ++;
+            }
           }
+          
+          
         })
         
         if( promo_info.limits.items.length != check ){
           return {
             st: false,
-            text: 'limits.items '+promo_info.promo_text.false
+            text: 'Позиции, которые должны быть в корзине: '+this_item_check
           }
         }
       }
@@ -506,7 +532,7 @@ class ItemsStore {
     }else{
       return {
         st: false,
-        text: '!promo_info '+promo_info.promo_text.false,
+        text: 'Промокод не найден',
         test: promo_info
       }
     }

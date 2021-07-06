@@ -991,9 +991,9 @@ class BlockAddrMy extends React.Component {
             <ListItemText primary={ 
               item.street + ' ' + 
               item.home + 
-              ( parseInt(item.pd) == 0 ? '' : ', Пд. '+item.pd )+
-              ( parseInt(item.et) == 0 ? '' : ', Эт. '+item.et )+
-              ( parseInt(item.kv) == 0 ? '' : ', Кв. '+item.kv )
+              ( item.pd.length == 0 ? '' : ', Пд. '+item.pd )+
+              ( item.et.length == 0 ? '' : ', Эт. '+item.et )+
+              ( item.kv.length == 0 ? '' : ', Кв. '+item.kv )
             } />
           </ListItem>
         ) }
@@ -2050,9 +2050,9 @@ class CreateOrder extends React.Component {
                   //this.state.newOrder.addr.city_name+', '+
                   this.state.newOrder.addr.street+' '+
                   this.state.newOrder.addr.home+
-                  ( parseInt(this.state.newOrder.addr.pd) == 0 ? '' : ', Пд. '+this.state.newOrder.addr.pd )+
-                  ( parseInt(this.state.newOrder.addr.et) == 0 ? '' : ', Эт. '+this.state.newOrder.addr.et )+
-                  ( parseInt(this.state.newOrder.addr.kv) == 0 ? '' : ', Кв. '+this.state.newOrder.addr.kv )
+                  ( this.state.newOrder.addr.pd.length == 0 ? '' : ', Пд. '+this.state.newOrder.addr.pd )+
+                  ( this.state.newOrder.addr.et.length == 0 ? '' : ', Эт. '+this.state.newOrder.addr.et )+
+                  ( this.state.newOrder.addr.kv.length == 0 ? '' : ', Кв. '+this.state.newOrder.addr.kv )
                       :
                   null
                 }</Typography>
