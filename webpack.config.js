@@ -26,8 +26,10 @@ module.exports = {
     // output files and chunks
     output: {
         path: path.resolve( __dirname, 'dist' ),
-        filename: 'build/[name].js',
-        publicPath: '/'
+        //filename: 'build/[name].js',
+        publicPath: '/',
+        filename: '[name].[contenthash].js',
+        clean: true,
     },
 
     // module/loaders configuration
@@ -104,21 +106,22 @@ module.exports = {
     },
 
     // webpack optimizations
+    
     optimization: {
-        runtimeChunk: false,
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
         splitChunks: {
             cacheGroups: {
-                default: false,
-                vendors: false,
-                
                 vendor: {
-                    chunks: 'all', // both : consider sync + async chunks for evaluation
-                    name: 'vendor', // name of chunk file
-                    test: /node_modules/, // test regular expression
-                }
-            }
-        }
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                },
+            },
+       },
     },
+    
+    
     
     // development server configuration
     devServer: {
