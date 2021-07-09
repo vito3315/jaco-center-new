@@ -5,8 +5,6 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CompressionPlugin = require("compression-webpack-plugin");
 
-
-
 const webpack = require('webpack');
 
 /*-------------------------------------------------*/
@@ -26,7 +24,6 @@ module.exports = {
     // output files and chunks
     output: {
         path: path.resolve( __dirname, 'dist' ),
-        //filename: 'build/[name].js',
         publicPath: '/',
         filename: '[name].[contenthash].js',
         clean: true,
@@ -100,13 +97,10 @@ module.exports = {
 
     // resolve files configuration
     resolve: {
-        
-        // file extensions
         extensions: [ '.js', '.jsx', '.scss', '.css' ],
     },
 
     // webpack optimizations
-    
     optimization: {
         moduleIds: 'deterministic',
         runtimeChunk: 'single',

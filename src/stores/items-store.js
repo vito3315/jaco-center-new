@@ -245,7 +245,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: 'Действует с '+promo_info.limits.time.min+' по '+promo_info.limits.time.max+' '+promo_info.promo_text.false
+            text: this_time+' Действует с '+promo_info.limits.time.min+' по '+promo_info.limits.time.max+' '+promo_info.promo_text.false
           }
         }
       }
