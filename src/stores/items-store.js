@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
-import moment from "moment";
+import moment from "moment-timezone";
+
 const queryString = require('query-string');
 
 import { configure } from "mobx"
@@ -211,13 +212,13 @@ class ItemsStore {
         this_dow = '';
     
     if( by_time == 0 ){
-      this_date = moment(new Date()).format("YYYY-MM-DD");
-      this_time = moment(new Date()).format("H:mm");
-      this_dow = parseInt(moment(new Date()).format("E"));
+      this_date = moment(new Date()).tz("Europe/Samara").format("YYYY-MM-DD");
+      this_time = moment(new Date()).tz("Europe/Samara").format("H:mm");
+      this_dow = parseInt(moment(new Date()).tz("Europe/Samara").format("E"));
     }else{
-      this_date = moment(by_time).format("YYYY-MM-DD");
-      this_time = moment(by_time).format("H:mm");
-      this_dow = parseInt(moment(by_time).format("E"));
+      this_date = moment(by_time).tz("Europe/Samara").format("YYYY-MM-DD");
+      this_time = moment(by_time).tz("Europe/Samara").format("H:mm");
+      this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
     }
     
     if( promo_info ){
