@@ -101,6 +101,15 @@ export class Header extends React.Component {
     }
     
     autorun(() => {
+      
+      let test = itemsStore.cart_data;
+      let thisCity = itemsStore.getCity();
+      let cartData = itemsStore.getCartData();
+      
+      if( this.state.promo_name && this.state.promo_name.length > 0 ){
+        this.checkPromo( {target: {value: this.state.promo_name}} )
+      }
+      
       if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
         
         let myPromos = itemsStore.getMyPromos();
@@ -199,6 +208,10 @@ export class Header extends React.Component {
   checkPromo(event){
     
     let promo = event.target.value;
+    //let promo = this.state.promo_name;
+    
+    console.log( 'promo', promo )
+    console.log( 'promo 555', event.target.value )
     
     fetch('https://jacofood.ru/src/php/test_app.php', {
       method: 'POST',
@@ -225,7 +238,8 @@ export class Header extends React.Component {
       }else{
         this.setState({
           orderPromoText: check_promo.text,
-          promoST: check_promo.st
+          promoST: check_promo.st,
+          promo_name: promo
         })
       }
     })
@@ -343,7 +357,7 @@ export class Header extends React.Component {
                     style={{ minWidth: 200, marginRight: 8 }}
                     
                     value={ this.state.promo_name } 
-                    onChange={ (event, val) => { console.log(val, event.target.value); this.setState({ promo_name: val }) } } 
+                    onChange={ (event, val) => { console.log(val); this.setState({ promo_name: val }) } } 
                     onBlur={this.checkPromo.bind(this)} 
                     
                     options={this.state.MyPromos.map((option) => option.promo)}

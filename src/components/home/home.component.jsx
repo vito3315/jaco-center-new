@@ -1034,7 +1034,7 @@ class BlockPic extends React.Component {
     autorun(() => {
       if( this._isMounted ){
         let cartData = itemsStore.getCartData();
-        let test = itemsStore.cart_data;
+        //let test = itemsStore.cart_data;
         
         if( cartData.orderType ){
           setTimeout( () => {

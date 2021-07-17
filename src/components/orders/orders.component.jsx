@@ -767,7 +767,7 @@ class OrdersStat extends React.Component {
             <MuiDialogTitle disableTypography style={{ margin: 0, padding: 8 }}>
               <Typography variant="h6">Отмена заказа {this.state.showOrder.order.order_id}</Typography>
             
-              <IconButton aria-label="close" style={{ position: 'absolute', top: 0, right: 0, color: '#000' }} onClick={this.closeDialog.bind(this)}>
+              <IconButton aria-label="close" style={{ position: 'absolute', top: 0, right: 0, color: '#000' }} onClick={() => { this.setState({delOrder: false}) }}>
                 <CloseIcon />
               </IconButton>
             </MuiDialogTitle>
