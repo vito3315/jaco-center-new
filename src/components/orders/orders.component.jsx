@@ -25,6 +25,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import itemsStore from '../../stores/items-store';
+import config from '../../stores/config';
 
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -227,7 +228,7 @@ class OrdersStat extends React.Component {
   }
   
   checkLogin(){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -255,7 +256,7 @@ class OrdersStat extends React.Component {
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin();
     
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -294,7 +295,7 @@ class OrdersStat extends React.Component {
   }
   
   getPoints(){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -328,7 +329,7 @@ class OrdersStat extends React.Component {
   
   getOrders(){
     setTimeout( () => {
-      fetch('https://jacofood.ru/src/php/test_app.php', {
+      fetch(config.urlApi, {
         method: 'POST',
         headers: {
           'Content-Type':'application/x-www-form-urlencoded'},
@@ -354,7 +355,7 @@ class OrdersStat extends React.Component {
   }
   
   getOrder(order_id){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -395,7 +396,7 @@ class OrdersStat extends React.Component {
     }
     
     if (confirm("Отменить заказ #"+this.state.showOrder.order.order_id)) {
-      fetch('https://jacofood.ru/src/php/test_app.php', {
+      fetch(config.urlApi, {
         method: 'POST',
         headers: {
           'Content-Type':'application/x-www-form-urlencoded'},

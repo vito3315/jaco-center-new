@@ -29,6 +29,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import itemsStore from '../../stores/items-store';
+import config from '../../stores/config';
 import { autorun } from "mobx"
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -213,7 +214,7 @@ export class Header extends React.Component {
     console.log( 'promo', promo )
     console.log( 'promo 555', event.target.value )
     
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},

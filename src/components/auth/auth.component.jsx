@@ -1,42 +1,17 @@
 import React from 'react';
-import { NavLink as Link } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
-
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
-
-import Typography from '@material-ui/core/Typography';
-
-import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
-import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import Hidden from '@material-ui/core/Hidden';
-import Popover from '@material-ui/core/Popover';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-import FormHelperText from '@material-ui/core/FormHelperText';
 
 const queryString = require('query-string');
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputMask from "react-input-mask";
-import Badge from '@material-ui/core/Badge';
 import itemsStore from '../../stores/items-store';
+import config from '../../stores/config';
 
-import { autorun } from "mobx"
 
 export class Auth extends React.Component {
   constructor(props) {
@@ -52,7 +27,7 @@ export class Auth extends React.Component {
   }
     
   login(){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},

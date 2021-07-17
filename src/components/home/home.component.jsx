@@ -34,6 +34,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import itemsStore from '../../stores/items-store';
+import config from '../../stores/config';
 import { autorun } from "mobx"
 
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -586,7 +587,7 @@ class BlockAddrCustom extends React.Component {
     let street = document.querySelector('#newAddrStreet').value;
     
     if( street.length > 0 && this.state.newAddrHome.length > 0 ){
-      fetch('https://jacofood.ru/src/php/test_app.php', {
+      fetch(config.urlApi, {
         method: 'POST',
         headers: {
           'Content-Type':'application/x-www-form-urlencoded'},
@@ -1238,7 +1239,7 @@ class BlockPred extends React.Component {
         });
     });
     
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -1269,7 +1270,7 @@ class BlockPred extends React.Component {
   loadTimeWait(){
     let cartData = itemsStore.getCartData();
     
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -1499,7 +1500,7 @@ class CreateOrder extends React.Component {
   }
   
   checkLogin(){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -1549,7 +1550,7 @@ class CreateOrder extends React.Component {
       })
     }
     
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -1569,7 +1570,7 @@ class CreateOrder extends React.Component {
     })
     .catch(err => { });
     
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -1603,7 +1604,7 @@ class CreateOrder extends React.Component {
             date_pred: []
           })
           
-          fetch('https://jacofood.ru/src/php/test_app.php', {
+          fetch(config.urlApi, {
             method: 'POST',
             headers: {
               'Content-Type':'application/x-www-form-urlencoded'},
@@ -1623,7 +1624,7 @@ class CreateOrder extends React.Component {
           })
           .catch(err => { });
           
-          fetch('https://jacofood.ru/src/php/test_app.php', {
+          fetch(config.urlApi, {
             method: 'POST',
             headers: {
               'Content-Type':'application/x-www-form-urlencoded'},
@@ -1716,7 +1717,7 @@ class CreateOrder extends React.Component {
   }
   
   getAddr(){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -1789,7 +1790,7 @@ class CreateOrder extends React.Component {
         }
       })
         
-      fetch('https://jacofood.ru/src/php/test_app.php', {
+      fetch(config.urlApi, {
         method: 'POST',
         headers: {
           'Content-Type':'application/x-www-form-urlencoded'},
@@ -1880,7 +1881,7 @@ class CreateOrder extends React.Component {
   }
   
   trueOrder(){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
