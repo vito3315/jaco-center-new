@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import moment from "moment-timezone";
+import config from './config';
 
 const queryString = require('query-string');
 
@@ -134,7 +135,7 @@ class ItemsStore {
   };
 
   getInfoPromo(promoName){
-    fetch('https://jacofood.ru/src/php/test_app.php', {
+    fetch(config.urlApi, {
       method: 'POST',
       headers: {
           'Content-Type':'application/x-www-form-urlencoded'},
