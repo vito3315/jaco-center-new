@@ -696,11 +696,12 @@ class OrdersStat extends React.Component {
                       </Grid>
                     }
                     
-                    <Grid item xs={12}>
-                      <Typography variant="h6" component="b">Сумма закза: </Typography>
-                      <Typography variant="h6" component="span">{this.state.showOrder.order.sum_order} р</Typography>
-                    </Grid>
-                    
+                    { this.state.showOrder.order.sdacha == null || parseInt(this.state.showOrder.order.sdacha) == 0 ? null :
+                      <Grid item xs={12}>
+                        <Typography variant="h6" component="b">Сдача: </Typography>
+                        <Typography variant="h6" component="span">{this.state.showOrder.order.sdacha}</Typography>
+                      </Grid>
+                    }
                   </Grid>
                   
                   <table className="tableOrderCheck">
@@ -735,6 +736,19 @@ class OrdersStat extends React.Component {
                             null
                           }
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <th>
+                            <Typography variant="h5" component="span">Сумма закза</Typography>
+                          </th>
+                          <td>
+                            <Typography variant="h5" component="span"></Typography>
+                          </td>
+                          <th>
+                            <Typography variant="h5" component="span">{this.state.showOrder.order.sum_order} р</Typography>
+                          </th>
+                        </tr>
+                      </tfoot>
                   </table>
                   
               </MuiDialogContent>
