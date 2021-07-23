@@ -738,13 +738,13 @@ class OrdersStat extends React.Component {
                       </tbody>
                       <tfoot>
                         <tr>
-                          <th>
+                          <th style={{ textAlign: 'left' }}>
                             <Typography variant="h5" component="span">Сумма закза</Typography>
                           </th>
                           <td>
                             <Typography variant="h5" component="span"></Typography>
                           </td>
-                          <th>
+                          <th style={{ textAlign: 'left' }}>
                             <Typography variant="h5" component="span">{this.state.showOrder.order.sum_order} р</Typography>
                           </th>
                         </tr>
