@@ -1034,8 +1034,13 @@ class BlockPic extends React.Component {
     
     autorun(() => {
       if( this._isMounted ){
+        
+        let test = itemsStore.cart_data;
+        
         let cartData = itemsStore.getCartData();
         //let test = itemsStore.cart_data;
+        
+        console.log( cartData )
         
         if( cartData.orderType ){
           setTimeout( () => {
@@ -1153,48 +1158,62 @@ class BlockPred extends React.Component {
     
     autorun(() => {
       let cartData = itemsStore.getCartData();
-      let test = itemsStore.cart_data;
+      //let test = itemsStore.cart_data;
+      
+      console.log( 'cartData', cartData )
+      
+      console.log( 'test', itemsStore.dateTimeDel )
       
       if( this._isMounted ){
         
-        if( cartData.orderPredDay == '' && cartData.orderPredTime == '' ){
-          this.setState({
-            time: '',
-            date: ''
-          })
-        }
-        
-        if( cartData.orderType == 0 ){
-          //if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
-            if( parseInt(cartData.orderTimes) == 1 ){
-              this.loadTimePred();
-            }else{
-              this.loadTimeWait();
-            }
-            
+        setTimeout(()=>{
+          
+          let cartData = itemsStore.getCartData();
+          
+          if( cartData.orderPredDay == '' && cartData.orderPredTime == '' ){
             this.setState({
-              //point_id: this.state.point_id
+              time: '',
+              date: '',
+              typeTime: 0
             })
-          //}
-        }
+          }
+          
+          if( cartData.orderType == 0 ){
+            //if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
+              if( parseInt(cartData.orderTimes) == 1 ){
+                this.loadTimePred();
+              }else{
+                this.loadTimeWait();
+              }
+              
+              this.setState({
+                //point_id: this.state.point_id
+              })
+            //}
+          }
+          
+          if( cartData.orderType == 1 ){
+            //if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
+              if( parseInt(cartData.orderTimes) == 1 ){
+                this.loadTimePred();
+              }else{
+                this.loadTimeWait();
+              }
+              
+              this.setState({
+                point_id: cartData.orderPic
+              })
+            //}
+          }
+          
+          if( !this._thisEdit ){
+            this.startData();
+          }
+          
+        }, 500)
         
-        if( cartData.orderType == 1 ){
-          //if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
-            if( parseInt(cartData.orderTimes) == 1 ){
-              this.loadTimePred();
-            }else{
-              this.loadTimeWait();
-            }
-            
-            this.setState({
-              point_id: cartData.orderPic
-            })
-          //}
-        }
         
-        if( !this._thisEdit ){
-          this.startData();
-        }
+        
       }
     })
     
@@ -1308,7 +1327,7 @@ class BlockPred extends React.Component {
   saveData(){
     let cartData = itemsStore.getCartData();
     
-    setTimeout(()=>{
+    //setTimeout(()=>{
       let data = {
         orderType: cartData && cartData.orderType ? cartData.orderType : '0',
         orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
@@ -1325,8 +1344,10 @@ class BlockPred extends React.Component {
           
       };
       
+      console.log( 'saveCartData', data )
+      
       itemsStore.saveCartData(data);
-    }, 500)
+    //}, 500)
   }
   
   startData(){

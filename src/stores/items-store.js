@@ -8,6 +8,7 @@ import { configure } from "mobx"
 
 configure({
   enforceActions: "never",
+  useProxies: "ifavailable"
 })
 
 class ItemsStore {
@@ -43,6 +44,8 @@ class ItemsStore {
   
   MyPromos = '';
   updateMyPromos = '';
+  
+  dateTimeDel = null;
   
   setMyPromos = (items) => {
     this.MyPromos = JSON.stringify( items );
@@ -145,6 +148,9 @@ class ItemsStore {
           promo_name: promoName
       })
   }).then(res => res.json()).then(json => {
+    
+      console.log( json )
+    
       itemsStore.setPromo( JSON.stringify(json), promoName );
       let check_promo = itemsStore.checkPromo();
               

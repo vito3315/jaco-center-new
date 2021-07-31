@@ -103,7 +103,7 @@ export class Header extends React.Component {
     
     autorun(() => {
       
-      let test = itemsStore.cart_data;
+      //let test = itemsStore.cart_data;
       let thisCity = itemsStore.getCity();
       let cartData = itemsStore.getCartData();
       
@@ -236,6 +236,7 @@ export class Header extends React.Component {
           orderPromoText: '',
           promoST: false
         })
+        localStorage.removeItem('promo_name')
       }else{
         this.setState({
           orderPromoText: check_promo.text,
@@ -255,6 +256,7 @@ export class Header extends React.Component {
   clear(){
     itemsStore.clientNumber = '';
     localStorage.removeItem('clientNumber')
+    localStorage.removeItem('promo_name')
     
     itemsStore.setItems([]);
     
@@ -270,11 +272,20 @@ export class Header extends React.Component {
       
       orderPay: '',
       orderSdacha: '',
+      
+      dateTime: new Date()
     };
+    
+    itemsStore.dateTimeDel = new Date();
     
     itemsStore.saveCartData(data);
     
-    this.checkPromo({ target: {value: ''} })
+    
+    setTimeout( () => {
+      itemsStore.setPromo(null, '');
+      this.checkPromo({ target: {value: ''} })
+    }, 300)
+    
     
     this.setState({
       number: '',
