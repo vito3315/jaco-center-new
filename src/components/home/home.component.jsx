@@ -1935,9 +1935,44 @@ class CreateOrder extends React.Component {
         })
         itemsStore.clear = true;
         
+        this.clear();
+        
         clearTimeout(this.startOrderIntervalTimer);
       }
     });
+  }
+  
+  clear(){
+    itemsStore.clientNumber = '';
+    localStorage.removeItem('clientNumber')
+    localStorage.removeItem('promo_name')
+    
+    itemsStore.setItems([]);
+    
+    let data = {
+      orderType: '0',
+      orderAddr: '',
+      orderPic: 0,
+      orderComment: '',
+      
+      orderTimes: 0,
+      orderPredDay: '',
+      orderPredTime: '',
+      
+      orderPay: '',
+      orderSdacha: '',
+      
+      dateTime: new Date()
+    };
+    
+    itemsStore.dateTimeDel = new Date();
+    
+    itemsStore.saveCartData(data);
+    
+    
+    setTimeout( () => {
+      itemsStore.setPromo(null, '');
+    }, 300)
   }
   
   render() {

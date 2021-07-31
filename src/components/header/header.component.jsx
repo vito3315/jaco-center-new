@@ -71,6 +71,8 @@ export class Header extends React.Component {
       left: false,
       bottom: false,
       right: false,
+      
+      thisDateTimeDel: null
     };
   }
     
@@ -106,6 +108,16 @@ export class Header extends React.Component {
       //let test = itemsStore.cart_data;
       let thisCity = itemsStore.getCity();
       let cartData = itemsStore.getCartData();
+      
+      let dateTimeDel = itemsStore.dateTimeDel;
+      
+      if( this.state.thisDateTimeDel != itemsStore.dateTimeDel ){
+        this.setState({
+          thisDateTimeDel: itemsStore.dateTimeDel
+        })
+        
+        this.clear();
+      }
       
       if( this.state.promo_name && this.state.promo_name.length > 0 ){
         this.checkPromo( {target: {value: this.state.promo_name}} )
