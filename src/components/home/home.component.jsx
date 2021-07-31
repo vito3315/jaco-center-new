@@ -1327,7 +1327,7 @@ class BlockPred extends React.Component {
   saveData(){
     let cartData = itemsStore.getCartData();
     
-    //setTimeout(()=>{
+    setTimeout(()=>{
       let data = {
         orderType: cartData && cartData.orderType ? cartData.orderType : '0',
         orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
@@ -1347,7 +1347,7 @@ class BlockPred extends React.Component {
       console.log( 'saveCartData', data )
       
       itemsStore.saveCartData(data);
-    //}, 500)
+    }, 500)
   }
   
   startData(){
