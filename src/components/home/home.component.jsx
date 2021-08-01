@@ -650,7 +650,7 @@ class BlockAddrCustom extends React.Component {
       if( this._isMounted ){
         let cartData = itemsStore.getCartData();
       
-        let test = itemsStore.cart_data;
+        //let test = itemsStore.cart_data;
         
         if( cartData.orderType || cartData.orderType == 0 ){
           this.setState({

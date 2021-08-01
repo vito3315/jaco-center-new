@@ -111,13 +111,25 @@ export class Header extends React.Component {
       
       let dateTimeDel = itemsStore.dateTimeDel;
       
-      if( this.state.thisDateTimeDel != itemsStore.dateTimeDel ){
-        this.setState({
-          thisDateTimeDel: itemsStore.dateTimeDel
-        })
+      setTimeout( () => {
+        dateTimeDel = itemsStore.dateTimeDel;
         
-        this.clear();
-      }
+        if( this.state.thisDateTimeDel != dateTimeDel ){
+          this.setState({
+            thisDateTimeDel: dateTimeDel
+          })
+          
+          this.setState({
+            number: '',
+            promo_name: '',
+            orderPromoText: '',
+          })
+          
+          this.clear2();
+        }
+      }, 300 )
+      
+      
       
       if( this.state.promo_name && this.state.promo_name.length > 0 ){
         this.checkPromo( {target: {value: this.state.promo_name}} )
@@ -246,6 +258,7 @@ export class Header extends React.Component {
       if( promo.length == 0 ){
         this.setState({
           orderPromoText: '',
+          promo_name: '',
           promoST: false
         })
         localStorage.removeItem('promo_name')
@@ -289,6 +302,45 @@ export class Header extends React.Component {
     };
     
     itemsStore.dateTimeDel = new Date();
+    
+    itemsStore.saveCartData(data);
+    
+    
+    setTimeout( () => {
+      itemsStore.setPromo(null, '');
+      this.checkPromo({ target: {value: ''} })
+    }, 300)
+    
+    
+    this.setState({
+      number: '',
+      promo_name: '',
+      orderPromoText: '',
+    })
+  }
+  
+  clear2(){
+    itemsStore.clientNumber = '';
+    localStorage.removeItem('clientNumber')
+    localStorage.removeItem('promo_name')
+    
+    itemsStore.setItems([]);
+    
+    let data = {
+      orderType: '0',
+      orderAddr: '',
+      orderPic: 0,
+      orderComment: '',
+      
+      orderTimes: 0,
+      orderPredDay: '',
+      orderPredTime: '',
+      
+      orderPay: '',
+      orderSdacha: '',
+      
+      dateTime: new Date()
+    };
     
     itemsStore.saveCartData(data);
     
