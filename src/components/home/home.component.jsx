@@ -1872,7 +1872,8 @@ class CreateOrder extends React.Component {
               sdacha: parseInt(cartData.orderType) == 0 ? cartData.orderSdacha : '',
               timePred: parseInt( cartData.orderTimes ) == 0 ? '' : cartData.orderPredDay + ' ' + cartData.orderPredTime,
               addr: parseInt(cartData.orderType) == 0 ? cartData.orderAddr : {},
-              promoName: localStorage.getItem('promo_name')
+              promoName: localStorage.getItem('promo_name'),
+              dop_text: json.dop_text,
             }
           })
           
@@ -2149,6 +2150,15 @@ class CreateOrder extends React.Component {
                   :
                 null
               }
+                  
+              { this.state.newOrder.typeOrder == 'Доставка' ?
+                null
+                  :
+                this.state.newOrder.dop_text.length > 0 ?
+                  <Typography variant="h5" component="span" style={{ fontWeight: 'bold' }} className="nameSdacha orderCheckText">{this.state.newOrder.dop_text}</Typography>
+                    :
+                  null
+              }     
                   
               <table className="tableOrderCheck">
                 <tbody>
