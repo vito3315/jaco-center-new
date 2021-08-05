@@ -2541,6 +2541,16 @@ class CreateOrder extends React.Component {
     }
     
     if( key != this.state.chooseAddr ){
+      
+      this.setState({
+        newAddrStreet: item.street,
+        newAddrHome: item.home,
+        pd: item.pd,
+        et: item.et,
+        kv: item.kv,
+        newAddrDom: parseInt(item.dom_true) == 0 ? true : false,
+      })
+      
       this.setState({
         chooseAddr: key
       })
