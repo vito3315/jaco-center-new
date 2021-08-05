@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import moment from "moment";
+import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import {Helmet} from "react-helmet";
 
@@ -53,11 +54,17 @@ import TableRow from '@material-ui/core/TableRow';
 
 import Dialog from '@material-ui/core/Dialog';
 
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
-import { Header } from '../header';
+//import { Header } from '../header';
 
 const queryString = require('query-string');
 
@@ -547,6 +554,9 @@ class BlockTable extends React.Component {
   }
 }
 
+
+
+
 class BlockAddrCustom extends React.Component {
   _isMounted = false;
   
@@ -982,7 +992,7 @@ class BlockAddrMy extends React.Component {
       
       itemsStore.saveCartData(data);
     }, 500)
-}
+  }
   
   render(){
     return (
@@ -1462,9 +1472,10 @@ class BlockPred extends React.Component {
 
 class CreateOrder extends React.Component {
   _isMounted = false;
+  _isEdit = false;
   clickOrderStart = false;
   
-  startOrderInterval = 90;
+  startOrderInterval = 300;
   startOrderIntervalTimer = null;
   
   interval = null;
@@ -1512,6 +1523,66 @@ class CreateOrder extends React.Component {
       orderDate: '',//дата предзаказа
       orderTime: '',//дата предзаказа
       typeOrder: 0,//тип заказа
+      
+      
+      items: [],
+      main_items: [],
+      dop_items: [],
+      promo_items: [],
+      
+      activeCat: 0,
+      thisItem: '',
+      
+      orderPic: 0,
+      picPointInfo: null,
+      
+      
+      defValStreet: '',
+      defValHome: '',
+      
+      newAddrInfo: '',
+      
+      newAddrStreet: '',
+      newAddrHome: '',
+      newAddrPD: '',
+      newAddrET: '',
+      newAddrKV: '',
+      newAddrDom: '',
+      
+      pd: '',
+      et: '',
+      kv: '',
+      
+      
+      chooseAddr: -1,
+      
+      
+      point_id: 0,
+      
+      textAvgTime: 'Среднее время: ~',
+      
+      date: '',//дата предзаказа
+      time: '',//дата предзаказа
+      typeTime: 0,//0 - быстрее / 1 - пред
+      
+      
+      city: itemsStore.getCity(),
+      
+      updateMyPromos: null,
+      MyPromos: [],
+      
+      number: '',
+      
+      orderPromoText: '',
+      promo_name: '',
+      promoST: false,
+      
+      top: false,
+      left: false,
+      bottom: false,
+      right: false,
+      
+      thisDateTimeDel: null
     };
   }
   
@@ -1548,7 +1619,7 @@ class CreateOrder extends React.Component {
     this._isMounted = true;
     
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
-    this.checkLogin();
+    this.checkLogin(); 
     
     let cartData = itemsStore.getCartData();
     
@@ -1560,14 +1631,16 @@ class CreateOrder extends React.Component {
       itemsStore.setCity(city);
       
       this.setState({
-        cityID: city
+        cityID: city,
+        city: city
       })
       
     }else{
       itemsStore.setCity(1);
       
       this.setState({
-        cityID: 1
+        cityID: 1,
+        city: 1
       })
     }
     
@@ -1608,6 +1681,69 @@ class CreateOrder extends React.Component {
       })
     });
     
+    let defValue = '';
+  
+    if( localStorage.getItem('clientNumber') ){
+      defValue = localStorage.getItem('clientNumber');
+      itemsStore.clientNumber = defValue;
+      
+      this.setState({
+        number: defValue,
+      })
+    }
+    
+    if( localStorage.getItem('promo_name') ){
+      let promo = localStorage.getItem('promo_name');
+      
+      setTimeout( ()=>{
+        this.setState({
+          promo_name: promo
+        })
+        
+        this.checkPromo( {target: {value: promo}} )
+      }, 500 )
+      
+    }
+    
+    if( cartData.orderType || cartData.orderType == 0 ){
+          
+      console.log( 'autorun orderType 1' );
+      
+      this.setState({
+        newAddrStreet: cartData.orderAddr && cartData.orderAddr.street ? cartData.orderAddr.street : '',
+        newAddrHome: cartData.orderAddr && cartData.orderAddr.home ? cartData.orderAddr.home : '',
+        pd: cartData.orderAddr && cartData.orderAddr.pd ? cartData.orderAddr.pd : '',
+        et: cartData.orderAddr && cartData.orderAddr.et ? cartData.orderAddr.et : '',
+        kv: cartData.orderAddr && cartData.orderAddr.kv ? cartData.orderAddr.kv : '',
+        newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 1 ? false : true,
+      })
+      
+      let allPrice = itemsStore.getAllPrice();
+        
+      if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 ){
+        if( parseInt(allPrice) > 0 ){
+            itemsStore.setSumDiv(0);
+        }else{
+          itemsStore.setSumDiv(1);
+        }
+      }else{
+        itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
+      }
+    }else{
+      console.log( 'autorun orderType 0' );
+      
+      this.setState({
+        newAddrStreet: '',
+        newAddrHome: '',
+        pd: '',
+        et: '',
+        kv: '',
+        newAddrDom: true,
+      })
+      
+      itemsStore.setSumDiv(0);
+    }
+    
     autorun(() => {
       if( this._isMounted ){
         
@@ -1615,7 +1751,14 @@ class CreateOrder extends React.Component {
         let cartData = itemsStore.getCartData();
         let test = itemsStore.cart_data;
         
+        //let thisCity = 1;
+        //let cartData = itemsStore.getCartData();
+        
+        console.log( 'autorun' );
+        
         if( parseInt(thisCity) != parseInt(this.state.cityID) ){
+          
+          console.log( 'autorun change_city' );
           
           this.setState({
             cityID: thisCity,
@@ -1664,24 +1807,32 @@ class CreateOrder extends React.Component {
         }
         
         if( parseInt(cartData.orderType) != parseInt(this.state.typeOrder) ){
+          console.log( 'autorun orderType -1' );
           this.setState({
             typeOrder: cartData.orderType
           })
+          
+          
         }
         
         if( cartData.orderComment != this.state.comment ){
+          console.log( 'autorun orderComment' );
           this.setState({
             comment: cartData.orderComment
           })
         }
         
         if( parseInt(cartData.orderSdacha) != parseInt(this.state.sdacha) ){
+          console.log( 'autorun orderSdacha' );
+          
           this.setState({
             sdacha: cartData.orderSdacha
           })
         }
         
         if( itemsStore.clientNumber != this.state.clientNumber ){
+          console.log( 'autorun clientNumber' );
+          
           this.setState({
             clientNumber: itemsStore.clientNumber
           })
@@ -1690,6 +1841,175 @@ class CreateOrder extends React.Component {
             this.getAddr();  
           }, 300)
         }
+        
+        if( cartData.orderType ){
+          console.log( 'autorun orderType -2' );
+          
+          setTimeout( () => {
+            let choosePoint = this.state.pic_point.find( (item) => parseInt(item.id) == parseInt(cartData.orderPic) );
+        
+            if( this.state.orderPic != choosePoint ){
+              if( choosePoint ){
+                this.choosePic(choosePoint)
+              }else{
+                this.setState({
+                  orderPic: 0,
+                  picPointInfo: null
+                })
+              }
+            }
+          }, 500 )
+        }
+        
+        /*if( cartData.orderType || cartData.orderType == 0 ){
+          
+          console.log( 'autorun orderType 1' );
+          
+          this.setState({
+            newAddrStreet: cartData.orderAddr && cartData.orderAddr.street ? cartData.orderAddr.street : '',
+            newAddrHome: cartData.orderAddr && cartData.orderAddr.home ? cartData.orderAddr.home : '',
+            pd: cartData.orderAddr && cartData.orderAddr.pd ? cartData.orderAddr.pd : '',
+            et: cartData.orderAddr && cartData.orderAddr.et ? cartData.orderAddr.et : '',
+            kv: cartData.orderAddr && cartData.orderAddr.kv ? cartData.orderAddr.kv : '',
+            newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 1 ? false : true,
+          })
+          
+          let allPrice = itemsStore.getAllPrice();
+            
+          if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 ){
+            if( parseInt(allPrice) > 0 ){
+                itemsStore.setSumDiv(0);
+            }else{
+              itemsStore.setSumDiv(1);
+            }
+          }else{
+            itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
+          }
+        }else{
+          console.log( 'autorun orderType 0' );
+          
+          this.setState({
+            newAddrStreet: '',
+            newAddrHome: '',
+            pd: '',
+            et: '',
+            kv: '',
+            newAddrDom: true,
+          })
+          
+          itemsStore.setSumDiv(0);
+        }*/
+        
+        if( parseInt(this.state.typeTime) != parseInt(cartData.orderTimes) ){
+          console.log( 'autorun typeTime' );
+          
+          //if( this._isEdit === true ){
+            this.setState({
+              typeTime: cartData.orderTimes
+            })
+            
+            //console.log( 'cartData', cartData )
+            
+            
+            this.setState({
+              time: cartData.orderPredTime,
+              date: cartData.orderPredDay,
+              typeTime: cartData.orderTimes,
+            })
+            
+            
+            if( cartData.orderType == 0 ){
+              if( parseInt(cartData.orderTimes) == 1 ){
+                this.loadTimePred();
+              }else{
+                this.loadTimeWait();
+              }
+            }
+            
+            if( cartData.orderType == 1 ){
+              if( parseInt(cartData.orderTimes) == 1 ){
+                this.loadTimePred();
+              }else{
+                this.loadTimeWait();
+              }
+              
+              this.setState({
+                point_id: cartData.orderPic
+              })
+            }
+          //}
+          
+          //this._isEdit = true;
+        }
+        
+        //let test = itemsStore.cart_data;
+        /*let dateTimeDel = itemsStore.dateTimeDel;
+        
+        setTimeout( () => {
+          dateTimeDel = itemsStore.dateTimeDel;
+          
+          if( this.state.thisDateTimeDel != dateTimeDel ){
+            this.setState({
+              thisDateTimeDel: dateTimeDel
+            })
+            
+            this.setState({
+              number: '',
+              promo_name: '',
+              orderPromoText: '',
+            })
+            
+            this.clear2();
+          }
+        }, 300 )*/
+        
+        
+        
+        //if( this.state.promo_name && this.state.promo_name.length > 0 ){
+          //this.checkPromo( {target: {value: this.state.promo_name}} )
+        //}
+        
+        if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
+          
+          console.log( 'autorun updateMyPromos' );
+          
+          let myPromos = itemsStore.getMyPromos();
+          let myPromosNew = [];
+          let checkDate = moment(new Date()).add(-7, 'days').format("YYYY-MM-DD");
+          
+          myPromos = myPromos.filter( (item) => item.date >= checkDate );
+          
+          localStorage.setItem('MyPromos', JSON.stringify(myPromos) );
+          
+          myPromos.forEach( element => {
+            let check = myPromosNew.find( (item) => item.promo == element.promo )
+            
+            if( !check || check.length == 0 ){
+              element.count = 1;
+              
+              myPromosNew.push( element )
+            }else{
+              myPromosNew.forEach( (item, key) => {
+                if( item.promo == element.promo ){
+                  myPromosNew[key]['count'] ++;
+                }
+              } )
+            }
+          });
+          
+          myPromosNew = myPromosNew.filter( (item) => item.count > 1 );
+          
+          this.setState({
+            updateMyPromos: itemsStore.updateMyPromos,
+            MyPromos: myPromosNew
+          })
+        }
+        
+        /*if( itemsStore.clear === true ){
+          this.clear();
+          
+          itemsStore.clear = false;
+        }*/
         
         let newPrice = itemsStore.getAllPrice();
         let newSumDiv = itemsStore.getSumDiv();
@@ -1705,6 +2025,51 @@ class CreateOrder extends React.Component {
             sumDiv: newSumDiv
           })
         }
+       
+        
+        let my_cart = itemsStore.getItems();
+        let all_items = itemsStore.getAllItems();
+        let promoItems = itemsStore.getItemsPromo();
+        let cartPromoItems = [];
+        
+        promoItems.map((item) => {
+          let thisitem = all_items.find( (item_) => item_.id == item.item_id );
+          
+          if(thisitem){
+            cartPromoItems.push({
+              id: item.item_id,
+              cat_id: thisitem.cat_id,
+              name: thisitem.name,
+              desc: thisitem.tmp_desc,
+              count: item.count,
+              all_price: item.all_price,
+              img: thisitem.img_new,
+              imgUpdate: thisitem.img_new_update,
+            })
+          }
+        })
+        
+        let main_items = [],
+            dop_items = [];
+        
+        if( all_items.length > 0 ){
+          my_cart.map( (it) => {
+            let cart_info = all_items.find( (item) => item.id == it.item_id );
+            
+            if( cart_info && parseInt(cart_info.cat_id) == 7 ){
+              dop_items.push( it );
+            }else{
+              main_items.push( it );
+            }
+          } )
+          
+          this.setState({
+            dop_items: dop_items,
+            main_items: main_items,
+            promo_items: cartPromoItems
+          })
+        }
+        
         
       }
     })
@@ -1767,21 +2132,60 @@ class CreateOrder extends React.Component {
     
     setTimeout(()=>{
       let data = {
-        orderType: parseInt(this.state.activeTab) == 0 || parseInt(this.state.activeTab) == 1 ? parseInt(this.state.activeTab) : 0,//this.state.typeOrder,
+        orderType: parseInt(this.state.activeTab) == 0 || parseInt(this.state.activeTab) == 1 ? parseInt(this.state.activeTab) : 0,
         orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
         
-        orderPic: cartData && cartData.orderPic ? cartData.orderPic : '0',
+        orderPic: this.state.orderPic,
         orderComment: this.state.comment,
         
-        orderTimes: cartData && cartData.orderTimes ? cartData.orderTimes : '0',
-        orderPredDay: cartData && cartData.orderPredDay ? cartData.orderPredDay : '',
-        orderPredTime: cartData && cartData.orderPredTime ? cartData.orderPredTime : '',
+        orderTimes: this.state.typeTime,
+        orderPredDay: this.state.date,
+        orderPredTime: this.state.time,
         
         orderPay: cartData && cartData.orderPay ? cartData.orderPay : '0',
         orderSdacha: this.state.sdacha,
       };
       
       itemsStore.saveCartData(data);
+    }, 100)
+  }
+  
+  saveDataOther(){
+    let cartData = itemsStore.getCartData();
+    
+    let addrInfo = this.state.newAddrInfo ? this.state.newAddrInfo : cartData.orderAddr;
+    
+    setTimeout(()=>{
+        let data = {
+            orderType: parseInt(this.state.activeTab) == 0 || parseInt(this.state.activeTab) == 1 ? parseInt(this.state.activeTab) : 0,
+            orderAddr: {
+              id: -1,
+              //city_name: itemsStore.getCityRU(),
+              street: addrInfo.street ? addrInfo.street : '',
+              home: addrInfo.home ? addrInfo.home : '',
+              kv: this.state.kv,
+              pd: this.state.pd,
+              et: this.state.et,
+              dom_true: this.state.newAddrDom ? 0 : 1,
+              free_drive: addrInfo.free_drive ? addrInfo.free_drive : 0,
+              sum_div: addrInfo.sum_div ? addrInfo.sum_div : 0,
+              point_id: addrInfo.point_id ? addrInfo.point_id : 0,
+              xy: addrInfo.xy ? addrInfo.xy : '',
+              pay_active: addrInfo.pay_active ? addrInfo.pay_active : 0,
+            },
+            
+          orderPic: this.state.orderPic,
+          orderComment: this.state.comment,
+          
+          orderTimes: this.state.typeTime,
+          orderPredDay: this.state.date,
+          orderPredTime: this.state.time,
+          
+          orderPay: cartData && cartData.orderPay ? cartData.orderPay : '0',
+          orderSdacha: this.state.sdacha,
+        };
+        
+        itemsStore.saveCartData(data);
     }, 100)
   }
   
@@ -1811,6 +2215,23 @@ class CreateOrder extends React.Component {
         }
       })
         
+      if( parseInt( cartData.orderTimes ) !== 0 ){
+        if( cartData.orderPredDay.length == 0 && cartData.orderPredTime.length == 0 ){
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: 'Не выбрано дата / время предзаказа'
+            },
+            errorOpen: true,
+            spiner: false
+          })
+          
+          this.clickOrderStart = false;
+          
+          return;
+        }
+      }
+      
       fetch(config.urlApi, {
         method: 'POST',
         headers: {
@@ -1858,10 +2279,26 @@ class CreateOrder extends React.Component {
             itemsStore.setMyPromos( arr );
           }
           
+          let new_cart = [];
+          
+          json.my_cart.map( (item) => {
+            if( parseInt(item.type) != 3 && parseInt(item.type) != 4 ){
+              new_cart.push( item )
+            }
+          } )
+          
+          json.my_cart.map( (item) => {
+            if( parseInt(item.type) == 3 || parseInt(item.type) == 4 ){
+              new_cart.push( item )
+            }
+          } )
+          
+          console.log( 'json.my_cart', json.my_cart )
+          console.log( 'new_cart', new_cart )
           
           this.setState({
             newOrder: {
-              cart: json.my_cart,
+              cart: new_cart,
               order_id: json.order_id,
               point_id: json.point_id,
               point_name: json.point_name,
@@ -1974,7 +2411,549 @@ class CreateOrder extends React.Component {
     setTimeout( () => {
       itemsStore.setPromo(null, '');
     }, 300)
+    
+    this.setState({
+      number: '',
+      promo_name: '',
+      orderPromoText: '',
+    })
+    
+    this.setState({
+      newAddrStreet: '',
+      newAddrHome: '',
+      pd: '',
+      et: '',
+      kv: '',
+      newAddrDom: true,
+    })
+    
+    itemsStore.setSumDiv(0);
   }
+  
+  
+  changeCat = (event, newValue) => {
+    this.setState({
+      activeCat: newValue
+    })
+  }
+  
+  addToCart(item_id){
+    itemsStore.AddItem(item_id);
+  }
+  
+  addItemCustom(event, value){
+    let additem = this.state.allItems.find( (item) => item.name == value );
+    this.addToCart(additem.id);
+    
+    this.setState({
+      thisItem: additem.name
+    })
+    
+    setTimeout( () => {
+      this.setState({
+        thisItem: ''
+      })
+    }, 100 )
+    
+  }
+  
+  
+  choosePic(point){
+    this.setState({
+      orderPic: point.id,
+      picPointInfo: point
+    })
+    
+    itemsStore.setSumDiv(0);
+    
+    this.saveData();
+  }
+  
+  
+  checkNewAddr(){
+    let street = document.querySelector('#newAddrStreet').value;
+    
+    if( street.length > 0 && this.state.newAddrHome.length > 0 ){
+      fetch(config.urlApi, {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+        body: queryString.stringify({
+          type: 'save_new_addr',  
+          city_id: itemsStore.getCity(),
+          street: street,
+          home: this.state.newAddrHome,
+          user_id: itemsStore.getToken()
+        })
+      }).then(res => res.json()).then(json => {
+        if( !json.st ){
+            alert( json.text )
+        }else{
+          this.setState({
+            newAddrInfo: json.res
+          })
+          
+          let allPrice = itemsStore.getAllPrice();
+    
+          if( parseInt(json.res ? json.res.free_drive : 0) == 1 ){
+              if( parseInt(allPrice) > 0 ){
+                  itemsStore.setSumDiv(0);
+              }else{
+                  itemsStore.setSumDiv(1);
+              }
+          }else{
+              itemsStore.setSumDiv(parseInt(json.res ? json.res.sum_div : 0));
+          }
+          
+          this.saveDataOther();
+        }
+      });
+    }
+  }
+  
+  changeDomTrue(type){
+    this.setState({
+      newAddrDom: type
+    })
+    this.changeDataOther('domTrue', {target: {value: type}})
+  }
+  
+  changeDataOther(type, data){
+    let value = data.target.value;
+    
+    this.setState({ [type]: value });
+    
+    this.saveDataOther();
+  }
+  
+  
+  chooseAddr(key, item, event){
+    let allPrice = itemsStore.getAllPrice();
+        
+    if( parseInt(item ? item.free_drive : 0) == 1 ){
+      if( parseInt(allPrice) > 0 ){
+          itemsStore.setSumDiv(0);
+      }else{
+        itemsStore.setSumDiv(1);
+      }
+    }else{
+      itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
+    }
+    
+    if( key != this.state.chooseAddr ){
+      this.setState({
+        chooseAddr: key
+      })
+      
+      let cartData = itemsStore.getCartData();
+      
+      if( cartData.orderType || cartData.orderType == 0 ){
+          
+        cartData.orderAddr = item;
+        
+        itemsStore.saveCartData(cartData);
+      }
+    }
+  }
+  
+  chooseAddr2(key, item, event){
+    
+    let allPrice = itemsStore.getAllPrice();
+        
+    if( parseInt(item ? item.free_drive : 0) == 1 ){
+      if( parseInt(allPrice) > 0 ){
+          itemsStore.setSumDiv(0);
+      }else{
+        itemsStore.setSumDiv(1);
+      }
+    }else{
+      itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
+    }
+    
+    if( key != this.state.chooseAddr ){
+      this.setState({
+        chooseAddr: key
+      })
+    }
+  }
+  
+  
+  changeTypeTime = (event, newValue) => {
+    //if( this._isEdit === true ){
+      console.log( 'changeTypeTime' )
+      
+      this.changeDataTime('typeTime', {target: {value: newValue}})
+      
+      if( parseInt(newValue) == 0 ){
+        this.loadTimeWait();
+      }else{
+        this.loadTimePred();
+      }
+    //}
+  }
+  
+  loadTimePred(){
+    let my_cart = [];
+    let cartItems = itemsStore.getItems();  
+    let cartData = itemsStore.getCartData();
+    
+    if( cartData.orderType+1 == 1 ){
+        if( !cartData.orderAddr || !cartData.orderAddr.point_id ){
+            /*this.setState({
+                error: {
+                    title: 'Предупреждение', 
+                    text: 'Адрес доставки или точка самовывоза не выбрана'
+                },
+                errorOpen: true,
+                orderTimes: '1'
+            })*/
+            
+            //return;
+        }
+    }
+    
+    cartItems.forEach(el => {
+        my_cart.push({
+            item_id: el.item_id,
+            count: el.count,
+        });
+    });
+    
+    fetch(config.urlApi, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+        type: 'get_times_pred_center',  
+        point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
+        type_order: cartData.orderType+1,
+        date: this.state.date,
+        cart: JSON.stringify( my_cart ),
+      })
+    }).then(res => res.json()).then(json => {
+      if( !json.st ){
+            /*this.setState({
+                error: {
+                    title: 'Предупреждение', 
+                    text: json.text
+                },
+                errorOpen: true
+            })*/
+      }else{
+        this.setState({
+          timePred: json.data
+        })
+      }
+    });
+  }
+  
+  loadTimeWait(){
+    let cartData = itemsStore.getCartData();
+    
+    fetch(config.urlApi, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+        type: 'load_time_wait',  
+        point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
+        type_order: cartData.orderType,
+        city_id: itemsStore.getCity(),
+      })
+    }).then(res => res.json()).then(json => {
+      this.setState({
+        textAvgTime: json
+      })
+    });
+  }
+  
+  changeDataTime(type, data){
+    let value = data.target.value;
+    
+    this.setState({ [type]: value });
+    
+    if( type == 'date' ){
+      setTimeout(() => {
+        this.loadTimePred();   
+      }, 300)
+    }
+    
+    this.saveData();
+  }
+  
+  startData(){
+    this._thisEdit = true;
+    
+    let cartData = itemsStore.getCartData();
+    
+    if( cartData ){
+      
+      let date = cartData.orderPredDay;
+      let check = this.state.date_pred.filter( (item) => item.date < date );
+      
+      if( check.length == 0 ){
+        this.changeTypeTime( null, 0 )
+        
+        this.setState({
+          time: '',
+          date: ''
+        })
+        
+        return ;
+      }else{
+        this.setState({
+          date: date
+        })
+        
+        setTimeout( () => {
+          this.loadTimePred();
+          
+          setTimeout( () => {
+            if( cartData.orderPredTime ){
+              let check = this.state.timePred.filter( (item) => item.value == cartData.orderPredTime );
+              
+              if( check.length == 0 ){
+                this.changeTypeTime( null, 0 )
+              }else{              
+                this.setState({
+                  time: cartData.orderPredTime
+                })
+              }
+            }
+          }, 1000 )
+          
+        }, 500 )
+      }
+    }
+    
+    if( cartData.orderTimes ){
+      this.setState({
+        typeTime: cartData.orderTimes
+      })
+    }
+    
+    this._thisEdit = false;
+  }
+  
+  
+  saveNumber(event){
+    
+    let number = event.target.value;
+    let str = '';
+    
+    number = number+'';
+    
+    if( number.length > 0 ){
+      
+      number = number.split(' ').join('');
+      number = number.split('(').join('');
+      number = number.split(')').join('');
+      number = number.split('-').join('');
+      number = number.split('+').join('');
+      
+      if( number[0] == '7' || number[0] == 7 ){
+        str = number.split("");
+        str[0] = 8;
+        number = str.join("");
+      }
+      
+      if( number.length != 11 ){
+        alert('Номер введен в не верном формате!')
+        return;
+      }
+      
+    }
+    
+    this.setState({
+      number: number
+    })
+    
+    itemsStore.clientNumber = number;
+    localStorage.setItem('clientNumber', number)
+    
+    /*let number = event.target.value;
+          
+    if( number.length > 0 ){
+      number = number.split(' ').join('');
+      number = number.split('(').join('');
+      number = number.split(')').join('');
+      number = number.split('-').join('');
+      
+      number = number.slice(1);
+      
+      itemsStore.clientNumber = '8' + number;
+      localStorage.setItem('clientNumber', '8' + number)
+    }else{
+      itemsStore.clientNumber = '';
+      localStorage.setItem('clientNumber', '')
+    }*/
+  }
+    
+  checkPromo(event){
+    
+    let promo = event.target.value;
+    //let promo = this.state.promo_name;
+    
+    console.log( 'promo', promo )
+    console.log( 'promo 555', event.target.value )
+    
+    fetch(config.urlApi, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+        type: 'get_promo', 
+        city_id: itemsStore.getCity(),
+        promo_name: promo
+      })
+    }).then(res => res.json()).then(json => {
+      itemsStore.setPromo( JSON.stringify(json), promo );
+      let check_promo = itemsStore.checkPromo();
+        
+      if( check_promo.st === false ){
+        localStorage.removeItem('promo_name')
+      }
+      
+      if( promo.length == 0 ){
+        this.setState({
+          orderPromoText: '',
+          promo_name: '',
+          promoST: false
+        })
+        localStorage.removeItem('promo_name')
+      }else{
+        this.setState({
+          orderPromoText: check_promo.text,
+          promoST: check_promo.st,
+          promo_name: promo
+        })
+      }
+    })
+  }
+    
+  toggleDrawer2(anchor, open, event){
+    this.setState({
+      [anchor]: open
+    })
+  };
+    
+  clear_(){
+    itemsStore.clientNumber = '';
+    localStorage.removeItem('clientNumber')
+    localStorage.removeItem('promo_name')
+    
+    itemsStore.setItems([]);
+    
+    let data = {
+      orderType: '0',
+      orderAddr: '',
+      orderPic: 0,
+      orderComment: '',
+      
+      orderTimes: 0,
+      orderPredDay: '',
+      orderPredTime: '',
+      
+      orderPay: '',
+      orderSdacha: '',
+      
+      dateTime: new Date()
+    };
+    
+    itemsStore.dateTimeDel = new Date();
+    
+    itemsStore.saveCartData(data);
+    
+    
+    setTimeout( () => {
+      itemsStore.setPromo(null, '');
+      this.checkPromo({ target: {value: ''} })
+    }, 300)
+    
+    
+    this.setState({
+      number: '',
+      promo_name: '',
+      orderPromoText: '',
+    })
+  }
+  
+  clear2(){
+    itemsStore.clientNumber = '';
+    localStorage.removeItem('clientNumber')
+    localStorage.removeItem('promo_name')
+    
+    itemsStore.setItems([]);
+    
+    let data = {
+      orderType: '0',
+      orderAddr: '',
+      orderPic: 0,
+      orderComment: '',
+      
+      orderTimes: 0,
+      orderPredDay: '',
+      orderPredTime: '',
+      
+      orderPay: '',
+      orderSdacha: '',
+      
+      dateTime: new Date()
+    };
+    
+    itemsStore.saveCartData(data);
+    
+    
+    setTimeout( () => {
+      itemsStore.setPromo(null, '');
+      this.checkPromo({ target: {value: ''} })
+    }, 300)
+    
+    
+    this.setState({
+      number: '',
+      promo_name: '',
+      orderPromoText: '',
+    })
+  }
+    
+  changeCity(event){
+    let city = event.target.value;
+    
+    this.setState({ city: city });
+    itemsStore.setCity(city)
+    
+    localStorage.setItem('cityID', city)
+    
+    let data = {
+      orderType: '0',
+      orderAddr: '',
+      orderPic: 0,
+      orderComment: '',
+      
+      orderTimes: 0,
+      orderPredDay: '',
+      orderPredTime: '',
+      
+      orderPay: '',
+      orderSdacha: '',
+    };
+    
+    itemsStore.saveCartData(data);
+    
+    setTimeout( () => {
+      //location.reload();
+    }, 500 )
+  }
+    
+  logOut(){
+    localStorage.removeItem('token');
+    
+    setTimeout( () => {
+      window.location.reload();
+    }, 500 )
+  }
+  
   
   render() {
     return (
@@ -1989,10 +2968,167 @@ class CreateOrder extends React.Component {
         </Backdrop>
         
         <Grid item xs={8} style={{ paddingRight: 16 }}>
-          { this.state.cityList.length > 0 ? <Header classes={this.state.classes} cityList={this.state.cityList} page="createOrder" /> : null }
+          { this.state.cityList.length > 0 ? 
+            <div className={this.state.classes.root}>
+              <AppBar position="static" style={{ backgroundColor: '#fff', color: '#000' }}>
+                <Toolbar style={{ minHeight: 48, height: 48 }}>
+                  <IconButton edge="start" onClick={this.toggleDrawer2.bind(this, 'left', true)} color="inherit" aria-label="menu">
+                    <MenuIcon />
+                  </IconButton>
+                  
+                  <Grid container className='headerInput'>
+                    
+                    <Grid item xs={3}>
+                      <FormControl className={this.state.classes.formControl}>
+                        <InputLabel style={{ paddingBottom: 2 }}>Город</InputLabel>
+                        <Select
+                        
+                          style={{ marginTop: 9 }}
+                          value={this.state.city}
+                          onChange={ this.changeCity.bind(this) }
+                        >
+                          { this.state.cityList.map( (item, key) =>
+                            <MenuItem key={key} value={item.id}>{item.name}</MenuItem>
+                          ) }
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+                      
+                      <Autocomplete
+                        freeSolo
+                        
+                        label="Промокод"
+                        variant="outlined"
+                        size="small"
+                        
+                        style={{ minWidth: 200, marginRight: 8 }}
+                        
+                        value={ this.state.promo_name } 
+                        onChange={ (event, val) => { console.log(val); this.setState({ promo_name: val }) } } 
+                        onBlur={this.checkPromo.bind(this)} 
+                        
+                        options={this.state.MyPromos.map((option) => option.promo)}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Промокод" margin="normal" variant="outlined" />
+                        )}
+                      />
+                      
+                      
+                      <HtmlTooltip
+                        placement="bottom"
+                        title={
+                          <React.Fragment>
+                            <Typography color="inherit" className={this.state.classes.size1}>{this.state.orderPromoText}</Typography>
+                          </React.Fragment>
+                        }
+                      >
+                        <Button variant="contained" color="primary" style={{ padding: '2px 6px', marginTop: 8, minWidth: 30, marginRight: 8, backgroundColor: this.state.promoST === false && this.state.orderPromoText.length == 0 ? 'gray' : this.state.promoST === false && this.state.orderPromoText.length > 0 ? 'red' : 'green' }}>?</Button>
+                      </HtmlTooltip>
+                      
+                      <Button variant="contained" color="primary" className="btnClear" style={{ padding: '2px 6px', minWidth: 30, marginTop: 8 }} onClick={ this.clear.bind(this) } >
+                        <CloseIcon />
+                      </Button>
+                    </Grid>
+                    <Grid item xs={3} style={{ paddingTop: 14 }}>
+                      <TextField 
+                        label="Телефон" 
+                        
+                        variant="outlined"
+                        size="small"
+                        
+                        placeholder="8 (999) 999-99-99"
+                        value={this.state.number}
+                        onChange={ event => this.setState({ number: event.target.value }) } 
+                        onBlur={this.saveNumber.bind(this)} 
+                        style={{ marginRight: 4, marginLeft: 4, marginBottom: 6}} 
+                      />
+                      
+                    </Grid>
+                  
+                  </Grid>
+                      
+                </Toolbar>
+              </AppBar>
+              
+              
+                
+              
+              
+              <Drawer anchor={'left'} open={this.state.left} onClose={this.toggleDrawer2.bind(this, 'left', false)}>
+                <div
+                  className={clsx(this.state.classes.list)}
+                  role="presentation"
+                  //onClick={this.toggleDrawer2(this, 'left', false)}
+                  //onKeyDown={this.toggleDrawer(this, 'left', false)}
+                >
+                  <Link
+                    to={ '/' }
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <ListItem button style={{ color: '#000' }}>
+                      <Typography variant="body1">Оформить заказ</Typography>
+                    </ListItem>
+                  </Link>
+                  <Link
+                    to={ '/orders' }
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <ListItem button style={{ color: '#000' }}>
+                      <Typography variant="body1">Список заказов</Typography>
+                    </ListItem>
+                  </Link>
+                  <Link
+                    to={ '/ordercook' }
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <ListItem button style={{ color: '#000' }}>
+                      <Typography variant="body1">Заказы на кухне</Typography>
+                    </ListItem>
+                  </Link>
+                  <Divider />
+                  <List>
+                    <ListItem button onClick={this.logOut.bind(this)}>
+                      <ListItemText primary={'Выйти'} />
+                    </ListItem>
+                  </List>
+                </div>
+              </Drawer>      
+            </div>
+              : 
+            null }
+            
         </Grid>
         <Grid item xs={8} style={{ padding: '24px 8px 0px 16px' }}>
-          <BlockTable classes={this.state.classes} />
+          { /* моя корзина */ }
+          <Paper style={{ width: '100%' }}>
+            <TableContainer style={{ maxHeight: 350 }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Наимнование</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Кол-во</TableCell>
+                    <TableCell>Сумма</TableCell>
+                    <TableCell> <CloseIcon style={{ marginTop: 5 }} /> </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  { this.state.main_items.map( (item, key) =>
+                    <BlockTableItem key={key} item={item} classes={this.state.classes} type="main" />
+                  )}
+                  
+                  { this.state.dop_items.map( (item, key) =>
+                    <BlockTableItem key={key} item={item} classes={this.state.classes} type="dop" />
+                  )}
+                  
+                  { this.state.promo_items.map( (item, key) =>
+                    <BlockTableItem key={key} item={item} classes={this.state.classes} type="promo" />
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+          { /* /моя корзина/ */ }
         </Grid>
         <Grid item xs={4} style={{ padding: '16px', marginTop: -50 }} className='container'>
           <Tabs
@@ -2009,12 +3145,102 @@ class CreateOrder extends React.Component {
           </Tabs>
           
           { this.state.activeTab == 0 ?
-            this.state.all_addr.length > 0 ? <BlockAddrCustom classes={this.state.classes} all_addr={this.state.all_addr} /> : null
+            this.state.all_addr.length > 0 ? 
+              <Grid container spacing={3}>
+                { /* адрес доставки */ }
+                <div className='mainAddr'>
+                  <Autocomplete
+                    freeSolo
+                    id="newAddrStreet"
+                    style={{ flex: 3 }}
+                    //defaultValue={this.state.defValStreet} 
+                    
+                    value={this.state.newAddrStreet} 
+                    onChange={ ( event, newVal) => { this.setState({ newAddrStreet: newVal }) } }
+                    
+                    onBlur={this.checkNewAddr.bind(this)}
+                    options={this.state.all_addr.map((option) => option.value)}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Улица" margin="normal" variant="outlined" />
+                    )}
+                  />
+                  <TextField 
+                    label="Дом" 
+                    variant="outlined" 
+                    style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+                    //defaultValue={this.state.defValHome} 
+                    value={this.state.newAddrHome} 
+                    onChange={ event => this.setState({ newAddrHome: event.target.value }) }
+                    onBlur={this.checkNewAddr.bind(this)}
+                  />
+                </div>
+                <div className='otherAddr'>
+                  <TextField 
+                    label="Подъезд" 
+                    variant="outlined" 
+                    style={{ marginRight: 4}}
+                    value={ this.state.pd }
+                    onChange={ this.changeDataOther.bind(this, 'pd') }
+                    onBlur={ this.changeDataOther.bind(this, 'pd') }
+                  />
+                  <TextField 
+                    label="Этаж" 
+                    variant="outlined" 
+                    style={{ marginRight: 4, marginLeft: 4}}
+                    value={ this.state.et }
+                    onBlur={ this.changeDataOther.bind(this, 'et') }
+                    onChange={ this.changeDataOther.bind(this, 'et') }
+                  />
+                  <TextField 
+                    label="Квартира" 
+                    variant="outlined" 
+                    style={{ marginRight: 8, marginLeft: 4}}
+                    value={ this.state.kv }
+                    onBlur={ this.changeDataOther.bind(this, 'kv') }
+                    onChange={ this.changeDataOther.bind(this, 'kv') }
+                  />  
+                </div>
+                <div style={{ width: '100%', marginRight: 8 }}>
+                  <ButtonGroup disableElevation variant="contained" className='chooseDomTrue'>
+                    <Button className={ this.state.newAddrDom === true ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, true) }>Домофон работает</Button>
+                    <Button className={ this.state.newAddrDom === false ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, false) }>Домофон не работает</Button>
+                  </ButtonGroup>
+                </div>
+                { /* адрес доставки */ }
+              </Grid>
+                : 
+              null
               :
               this.state.activeTab == 1 ?
-                this.state.pic_point.length > 0 ? <BlockPic classes={this.state.classes} pic_point={this.state.pic_point} /> : null
+                this.state.pic_point.length > 0 ? 
+                  <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container' style={{ paddingRight: 8 }}>
+                    { /* самовывоз */ }
+                    { this.state.pic_point.map( (item, key) =>
+                      <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#6ab04c' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
+                    )}
+                    { /* /самовывоз/ */ }
+                  </Grid>
+                    : 
+                  null
                   :
-                this.state.clientAddr.length > 0 ? <BlockAddrMy classes={this.state.classes} clientAddr={this.state.clientAddr} /> : null
+                this.state.clientAddr.length > 0 ? 
+                  <List component="nav" aria-label="main mailbox folders" style={{ maxHeight: 106, overflow: 'auto', marginLeft: -13 }}>
+                    { /* мой адрес */ }
+                    { this.state.clientAddr.map( (item, key) =>
+                      <ListItem button key={key} selected={this.state.chooseAddr === key} onClick={this.chooseAddr.bind(this, key, item)} style={{ paddingTop: 0, paddingBottom: 0 }}>
+                        <ListItemText primary={ 
+                          item.street + ' ' + 
+                          item.home + 
+                          ( item.pd.length == 0 ? '' : ', Пд. '+item.pd )+
+                          ( item.et.length == 0 ? '' : ', Эт. '+item.et )+
+                          ( item.kv.length == 0 ? '' : ', Кв. '+item.kv )
+                        } />
+                      </ListItem>
+                    ) }
+                    { /* /мой адрес/ */ }
+                  </List>
+                    : 
+                  null
           }
           
           { (this.state.activeTab == 0 || this.state.activeTab == 2) && this.state.all_addr.length > 0 ?
@@ -2044,7 +3270,61 @@ class CreateOrder extends React.Component {
           }
           
           
-          { this.state.date_pred.length > 0 ? <BlockPred classes={this.state.classes} date_pred={this.state.date_pred} /> : null }
+          { this.state.date_pred.length > 0 ? 
+            <>
+              { /* время заказа */ }
+              <Grid container spacing={3} className='container'>
+                <Tabs
+                  value={this.state.typeTime}
+                  onChange={this.changeTypeTime}
+                  style={{ marginTop: 15, width: '100%', marginBottom: 10 }}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  centered
+                >
+                  <Tab label="По текущему" />
+                  <Tab label="Ко времени" />
+                </Tabs>
+              </Grid>
+                
+              { this.state.typeTime == 0 ?
+                <Grid container spacing={3} className='container'>
+                  <Typography component="span" style={{ padding: '8px 0px', fontSize: '1rem' }}>{this.state.textAvgTime}</Typography>
+                </Grid>
+                  :
+                <Grid container spacing={3} className='container'>
+                  <div className='formPred'>
+                    <FormControl variant="outlined" className='formControl'>
+                      <InputLabel>Дата</InputLabel>
+                      <Select
+                        value={this.state.date}
+                        onChange={ this.changeData.bind(this, 'date') }
+                        label="Дата"
+                      >
+                        {this.state.date_pred.map( (item, key) =>
+                          <MenuItem key={key} value={item.date}>{item.text}</MenuItem>
+                        )}
+                      </Select>
+                    </FormControl>
+                    <FormControl variant="outlined" className='formControl'>
+                      <InputLabel>Время</InputLabel>
+                      <Select
+                        value={this.state.time}
+                        onChange={ this.changeData.bind(this, 'time') }
+                        label="Время"
+                      >
+                        {this.state.timePred.map( (item, key) =>
+                          <MenuItem key={key} value={item.value}>{item.text}</MenuItem>
+                        )}
+                      </Select>
+                    </FormControl>
+                  </div>
+                </Grid>
+              }
+              { /* /время заказа/ */ }
+            </>
+              : 
+            null }
           
           
           
@@ -2063,11 +3343,69 @@ class CreateOrder extends React.Component {
           
         </Grid>
         <Grid item xs={12} style={{ padding: '16px 0px 0px 0px' }}>
+          { /* все позиции */ }
           {this.state.cats.length > 0 && this.state.allItems.length > 0 ?
-            <BlockItems classes={this.state.classes} cats={this.state.cats} allItems={this.state.allItems} />
+            <>
+              <Autocomplete
+                freeSolo
+                size="small"
+                //id="newAddrStreet"
+                style={{ width: '30%', marginLeft: 16, marginBottom: 8 }}
+                //defaultValue={this.state.defValStreet} 
+                
+                value={this.state.thisItem} 
+                onChange={ this.addItemCustom.bind(this) }
+                
+                //onBlur={this.clearFace.bind(this)}
+                options={this.state.allItems.map((option) => option.name)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Все позиции" margin="normal" variant="outlined" />
+                )}
+              />
+            
+              <AppBar position="static">
+                <Tabs value={this.state.activeCat} onChange={this.changeCat} aria-label="simple tabs example">
+                  { this.state.cats.map((item, key) =>
+                    <Tab label={item.name} style={{ minWidth: 'auto' }} key={key} {...a11yProps(key)} />
+                  ) }
+                </Tabs>
+              </AppBar>
+              
+              { this.state.cats.map((cat, key) =>
+                <TabPanel value={this.state.activeCat} index={key} key={key}>
+                  <Grid container spacing={2} className='container' style={{ paddingTop: 0 }}>
+                    { cat.items.map( (item, k) =>
+                      <Grid key={k} item xs={2}>
+                        <Paper className={this.state.classes.paperCat} onClick={ this.addToCart.bind(this, item.id) }>
+                          <Grid container direction="column" style={{ height: '100%', justifyContent: 'space-around' }}>
+                            <Typography component="span" className={this.state.classes.size1}>{item.name}</Typography>
+                            <Typography component="span" className={this.state.classes.size1}>{item.price} р.</Typography>
+                            
+                            <HtmlTooltip
+                              className={this.state.classes.paperCatInfo}
+                              placement="top"
+                              title={
+                                <React.Fragment>
+                                  <Typography color="inherit" className={this.state.classes.size1}>{item.tmp_desc}</Typography>
+                                  <Typography color="inherit" className={this.state.classes.size1}>{item.info_weight}</Typography>
+                                </React.Fragment>
+                              }
+                            >
+                              <InfoIcon />
+                            </HtmlTooltip>
+                            
+                          </Grid>
+                        </Paper>
+                      </Grid>
+                    ) }
+                  </Grid>
+                </TabPanel>
+              )}
+            </>
               :
             null
           }
+          { /* /все позиции/ */ }
         </Grid>
       
         <Dialog
