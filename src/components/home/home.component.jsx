@@ -1799,7 +1799,7 @@ class CreateOrder extends React.Component {
                 }, 500 )
                 
               }
-            }, 1000 )
+            }, 500 )
             
           })
           .catch(err => { });
