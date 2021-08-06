@@ -1535,7 +1535,7 @@ class CreateOrder extends React.Component {
       
       orderPic: 0,
       picPointInfo: null,
-      
+      point_id: 0,
       
       defValStreet: '',
       defValHome: '',
@@ -1744,6 +1744,18 @@ class CreateOrder extends React.Component {
       itemsStore.setSumDiv(0);
     }
     
+    if( cartData.orderComment != this.state.comment ){
+      this.setState({
+        comment: cartData.orderComment
+      })
+    }
+    
+    if( parseInt(cartData.orderSdacha) != parseInt(this.state.sdacha) ){
+      this.setState({
+        sdacha: cartData.orderSdacha
+      })
+    }
+    
     autorun(() => {
       if( this._isMounted ){
         
@@ -1826,99 +1838,7 @@ class CreateOrder extends React.Component {
           
         }
         
-        if( parseInt(cartData.orderType) != parseInt(this.state.typeOrder) ){
-          console.log( 'autorun orderType -1' );
-          this.setState({
-            typeOrder: cartData.orderType
-          })
-          
-          
-        }
         
-        if( cartData.orderComment != this.state.comment ){
-          console.log( 'autorun orderComment' );
-          this.setState({
-            comment: cartData.orderComment
-          })
-        }
-        
-        if( parseInt(cartData.orderSdacha) != parseInt(this.state.sdacha) ){
-          console.log( 'autorun orderSdacha' );
-          
-          this.setState({
-            sdacha: cartData.orderSdacha
-          })
-        }
-        
-        if( itemsStore.clientNumber != this.state.clientNumber ){
-          console.log( 'autorun clientNumber' );
-          
-          this.setState({
-            clientNumber: itemsStore.clientNumber
-          })
-          
-          setTimeout(() => {
-            this.getAddr();  
-          }, 300)
-        }
-        
-        if( cartData.orderType ){
-          console.log( 'autorun orderType -2' );
-          
-          setTimeout( () => {
-            let choosePoint = this.state.pic_point.find( (item) => parseInt(item.id) == parseInt(cartData.orderPic) );
-        
-            if( this.state.orderPic != choosePoint ){
-              if( choosePoint ){
-                this.choosePic(choosePoint)
-              }else{
-                this.setState({
-                  orderPic: 0,
-                  picPointInfo: null
-                })
-              }
-            }
-          }, 500 )
-        }
-        
-        /*if( cartData.orderType || cartData.orderType == 0 ){
-          
-          console.log( 'autorun orderType 1' );
-          
-          this.setState({
-            newAddrStreet: cartData.orderAddr && cartData.orderAddr.street ? cartData.orderAddr.street : '',
-            newAddrHome: cartData.orderAddr && cartData.orderAddr.home ? cartData.orderAddr.home : '',
-            pd: cartData.orderAddr && cartData.orderAddr.pd ? cartData.orderAddr.pd : '',
-            et: cartData.orderAddr && cartData.orderAddr.et ? cartData.orderAddr.et : '',
-            kv: cartData.orderAddr && cartData.orderAddr.kv ? cartData.orderAddr.kv : '',
-            newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 1 ? false : true,
-          })
-          
-          let allPrice = itemsStore.getAllPrice();
-            
-          if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 ){
-            if( parseInt(allPrice) > 0 ){
-                itemsStore.setSumDiv(0);
-            }else{
-              itemsStore.setSumDiv(1);
-            }
-          }else{
-            itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
-          }
-        }else{
-          console.log( 'autorun orderType 0' );
-          
-          this.setState({
-            newAddrStreet: '',
-            newAddrHome: '',
-            pd: '',
-            et: '',
-            kv: '',
-            newAddrDom: true,
-          })
-          
-          itemsStore.setSumDiv(0);
-        }*/
         
         if( parseInt(this.state.typeTime) != parseInt(cartData.orderTimes) ){
           console.log( 'autorun typeTime' );
@@ -1962,32 +1882,9 @@ class CreateOrder extends React.Component {
           //this._isEdit = true;
         }
         
-        //let test = itemsStore.cart_data;
-        /*let dateTimeDel = itemsStore.dateTimeDel;
-        
-        setTimeout( () => {
-          dateTimeDel = itemsStore.dateTimeDel;
-          
-          if( this.state.thisDateTimeDel != dateTimeDel ){
-            this.setState({
-              thisDateTimeDel: dateTimeDel
-            })
-            
-            this.setState({
-              number: '',
-              promo_name: '',
-              orderPromoText: '',
-            })
-            
-            this.clear2();
-          }
-        }, 300 )*/
         
         
         
-        //if( this.state.promo_name && this.state.promo_name.length > 0 ){
-          //this.checkPromo( {target: {value: this.state.promo_name}} )
-        //}
         
         if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
           
@@ -2025,11 +1922,7 @@ class CreateOrder extends React.Component {
           })
         }
         
-        /*if( itemsStore.clear === true ){
-          this.clear();
-          
-          itemsStore.clear = false;
-        }*/
+        
         
         let newPrice = itemsStore.getAllPrice();
         let newSumDiv = itemsStore.getSumDiv();
@@ -2448,7 +2341,14 @@ class CreateOrder extends React.Component {
       newAddrDom: true,
       
       newAddrInfo: '',
-      chooseAddr: -1
+      chooseAddr: -1,
+      
+      orderPic: 0,
+      picPointInfo: null,
+      point_id: 0,
+      
+      comment: '',
+      sdacha: ''
     })
     
     itemsStore.setSumDiv(0);
