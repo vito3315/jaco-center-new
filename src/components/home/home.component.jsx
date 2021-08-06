@@ -2540,30 +2540,29 @@ class CreateOrder extends React.Component {
       itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
     }
     
-    if( key != this.state.chooseAddr ){
-      
-      this.setState({
-        newAddrStreet: item.street,
-        newAddrHome: item.home,
-        pd: item.pd,
-        et: item.et,
-        kv: item.kv,
-        newAddrDom: parseInt(item.dom_true) == 0 ? true : false,
-      })
-      
+    this.setState({
+      newAddrStreet: item.street,
+      newAddrHome: item.home,
+      pd: item.pd,
+      et: item.et,
+      kv: item.kv,
+      newAddrDom: parseInt(item.dom_true) == 0 ? true : false,
+    })
+    
+    //if( key != this.state.chooseAddr ){
       this.setState({
         chooseAddr: key
       })
       
       let cartData = itemsStore.getCartData();
       
-      if( cartData.orderType || cartData.orderType == 0 ){
+      //if( cartData.orderType || cartData.orderType == 0 ){
           
         cartData.orderAddr = item;
         
         itemsStore.saveCartData(cartData);
-      }
-    }
+      //}
+    //}
   }
   
   chooseAddr2(key, item, event){
