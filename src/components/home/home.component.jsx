@@ -1785,6 +1785,22 @@ class CreateOrder extends React.Component {
             itemsStore.setAllItemsCat(json.arr);
             itemsStore.setAllItems(json.all_items);
             itemsStore.setFreeItems(json.free_items);
+            
+            setTimeout( () => {
+              if( localStorage.getItem('promo_name') ){
+                let promo = localStorage.getItem('promo_name');
+                
+                setTimeout( ()=>{
+                  this.setState({
+                    promo_name: promo
+                  })
+                  
+                  this.checkPromo( {target: {value: promo}} )
+                }, 500 )
+                
+              }
+            }, 1000 )
+            
           })
           .catch(err => { });
           
@@ -1806,18 +1822,7 @@ class CreateOrder extends React.Component {
           });
           
           
-          if( localStorage.getItem('promo_name') ){
-            let promo = localStorage.getItem('promo_name');
-            
-            setTimeout( ()=>{
-              this.setState({
-                promo_name: promo
-              })
-              
-              this.checkPromo( {target: {value: promo}} )
-            }, 500 )
-            
-          }
+          
           
         }
         
