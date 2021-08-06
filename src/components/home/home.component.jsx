@@ -1804,6 +1804,21 @@ class CreateOrder extends React.Component {
                 date_pred: json.date_pred
             })
           });
+          
+          
+          if( localStorage.getItem('promo_name') ){
+            let promo = localStorage.getItem('promo_name');
+            
+            setTimeout( ()=>{
+              this.setState({
+                promo_name: promo
+              })
+              
+              this.checkPromo( {target: {value: promo}} )
+            }, 500 )
+            
+          }
+          
         }
         
         if( parseInt(cartData.orderType) != parseInt(this.state.typeOrder) ){
