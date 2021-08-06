@@ -2425,6 +2425,9 @@ class CreateOrder extends React.Component {
       et: '',
       kv: '',
       newAddrDom: true,
+      
+      newAddrInfo: '',
+      chooseAddr: -1
     })
     
     itemsStore.setSumDiv(0);
