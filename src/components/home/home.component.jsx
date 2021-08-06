@@ -2406,6 +2406,7 @@ class CreateOrder extends React.Component {
     localStorage.removeItem('promo_name')
     
     itemsStore.setItems([]);
+    itemsStore.setItemsPromo([]);
     
     let data = {
       orderType: '0',
