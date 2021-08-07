@@ -2704,6 +2704,8 @@ class CreateOrder extends React.Component {
     itemsStore.clientNumber = number;
     localStorage.setItem('clientNumber', number)
     
+    this.getAddr();
+    
     /*let number = event.target.value;
           
     if( number.length > 0 ){
