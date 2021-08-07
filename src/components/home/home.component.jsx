@@ -2026,6 +2026,9 @@ class CreateOrder extends React.Component {
         login: this.state.clientNumber
       })
     }).then(res => res.json()).then(json => {
+      
+      console.log( 'clientAddr', json )
+      
       this.setState({
         clientAddr: json
       })
@@ -2348,7 +2351,10 @@ class CreateOrder extends React.Component {
       point_id: 0,
       
       comment: '',
-      sdacha: ''
+      sdacha: '',
+      
+      number: '',
+      clientNumber: ''
     })
     
     itemsStore.setSumDiv(0);
@@ -2698,7 +2704,8 @@ class CreateOrder extends React.Component {
     }
     
     this.setState({
-      number: number
+      number: number,
+      clientNumber: number
     })
     
     itemsStore.clientNumber = number;
