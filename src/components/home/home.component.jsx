@@ -2028,6 +2028,11 @@ class CreateOrder extends React.Component {
     }).then(res => res.json()).then(json => {
       
       console.log( 'clientAddr', json )
+      console.log( 'type', {
+        type: 'get_user_addrs',  
+        city_id: itemsStore.getCity(),
+        login: this.state.clientNumber
+       } )
       
       this.setState({
         clientAddr: json
