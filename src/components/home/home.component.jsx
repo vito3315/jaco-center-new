@@ -1689,7 +1689,10 @@ class CreateOrder extends React.Component {
       
       this.setState({
         number: defValue,
+        clientNumber: defValue
       })
+      
+      this.getAddr();
     }
     
     if( localStorage.getItem('promo_name') ){
@@ -1811,6 +1814,8 @@ class CreateOrder extends React.Component {
                 }, 500 )
                 
               }
+              
+              this.getAddr();
             }, 500 )
             
           })
