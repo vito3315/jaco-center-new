@@ -723,8 +723,6 @@ class CreateOrder extends React.Component {
         }
         
         
-        //8ГБИПГ
-        
         if( cartData.orderType || cartData.orderType == 0 ){
           
           console.log( 'autorun orderType 111' );
@@ -744,6 +742,9 @@ class CreateOrder extends React.Component {
           }
         }
         
+        if( cartData.orderType && cartData.orderType == 1 ){
+          //itemsStore.setSumDiv(0);
+        }
         
         if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
           
@@ -810,9 +811,15 @@ class CreateOrder extends React.Component {
           }
         }else{
           if( parseInt(newSumDiv) != parseInt(this.state.sumDiv) ){
-            this.setState({
-              sumDiv: newSumDiv
-            })
+            if( cartData.orderType && cartData.orderType == 1 ){
+              this.setState({
+                sumDiv: 0
+              })
+            }else{
+              this.setState({
+                sumDiv: newSumDiv
+              })
+            }
           }
         }
         
@@ -884,6 +891,16 @@ class CreateOrder extends React.Component {
       //activeTab: newValue,
       //typeOrder: parseInt(newValue) == 0 || parseInt(newValue) == 1 ? parseInt(newValue) : 0
     //});
+    
+    console.log( 'test', newValue )
+    
+    if( parseInt(newValue) == 1 ){
+      this.setState({
+        sumDiv: 0
+      });
+      
+      itemsStore.setSumDiv(0);
+    }
     
     this.setState({
       activeTab: newValue
@@ -1277,7 +1294,8 @@ class CreateOrder extends React.Component {
       orderPic: point.id,
       picPointInfo: point,
       
-      point_id: point.id
+      point_id: point.id,
+      sumDiv: 0
     })
     
     itemsStore.setSumDiv(0);
@@ -1286,6 +1304,8 @@ class CreateOrder extends React.Component {
     
     setTimeout( () => {
       this.checkPromo( {target: {value: this.state.promo_name}} )
+      
+      itemsStore.setSumDiv(0);
     }, 300 )
   }
   
