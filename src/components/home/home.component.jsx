@@ -185,127 +185,6 @@ const HtmlTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-class BlockItems extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      allItems: this.props.allItems,
-      activeCat: 0,
-      cats: this.props.cats,
-      thisItem: ''
-    };
-  }
-  
-  changeCat = (event, newValue) => {
-    this.setState({
-      activeCat: newValue
-    })
-  }
-  
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      true
-      //(parseInt(this.state.cats[0].items[0].price) !== parseInt(nextState.cats[0].items[0].price) && (nextState.cats.length != 0 && this.state.cats.length != 0) )
-    );
-  }
-  
-  componentDidMount(){
-    autorun(() => {
-      let cat = itemsStore.getAllItemsCat();
-      itemsStore.getCity()
-      
-      this.setState({
-        cats: cat
-      })
-    })
-  }
-  
-  addToCart(item_id){
-    itemsStore.AddItem(item_id);
-  }
-  
-  addItemCustom(event, value){
-    let additem = this.state.allItems.find( (item) => item.name == value );
-    this.addToCart(additem.id);
-    
-    this.setState({
-      thisItem: additem.name
-    })
-    
-    setTimeout( () => {
-      this.setState({
-        thisItem: ''
-      })
-    }, 100 )
-    
-  }
-  
-  render(){
-    return (
-      <>
-        
-        <Autocomplete
-          freeSolo
-          size="small"
-          //id="newAddrStreet"
-          style={{ width: '30%', marginLeft: 16, marginBottom: 8 }}
-          //defaultValue={this.state.defValStreet} 
-          
-          value={this.state.thisItem} 
-          onChange={ this.addItemCustom.bind(this) }
-          
-          //onBlur={this.clearFace.bind(this)}
-          options={this.state.allItems.map((option) => option.name)}
-          renderInput={(params) => (
-            <TextField {...params} label="Все позиции" margin="normal" variant="outlined" />
-          )}
-        />
-      
-        <AppBar position="static">
-          <Tabs value={this.state.activeCat} onChange={this.changeCat} aria-label="simple tabs example">
-            { this.state.cats.map((item, key) =>
-              <Tab label={item.name} style={{ minWidth: 'auto' }} key={key} {...a11yProps(key)} />
-            ) }
-          </Tabs>
-        </AppBar>
-        
-        { this.state.cats.map((cat, key) =>
-          <TabPanel value={this.state.activeCat} index={key} key={key}>
-            <Grid container spacing={2} className='container' style={{ paddingTop: 0 }}>
-              { cat.items.map( (item, k) =>
-                <Grid key={k} item xs={2}>
-                  <Paper className={this.state.classes.paperCat} onClick={ this.addToCart.bind(this, item.id) }>
-                    <Grid container direction="column" style={{ height: '100%', justifyContent: 'space-around' }}>
-                      <Typography component="span" className={this.state.classes.size1}>{item.name}</Typography>
-                      <Typography component="span" className={this.state.classes.size1}>{item.price} р.</Typography>
-                      
-                      <HtmlTooltip
-                        className={this.state.classes.paperCatInfo}
-                        placement="top"
-                        title={
-                          <React.Fragment>
-                            <Typography color="inherit" className={this.state.classes.size1}>{item.tmp_desc}</Typography>
-                            <Typography color="inherit" className={this.state.classes.size1}>{item.info_weight}</Typography>
-                          </React.Fragment>
-                        }
-                      >
-                        <InfoIcon />
-                      </HtmlTooltip>
-                      
-                    </Grid>
-                  </Paper>
-                </Grid>
-              ) }
-            </Grid>
-          </TabPanel>
-        )}
-      </>
-    )
-  }
-}
-
 class BlockTableItem extends React.Component {
   _isMounted = false;
   
@@ -404,1072 +283,6 @@ class BlockTableItem extends React.Component {
   }
 }
 
-class BlockTable extends React.Component {
-  _isMounted = false;
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      items: [],
-      main_items: [],
-      dop_items: [],
-      promo_items: []
-    };
-  }
-  
-  /*shouldComponentUpdate(nextProps, nextState) {
-    return (
-      (this.state.cats.length !== nextState.cats.length && nextState.cats.length != 0) ||
-      this.state.activeCat !== nextState.activeCat
-    );
-  }*/
-  
-  componentDidMount(){
-    this._isMounted = true;
-    
-    let my_cart = itemsStore.getItems();
-    let all_items = itemsStore.getAllItems();
-    let promoItems = itemsStore.getItemsPromo();
-    let cartPromoItems = [];
-    
-    promoItems.map((item) => {
-      let thisitem = all_items.find( (item_) => item_.id == item.item_id );
-      
-      if(thisitem){
-        cartPromoItems.push({
-          id: item.item_id,
-          cat_id: thisitem.cat_id,
-          name: thisitem.name,
-          desc: thisitem.tmp_desc,
-          count: item.count,
-          all_price: item.all_price,
-          img: thisitem.img_new,
-          imgUpdate: thisitem.img_new_update,
-        })
-      }
-    })
-    
-    let main_items = [],
-        dop_items = [];
-    
-    if( all_items.length > 0 ){
-      my_cart.map( (it) => {
-        let cart_info = all_items.find( (item) => item.id == it.item_id );
-        
-        
-        if( cart_info && parseInt(cart_info.cat_id) == 7 ){
-          dop_items.push( it );
-        }else{
-          main_items.push( it );
-        }
-      } )
-      
-      this.setState({
-        dop_items: dop_items,
-        main_items: main_items,
-        promo_items: cartPromoItems
-      })
-    }
-    
-    autorun(() => {
-      if( this._isMounted === true ){
-        let my_cart = itemsStore.getItems();
-        let all_items = itemsStore.getAllItems();
-        let promoItems = itemsStore.getItemsPromo();
-        let cartPromoItems = [];
-        
-        promoItems.map((item) => {
-          let thisitem = all_items.find( (item_) => item_.id == item.item_id );
-          
-          if(thisitem){
-            cartPromoItems.push({
-              id: item.item_id,
-              cat_id: thisitem.cat_id,
-              name: thisitem.name,
-              desc: thisitem.tmp_desc,
-              count: item.count,
-              all_price: item.all_price,
-              img: thisitem.img_new,
-              imgUpdate: thisitem.img_new_update,
-            })
-          }
-        })
-        
-        let main_items = [],
-            dop_items = [];
-        
-        if( all_items.length > 0 ){
-          my_cart.map( (it) => {
-            let cart_info = all_items.find( (item) => item.id == it.item_id );
-            
-            if( cart_info && parseInt(cart_info.cat_id) == 7 ){
-              dop_items.push( it );
-            }else{
-              main_items.push( it );
-            }
-          } )
-          
-          this.setState({
-            dop_items: dop_items,
-            main_items: main_items,
-            promo_items: cartPromoItems
-          })
-        }
-      }
-    })
-  }
-  
-  render(){
-    return (
-      <Paper style={{ widows: '100%' }}>
-        <TableContainer style={{ maxHeight: 350 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Наимнование</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>Кол-во</TableCell>
-                <TableCell>Сумма</TableCell>
-                <TableCell> <CloseIcon style={{ marginTop: 5 }} /> </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { this.state.main_items.map( (item, key) =>
-                <BlockTableItem key={key} item={item} classes={this.state.classes} type="main" />
-              )}
-              
-              { this.state.dop_items.map( (item, key) =>
-                <BlockTableItem key={key} item={item} classes={this.state.classes} type="dop" />
-              )}
-              
-              { this.state.promo_items.map( (item, key) =>
-                <BlockTableItem key={key} item={item} classes={this.state.classes} type="promo" />
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    )
-  }
-}
-
-
-
-
-class BlockAddrCustom extends React.Component {
-  _isMounted = false;
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      all_addr: this.props.all_addr,
-      
-      defValStreet: '',
-      defValHome: '',
-      
-      newAddrInfo: '',
-      
-      newAddrStreet: '',
-      newAddrHome: '',
-      newAddrPD: '',
-      newAddrET: '',
-      newAddrKV: '',
-      newAddrDom: '',
-      
-      pd: '',
-      et: '',
-      kv: '',
-      comment: '',
-      sdacha: ''
-    };
-  }
-  
-  /*shouldComponentUpdate(nextProps, nextState) {
-    return (
-      (this.state.all_addr.length !== nextState.all_addr.length && nextState.all_addr.length != 0)
-    );
-  }*/
-  
-  checkNewAddr(){
-    let street = document.querySelector('#newAddrStreet').value;
-    
-    if( street.length > 0 && this.state.newAddrHome.length > 0 ){
-      fetch(config.urlApi, {
-        method: 'POST',
-        headers: {
-          'Content-Type':'application/x-www-form-urlencoded'},
-        body: queryString.stringify({
-          type: 'save_new_addr',  
-          city_id: itemsStore.getCity(),
-          street: street,
-          home: this.state.newAddrHome,
-          user_id: itemsStore.getToken()
-        })
-      }).then(res => res.json()).then(json => {
-        if( !json.st ){
-            alert( json.text )
-        }else{
-          this.setState({
-            newAddrInfo: json.res
-          })
-          
-          let allPrice = itemsStore.getAllPrice();
-    
-          if( parseInt(json.res ? json.res.free_drive : 0) == 1 ){
-              if( parseInt(allPrice) > 0 ){
-                  itemsStore.setSumDiv(0);
-              }else{
-                  itemsStore.setSumDiv(1);
-              }
-          }else{
-              itemsStore.setSumDiv(parseInt(json.res ? json.res.sum_div : 0));
-          }
-          
-          this.saveData();
-        }
-      });
-    }
-  }
-  
-  changeDomTrue(type){
-    this.setState({
-      newAddrDom: type
-    })
-    this.changeData('domTrue', {target: {value: type}})
-  }
-  
-  changeData(type, data){
-    let value = data.target.value;
-    
-    this.setState({ [type]: value });
-    
-    this.saveData();
-  }
-  
-  componentWillUnmount(){
-    this._isMounted = false;
-  }
-  
-  componentDidMount(){
-    this._isMounted = true;
-    
-    autorun(() => {
-      if( this._isMounted ){
-        let cartData = itemsStore.getCartData();
-      
-        //let test = itemsStore.cart_data;
-        
-        if( cartData.orderType || cartData.orderType == 0 ){
-          this.setState({
-            newAddrStreet: cartData.orderAddr && cartData.orderAddr.street ? cartData.orderAddr.street : '',
-            newAddrHome: cartData.orderAddr && cartData.orderAddr.home ? cartData.orderAddr.home : '',
-            pd: cartData.orderAddr && cartData.orderAddr.pd ? cartData.orderAddr.pd : '',
-            et: cartData.orderAddr && cartData.orderAddr.et ? cartData.orderAddr.et : '',
-            kv: cartData.orderAddr && cartData.orderAddr.kv ? cartData.orderAddr.kv : '',
-            newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 1 ? false : true,
-          })
-          
-          let allPrice = itemsStore.getAllPrice();
-            
-          if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 ){
-            if( parseInt(allPrice) > 0 ){
-                itemsStore.setSumDiv(0);
-            }else{
-              itemsStore.setSumDiv(1);
-            }
-          }else{
-            itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
-          }
-        }else{
-          this.setState({
-            newAddrStreet: '',
-            newAddrHome: '',
-            pd: '',
-            et: '',
-            kv: '',
-            newAddrDom: true,
-          })
-          
-          itemsStore.setSumDiv(0);
-        }
-      }
-    })
-    
-    let cartData = itemsStore.getCartData();
-    
-    if( cartData.orderType || cartData.orderType == 0 ){
-      this.setState({
-        //newAddrStreet: cartData.orderAddr.street,
-        //newAddrHome: cartData.orderAddr.home,
-        //pd: cartData.orderAddr.pd,
-        //et: cartData.orderAddr.et,
-        //kv: cartData.orderAddr.kv,
-        //newAddrDom: parseInt(cartData.orderAddr.fake_dom) == 0 ? true : false,
-      })
-      
-      let allPrice = itemsStore.getAllPrice();
-        
-      if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 ){
-        if( parseInt(allPrice) > 0 ){
-            itemsStore.setSumDiv(0);
-        }else{
-          itemsStore.setSumDiv(1);
-        }
-      }else{
-        itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
-      }
-    }
-  }
-  
-  saveData(){
-    let cartData = itemsStore.getCartData();
-    
-    let addrInfo = this.state.newAddrInfo ? this.state.newAddrInfo : cartData.orderAddr;
-    
-    setTimeout(()=>{
-        let data = {
-            orderType: 0,
-            orderAddr: {
-              id: -1,
-              //city_name: itemsStore.getCityRU(),
-              street: addrInfo.street ? addrInfo.street : '',
-              home: addrInfo.home ? addrInfo.home : '',
-              kv: this.state.kv,
-              pd: this.state.pd,
-              et: this.state.et,
-              dom_true: this.state.newAddrDom ? 0 : 1,
-              free_drive: addrInfo.free_drive ? addrInfo.free_drive : 0,
-              sum_div: addrInfo.sum_div ? addrInfo.sum_div : 0,
-              point_id: addrInfo.point_id ? addrInfo.point_id : 0,
-              xy: addrInfo.xy ? addrInfo.xy : '',
-              pay_active: addrInfo.pay_active ? addrInfo.pay_active : 0,
-            },
-            orderPic: cartData && cartData.orderPic ? cartData.orderPic : 0,
-            orderComment: cartData && cartData.orderComment ? cartData.orderComment : '',
-            
-            orderTimes: cartData && cartData.orderTimes ? cartData.orderTimes : '0',
-            orderPredDay: cartData && cartData.orderPredDay ? cartData.orderPredDay : '',
-            orderPredTime: cartData && cartData.orderPredTime ? cartData.orderPredTime : '',
-            
-            orderPay: cartData && cartData.orderPay ? cartData.orderPay : '0',
-            orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
-            
-        };
-        
-        itemsStore.saveCartData(data);
-    }, 500)
-  }
-  
-  render(){
-    return (
-      <Grid container spacing={3}>
-        <div className='mainAddr'>
-          <Autocomplete
-            freeSolo
-            id="newAddrStreet"
-            style={{ flex: 3 }}
-            //defaultValue={this.state.defValStreet} 
-            
-            value={this.state.newAddrStreet} 
-            onChange={ ( event, newVal) => { this.setState({ newAddrStreet: newVal }) } }
-            
-            onBlur={this.checkNewAddr.bind(this)}
-            options={this.state.all_addr.map((option) => option.value)}
-            renderInput={(params) => (
-                <TextField {...params} label="Улица" margin="normal" variant="outlined" />
-            )}
-          />
-          <TextField 
-            label="Дом" 
-            variant="outlined" 
-            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
-            //defaultValue={this.state.defValHome} 
-            value={this.state.newAddrHome} 
-            onChange={ event => this.setState({ newAddrHome: event.target.value }) }
-            onBlur={this.checkNewAddr.bind(this)}
-          />
-        </div>
-        <div className='otherAddr'>
-          <TextField 
-            label="Подъезд" 
-            variant="outlined" 
-            style={{ marginRight: 4}}
-            value={ this.state.pd }
-            onChange={ this.changeData.bind(this, 'pd') }
-            onBlur={ this.changeData.bind(this, 'pd') }
-          />
-          <TextField 
-            label="Этаж" 
-            variant="outlined" 
-            style={{ marginRight: 4, marginLeft: 4}}
-            value={ this.state.et }
-            onBlur={ this.changeData.bind(this, 'et') }
-            onChange={ this.changeData.bind(this, 'et') }
-          />
-          <TextField 
-            label="Квартира" 
-            variant="outlined" 
-            style={{ marginRight: 8, marginLeft: 4}}
-            value={ this.state.kv }
-            onBlur={ this.changeData.bind(this, 'kv') }
-            onChange={ this.changeData.bind(this, 'kv') }
-          />  
-        </div>
-        <div style={{ width: '100%', marginRight: 8 }}>
-          <ButtonGroup disableElevation variant="contained" className='chooseDomTrue'>
-            <Button className={ this.state.newAddrDom === true ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, true) }>Домофон работает</Button>
-            <Button className={ this.state.newAddrDom === false ? 'active' : '' } onClick={ this.changeDomTrue.bind(this, false) }>Домофон не работает</Button>
-          </ButtonGroup>
-        </div>
-        
-      </Grid>
-    )
-  }
-}
-
-class BlockAddrMy extends React.Component {
-  _isMounted = false;
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      clientAddr: this.props.clientAddr,
-      
-      chooseAddr: -1
-    };
-  }
-  
-  /*shouldComponentUpdate(nextProps, nextState) {
-    return (
-      (this.state.all_addr.length !== nextState.all_addr.length && nextState.all_addr.length != 0)
-    );
-  }*/
-  
-  chooseAddr(key, item, event){
-    let allPrice = itemsStore.getAllPrice();
-        
-    if( parseInt(item ? item.free_drive : 0) == 1 ){
-      if( parseInt(allPrice) > 0 ){
-          itemsStore.setSumDiv(0);
-      }else{
-        itemsStore.setSumDiv(1);
-      }
-    }else{
-      itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
-    }
-    
-    if( key != this.state.chooseAddr ){
-      this.setState({
-        chooseAddr: key
-      })
-      
-      let cartData = itemsStore.getCartData();
-      
-      if( cartData.orderType || cartData.orderType == 0 ){
-          
-        let data = {
-          orderType: 0,
-          
-          type: 'client',
-          
-          orderAddr: item,
-          
-          orderPic: cartData.orderPic,
-          orderComment: cartData.orderComment,
-          
-          orderTimes: cartData.orderTimes,
-          orderPredDay: cartData.orderPredDay,
-          orderPredTime: cartData.orderPredTime,
-          
-          orderPay: cartData.orderPay,
-          orderSdacha: cartData.orderSdacha,
-          
-        };
-      
-        itemsStore.saveCartData(data);
-      }else{
-        let data = {
-          
-          orderType: '0',
-          
-          type: 'client',
-          
-          orderAddr: item,
-          
-          orderPic: 0,
-          orderComment: '',
-          
-          orderTimes: '1',
-          orderPredDay: '',
-          orderPredTime: '',
-          
-          orderPay: '',
-          orderSdacha: ''        
-        };
-      
-        itemsStore.saveCartData(data);
-      }
-    }
-  }
-  
-  chooseAddr2(key, item, event){
-    
-    let allPrice = itemsStore.getAllPrice();
-        
-    if( parseInt(item ? item.free_drive : 0) == 1 ){
-      if( parseInt(allPrice) > 0 ){
-          itemsStore.setSumDiv(0);
-      }else{
-        itemsStore.setSumDiv(1);
-      }
-    }else{
-      itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
-    }
-    
-    if( key != this.state.chooseAddr ){
-      this.setState({
-        chooseAddr: key
-      })
-    }
-  }
-  
-  componentWillUnmount(){
-    this._isMounted = false;
-  }
-  
-  componentDidMount(){
-    this._isMounted = true;
-    
-    /*let cartData = itemsStore.getCartData();
-    
-    if( cartData.orderType || cartData.orderType == 0 ){
-      setTimeout( () => {
-        let keyAddr = this.state.clientAddr.findIndex( (item, key) => item.street == cartData.orderAddr.street && item.home == cartData.orderAddr.home );
-          
-        this.chooseAddr(keyAddr, cartData.orderAddr)
-      }, 500 )
-    }*/
-    
-    autorun(() => {
-      if( this._isMounted ){
-        let cartData = itemsStore.getCartData();
-        let test = itemsStore.cart_data;
-        
-        if( cartData.orderType || cartData.orderType == 0 ){
-          setTimeout( () => {
-            let keyAddr = this.state.clientAddr.findIndex( (item, key) => item.street == cartData.orderAddr.street && item.home == cartData.orderAddr.home );
-              
-            if( keyAddr != this.state.chooseAddr ){
-              this.chooseAddr2(keyAddr, cartData.orderAddr)
-            }
-          }, 500 )
-        }
-      }
-    })
-  }
-  
-  saveData(){
-    setTimeout(()=>{
-      let data = {
-        orderType: this.state.orderType,
-        orderAddr: this.state.orderAddr,
-        orderPic: this.state.orderPic,
-        orderComment: this.state.orderComment,
-        
-        orderTimes: this.state.orderTimes,
-        orderPredDay: this.state.orderPredDay,
-        orderPredTime: this.state.orderPredTime,
-        
-        orderPay: this.state.orderPay,
-        orderSdacha: this.state.orderSdacha,
-        
-      };
-      
-      itemsStore.saveCartData(data);
-    }, 500)
-  }
-  
-  render(){
-    return (
-      <List component="nav" aria-label="main mailbox folders" style={{ maxHeight: 106, overflow: 'auto', marginLeft: -13 }}>
-        { this.state.clientAddr.map( (item, key) =>
-          <ListItem button key={key} selected={this.state.chooseAddr === key} onClick={this.chooseAddr.bind(this, key, item)} style={{ paddingTop: 0, paddingBottom: 0 }}>
-            <ListItemText primary={ 
-              item.street + ' ' + 
-              item.home + 
-              ( item.pd.length == 0 ? '' : ', Пд. '+item.pd )+
-              ( item.et.length == 0 ? '' : ', Эт. '+item.et )+
-              ( item.kv.length == 0 ? '' : ', Кв. '+item.kv )
-            } />
-          </ListItem>
-        ) }
-      </List>
-    )
-  }
-}
-
-class BlockPic extends React.Component {
-  _isMounted = false;
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      pic_point: this.props.pic_point,
-      
-      orderPic: 0,
-      picPointInfo: null,
-    };
-  }
-  
-  /*shouldComponentUpdate(nextProps, nextState) {
-    return (
-      (this.state.cats.length !== nextState.cats.length && nextState.cats.length != 0) ||
-      this.state.activeCat !== nextState.activeCat
-    );
-  }*/
-  
-  componentWillUnmount(){
-    this._isMounted = false;
-  }
-  
-  componentDidMount(){
-    this._isMounted = true;
-    
-    autorun(() => {
-      if( this._isMounted ){
-        
-        let test = itemsStore.cart_data;
-        
-        let cartData = itemsStore.getCartData();
-        //let test = itemsStore.cart_data;
-        
-        console.log( cartData )
-        
-        if( cartData.orderType ){
-          setTimeout( () => {
-            let choosePoint = this.state.pic_point.find( (item) => parseInt(item.id) == parseInt(cartData.orderPic) );
-        
-            if( this.state.orderPic != choosePoint ){
-              if( choosePoint ){
-                this.choosePic(choosePoint)
-              }else{
-                this.setState({
-                  orderPic: 0,
-                  picPointInfo: null
-                })
-              }
-            }
-          }, 500 )
-        }
-      }
-    })
-    
-    let cartData = itemsStore.getCartData();
-    
-    if( cartData.orderType && cartData.orderType == 1 ){
-      setTimeout( () => {
-        let choosePoint = this.state.pic_point.find( (item) => parseInt(item.id) == parseInt(cartData.orderPic) );
-        
-        if( choosePoint ){
-          this.choosePic(choosePoint)
-        }
-      }, 500 )
-    }
-  }
-  
-  choosePic(point){
-    this.setState({
-      orderPic: point.id,
-      picPointInfo: point
-    })
-    
-    itemsStore.setSumDiv(0);
-    
-    this.saveData();
-  }
-  
-  saveData(){
-    let cartData = itemsStore.getCartData();
-    
-    setTimeout(()=>{
-      let data = {
-        orderType: 1,
-        orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
-        
-        orderPic: this.state.orderPic,
-        orderComment: cartData && cartData.orderComment ? cartData.orderComment : '',
-        
-        orderTimes: cartData && cartData.orderTimes ? cartData.orderTimes : '0',
-        orderPredDay: cartData && cartData.orderPredDay ? cartData.orderPredDay : '',
-        orderPredTime: cartData && cartData.orderPredTime ? cartData.orderPredTime : '',
-        
-        orderPay: cartData && cartData.orderPay ? cartData.orderPay : '0',
-        orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
-          
-      };
-      
-      itemsStore.saveCartData(data);
-    }, 500)
-  }
-  
-  render(){
-    return (
-      <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container' style={{ paddingRight: 8 }}>
-        { this.state.pic_point.map( (item, key) =>
-          <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#6ab04c' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
-        )}
-      </Grid>
-    )
-  }
-}
-
-class BlockPred extends React.Component {
-  _isMounted = false;
-  _thisEdit = false;
-  
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      classes: this.props.classes,
-      point_id: 0,
-      
-      textAvgTime: 'Среднее время: ~',
-      
-      date: '',//дата предзаказа
-      time: '',//дата предзаказа
-      typeTime: 0,//0 - быстрее / 1 - пред
-      
-      timePred: [],
-      date_pred: this.props.date_pred,
-    };
-  }
-  
-  /*shouldComponentUpdate(nextProps, nextState) {
-    return (
-      (this.state.cats.length !== nextState.cats.length && nextState.cats.length != 0) ||
-      this.state.activeCat !== nextState.activeCat
-    );
-  }*/
-  
-  componentWillUnmount(){
-    this._isMounted = false;
-  }
-  
-  componentDidMount(){
-    this._isMounted = true;
-    
-    autorun(() => {
-      let cartData = itemsStore.getCartData();
-      //let test = itemsStore.cart_data;
-      
-      console.log( 'cartData', cartData )
-      
-      console.log( 'test', itemsStore.dateTimeDel )
-      
-      if( this._isMounted ){
-        
-        setTimeout(()=>{
-          
-          let cartData = itemsStore.getCartData();
-          
-          if( cartData.orderPredDay == '' && cartData.orderPredTime == '' ){
-            this.setState({
-              time: '',
-              date: '',
-              typeTime: 0
-            })
-          }
-          
-          if( cartData.orderType == 0 ){
-            //if( parseInt( cartData.orderAddr.point_id ) != parseInt( this.state.point_id ) ){
-              if( parseInt(cartData.orderTimes) == 1 ){
-                this.loadTimePred();
-              }else{
-                this.loadTimeWait();
-              }
-              
-              this.setState({
-                //point_id: this.state.point_id
-              })
-            //}
-          }
-          
-          if( cartData.orderType == 1 ){
-            //if( parseInt( cartData.orderPic ) != parseInt( this.state.point_id ) ){
-              if( parseInt(cartData.orderTimes) == 1 ){
-                this.loadTimePred();
-              }else{
-                this.loadTimeWait();
-              }
-              
-              this.setState({
-                point_id: cartData.orderPic
-              })
-            //}
-          }
-          
-          if( !this._thisEdit ){
-            this.startData();
-          }
-          
-        }, 500)
-        
-        
-        
-      }
-    })
-    
-    this.startData();
-  }
-  
-  changeTypeTime = (event, newValue) => {
-    this._thisEdit = true;
-    this.changeData('typeTime', {target: {value: newValue}})
-    
-    if( parseInt(newValue) == 0 ){
-      this.loadTimeWait();
-    }else{
-      this.loadTimePred();
-    }
-  }
-  
-  loadTimePred(){
-    let my_cart = [];
-    let cartItems = itemsStore.getItems();  
-    let cartData = itemsStore.getCartData();
-    
-    if( cartData.orderType+1 == 1 ){
-        if( !cartData.orderAddr || !cartData.orderAddr.point_id ){
-            /*this.setState({
-                error: {
-                    title: 'Предупреждение', 
-                    text: 'Адрес доставки или точка самовывоза не выбрана'
-                },
-                errorOpen: true,
-                orderTimes: '1'
-            })*/
-            
-            //return;
-        }
-    }
-    
-    cartItems.forEach(el => {
-        my_cart.push({
-            item_id: el.item_id,
-            count: el.count,
-        });
-    });
-    
-    fetch(config.urlApi, {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'get_times_pred_center',  
-        point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
-        type_order: cartData.orderType+1,
-        date: this.state.date,
-        cart: JSON.stringify( my_cart ),
-      })
-    }).then(res => res.json()).then(json => {
-      if( !json.st ){
-            /*this.setState({
-                error: {
-                    title: 'Предупреждение', 
-                    text: json.text
-                },
-                errorOpen: true
-            })*/
-      }else{
-        this.setState({
-          timePred: json.data
-        })
-      }
-    });
-  }
-  
-  loadTimeWait(){
-    let cartData = itemsStore.getCartData();
-    
-    fetch(config.urlApi, {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'load_time_wait',  
-        point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
-        type_order: cartData.orderType,
-        city_id: itemsStore.getCity(),
-      })
-    }).then(res => res.json()).then(json => {
-      this.setState({
-        textAvgTime: json
-      })
-    });
-  }
-  
-  changeData(type, data){
-    this._thisEdit = true;
-    
-    let value = data.target.value;
-    
-    this.setState({ [type]: value });
-    
-    if( type == 'date' ){
-      setTimeout(() => {
-        this.loadTimePred();   
-      }, 300)
-    }
-    
-    this.saveData();
-    
-    //this._thisEdit = false;
-  }
-  
-  saveData(){
-    let cartData = itemsStore.getCartData();
-    
-    setTimeout(()=>{
-      let data = {
-        orderType: cartData && cartData.orderType ? cartData.orderType : '0',
-        orderAddr: cartData && cartData.orderAddr ? cartData.orderAddr : '',
-        
-        orderPic: cartData && cartData.orderPic ? cartData.orderPic : '0',
-        orderComment: cartData && cartData.orderComment ? cartData.orderComment : '',
-        
-        orderTimes: this.state.typeTime,
-        orderPredDay: this.state.date,
-        orderPredTime: this.state.time,
-        
-        orderPay: cartData && cartData.orderPay ? cartData.orderPay : '0',
-        orderSdacha: cartData && cartData.orderSdacha ? cartData.orderSdacha : '',
-          
-      };
-      
-      console.log( 'saveCartData', data )
-      
-      itemsStore.saveCartData(data);
-    }, 500)
-  }
-  
-  startData(){
-    this._thisEdit = true;
-    
-    let cartData = itemsStore.getCartData();
-    
-    if( cartData ){
-      
-      let date = cartData.orderPredDay;
-      let check = this.state.date_pred.filter( (item) => item.date < date );
-      
-      if( check.length == 0 ){
-        this.changeTypeTime( null, 0 )
-        
-        this.setState({
-          time: '',
-          date: ''
-        })
-        
-        return ;
-      }else{
-        this.setState({
-          date: date
-        })
-        
-        setTimeout( () => {
-          this.loadTimePred();
-          
-          setTimeout( () => {
-            if( cartData.orderPredTime ){
-              let check = this.state.timePred.filter( (item) => item.value == cartData.orderPredTime );
-              
-              if( check.length == 0 ){
-                this.changeTypeTime( null, 0 )
-              }else{              
-                this.setState({
-                  time: cartData.orderPredTime
-                })
-              }
-            }
-          }, 1000 )
-          
-        }, 500 )
-      }
-    }
-    
-    if( cartData.orderTimes ){
-      this.setState({
-        typeTime: cartData.orderTimes
-      })
-    }
-    
-    this._thisEdit = false;
-  }
-  
-  render(){
-    return (
-      <>
-        <Grid container spacing={3} className='container'>
-          <Tabs
-            value={this.state.typeTime}
-            onChange={this.changeTypeTime}
-            style={{ marginTop: 15, width: '100%', marginBottom: 10 }}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-          >
-            <Tab label="По текущему" />
-            <Tab label="Ко времени" />
-          </Tabs>
-        </Grid>
-          
-        { this.state.typeTime == 0 ?
-          <Grid container spacing={3} className='container'>
-            <Typography component="span" style={{ padding: '8px 0px', fontSize: '1rem' }}>{this.state.textAvgTime}</Typography>
-          </Grid>
-            :
-          <Grid container spacing={3} className='container'>
-            <div className='formPred'>
-              <FormControl variant="outlined" className='formControl'>
-                <InputLabel>Дата</InputLabel>
-                <Select
-                  value={this.state.date}
-                  onChange={ this.changeData.bind(this, 'date') }
-                  label="Дата"
-                >
-                  {this.state.date_pred.map( (item, key) =>
-                    <MenuItem key={key} value={item.date}>{item.text}</MenuItem>
-                  )}
-                </Select>
-              </FormControl>
-              <FormControl variant="outlined" className='formControl'>
-                <InputLabel>Время</InputLabel>
-                <Select
-                  value={this.state.time}
-                  onChange={ this.changeData.bind(this, 'time') }
-                  label="Время"
-                >
-                  {this.state.timePred.map( (item, key) =>
-                    <MenuItem key={key} value={item.value}>{item.text}</MenuItem>
-                  )}
-                </Select>
-              </FormControl>
-            </div>
-          </Grid>
-        }
-      </>
-    )
-  }
-}
-
 class CreateOrder extends React.Component {
   _isMounted = false;
   _isEdit = false;
@@ -1558,6 +371,7 @@ class CreateOrder extends React.Component {
       
       
       point_id: 0,
+      change_point_id: 0,
       
       textAvgTime: 'Среднее время: ~',
       
@@ -1679,7 +493,18 @@ class CreateOrder extends React.Component {
           all_addr: json.get_addr,
           date_pred: json.date_pred
       })
+      
+      if( cartData.orderType && parseInt(cartData.orderType) == 1 ){
+        let my_point = json.get_addr_pic.points.find( (item) => item.id == parseInt(cartData.orderPic) );
+        
+        this.choosePic(my_point);
+      }
+      
     });
+    
+    
+    
+    
     
     let defValue = '';
   
@@ -1723,7 +548,9 @@ class CreateOrder extends React.Component {
       
       let allPrice = itemsStore.getAllPrice();
         
-      if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 ){
+      console.log( 'free_drive 1', cartData.orderAddr.free_drive, parseInt(itemsStore.free_drive) )
+      
+      if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
         if( parseInt(allPrice) > 0 ){
             itemsStore.setSumDiv(0);
         }else{
@@ -1732,20 +559,9 @@ class CreateOrder extends React.Component {
       }else{
         itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
       }
-    }else{
-      console.log( 'autorun orderType 0' );
-      
-      this.setState({
-        newAddrStreet: '',
-        newAddrHome: '',
-        pd: '',
-        et: '',
-        kv: '',
-        newAddrDom: true,
-      })
-      
-      itemsStore.setSumDiv(0);
     }
+    
+    
     
     if( cartData.orderComment != this.state.comment ){
       this.setState({
@@ -1766,10 +582,18 @@ class CreateOrder extends React.Component {
         let cartData = itemsStore.getCartData();
         let test = itemsStore.cart_data;
         
+        
+        console.log( 'free_drive', parseInt(itemsStore.free_drive) )
+        
+        
         //let thisCity = 1;
         //let cartData = itemsStore.getCartData();
         
         console.log( 'autorun' );
+        
+        console.log( 'point_id ', this.state.point_id );
+        
+        this.loadTimeWait();
         
         if( parseInt(thisCity) != parseInt(this.state.cityID) ){
           
@@ -1843,7 +667,18 @@ class CreateOrder extends React.Component {
           
         }
         
-        
+        /*if( localStorage.getItem('promo_name') && localStorage.getItem('promo_name') != this.state.promo_name ){
+          let promo = localStorage.getItem('promo_name');
+          
+          setTimeout( ()=>{
+            this.setState({
+              promo_name: promo
+            })
+            
+            this.checkPromo( {target: {value: this.state.promo_name}} )
+          }, 500 )
+          
+        }*/
         
         if( parseInt(this.state.typeTime) != parseInt(cartData.orderTimes) ){
           console.log( 'autorun typeTime' );
@@ -1888,7 +723,26 @@ class CreateOrder extends React.Component {
         }
         
         
+        //8ГБИПГ
         
+        if( cartData.orderType || cartData.orderType == 0 ){
+          
+          console.log( 'autorun orderType 111' );
+          
+          let allPrice = itemsStore.getAllPrice();
+            
+          console.log( 'free_drive 1', cartData.orderAddr.free_drive, parseInt(itemsStore.free_drive) )
+          
+          if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
+            if( parseInt(allPrice) > 0 ){
+                itemsStore.setSumDiv(0);
+            }else{
+              itemsStore.setSumDiv(1);
+            }
+          }else{
+            itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
+          }
+        }
         
         
         if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
@@ -1932,17 +786,37 @@ class CreateOrder extends React.Component {
         let newPrice = itemsStore.getAllPrice();
         let newSumDiv = itemsStore.getSumDiv();
         
+        console.log( 'newSumDiv', newSumDiv )
+        
         if( parseInt(newPrice) != parseInt(this.state.AllPrice) ){
           this.setState({
             AllPrice: newPrice
           })
         }
         
-        if( parseInt(newSumDiv) != parseInt(this.state.sumDiv) ){
-          this.setState({
-            sumDiv: newSumDiv
-          })
+        if( parseInt( itemsStore.free_drive ) == 1 ){
+          if( parseInt(newPrice) == 0 ){
+            itemsStore.setSumDiv(1);
+            
+            this.setState({
+              sumDiv: 1
+            })
+          }else{
+            itemsStore.setSumDiv(0);
+            
+            this.setState({
+              sumDiv: 0
+            })
+          }
+        }else{
+          if( parseInt(newSumDiv) != parseInt(this.state.sumDiv) ){
+            this.setState({
+              sumDiv: newSumDiv
+            })
+          }
         }
+        
+        
        
         
         let my_cart = itemsStore.getItems();
@@ -2401,12 +1275,18 @@ class CreateOrder extends React.Component {
   choosePic(point){
     this.setState({
       orderPic: point.id,
-      picPointInfo: point
+      picPointInfo: point,
+      
+      point_id: point.id
     })
     
     itemsStore.setSumDiv(0);
     
     this.saveData();
+    
+    setTimeout( () => {
+      this.checkPromo( {target: {value: this.state.promo_name}} )
+    }, 300 )
   }
   
   
@@ -2430,12 +1310,15 @@ class CreateOrder extends React.Component {
             alert( json.text )
         }else{
           this.setState({
-            newAddrInfo: json.res
+            newAddrInfo: json.res,
+            point_id: json.res.point_id
           })
           
           let allPrice = itemsStore.getAllPrice();
     
-          if( parseInt(json.res ? json.res.free_drive : 0) == 1 ){
+          console.log( 'free_drive 2', json.res.free_drive, parseInt(itemsStore.free_drive) )
+          
+          if( parseInt(json.res ? json.res.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
               if( parseInt(allPrice) > 0 ){
                   itemsStore.setSumDiv(0);
               }else{
@@ -2446,6 +1329,11 @@ class CreateOrder extends React.Component {
           }
           
           this.saveDataOther();
+          
+          
+          setTimeout( () => {
+            this.checkPromo( {target: {value: this.state.promo_name}} )
+          }, 300 )
         }
       });
     }
@@ -2470,7 +1358,9 @@ class CreateOrder extends React.Component {
   chooseAddr(key, item, event){
     let allPrice = itemsStore.getAllPrice();
         
-    if( parseInt(item ? item.free_drive : 0) == 1 ){
+    console.log( 'free_drive 3', item.free_drive, parseInt(itemsStore.free_drive) )
+    
+    if( parseInt(item ? item.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
       if( parseInt(allPrice) > 0 ){
           itemsStore.setSumDiv(0);
       }else{
@@ -2480,6 +1370,8 @@ class CreateOrder extends React.Component {
       itemsStore.setSumDiv(parseInt(item ? item.sum_div : 0));
     }
     
+    console.log( item )
+    
     this.setState({
       newAddrStreet: item.street,
       newAddrHome: item.home,
@@ -2487,6 +1379,8 @@ class CreateOrder extends React.Component {
       et: item.et,
       kv: item.kv,
       newAddrDom: parseInt(item.dom_true) == 0 ? true : false,
+      
+      point_id: item.point_id
     })
     
     //if( key != this.state.chooseAddr ){
@@ -2503,13 +1397,19 @@ class CreateOrder extends React.Component {
         itemsStore.saveCartData(cartData);
       //}
     //}
+    
+    setTimeout( () => {
+      this.checkPromo( {target: {value: this.state.promo_name}} )
+    }, 300 )
   }
   
   chooseAddr2(key, item, event){
     
     let allPrice = itemsStore.getAllPrice();
         
-    if( parseInt(item ? item.free_drive : 0) == 1 ){
+    console.log( 'free_drive 4', item.free_drive, parseInt(itemsStore.free_drive) )
+    
+    if( parseInt(item ? item.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
       if( parseInt(allPrice) > 0 ){
           itemsStore.setSumDiv(0);
       }else{
@@ -2521,9 +1421,15 @@ class CreateOrder extends React.Component {
     
     if( key != this.state.chooseAddr ){
       this.setState({
-        chooseAddr: key
+        chooseAddr: key,
+        point_id: item.point_id
       })
     }
+    
+    
+    setTimeout( () => {
+      this.checkPromo( {target: {value: this.state.promo_name}} )
+    }, 300 )
   }
   
   
@@ -2604,14 +1510,21 @@ class CreateOrder extends React.Component {
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        type: 'load_time_wait',  
+        type: 'load_time_wait_test',  
         point_id: cartData.orderType+1 == 1 ? cartData.orderAddr.point_id ?? 0 : cartData.orderPic ?? 0,
         type_order: cartData.orderType,
         city_id: itemsStore.getCity(),
+        
+        cart: JSON.stringify( itemsStore.getItems() ),
+        cartPromo: JSON.stringify( itemsStore.getItemsPromo() )
+        
       })
     }).then(res => res.json()).then(json => {
+      
+      console.log( json )
+      
       this.setState({
-        textAvgTime: json
+        textAvgTime: json['text']
       })
     });
   }
@@ -2742,12 +1655,7 @@ class CreateOrder extends React.Component {
   }
     
   checkPromo(event){
-    
     let promo = event.target.value;
-    //let promo = this.state.promo_name;
-    
-    console.log( 'promo', promo )
-    console.log( 'promo 555', event.target.value )
     
     fetch(config.urlApi, {
       method: 'POST',
@@ -2773,6 +1681,7 @@ class CreateOrder extends React.Component {
           promoST: false
         })
         localStorage.removeItem('promo_name')
+        itemsStore.free_drive = 0;
       }else{
         this.setState({
           orderPromoText: check_promo.text,

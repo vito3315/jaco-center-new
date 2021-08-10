@@ -47,6 +47,8 @@ class ItemsStore {
   
   dateTimeDel = null;
   
+  free_drive = 0;
+  
   setMyPromos = (items) => {
     this.MyPromos = JSON.stringify( items );
     
@@ -228,6 +230,8 @@ class ItemsStore {
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
     }
     
+    
+    
     if( promo_info ){
       if( !promo_info.status_promo ){
         return {
@@ -359,8 +363,8 @@ class ItemsStore {
           }
         }
       }
-      //
       
+      itemsStore.free_drive = parseInt(promo_info.limits.free_drive);
       
       let all_price = 0,
           count_sale = 0,
