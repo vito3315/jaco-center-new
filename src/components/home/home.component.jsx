@@ -1049,6 +1049,8 @@ class CreateOrder extends React.Component {
         }
       }
       
+      let promo_name = localStorage.getItem('promo_name') ? localStorage.getItem('promo_name') : document.getElementById('promo_name').value;
+      
       fetch(config.urlApi, {
         method: 'POST',
         headers: {
@@ -1068,7 +1070,7 @@ class CreateOrder extends React.Component {
           //pay: payFull.title, //
           payFull: JSON.stringify({ type: 'cash' }), 
           cart: JSON.stringify(new_cart),
-          promo_name: localStorage.getItem('promo_name'),
+          promo_name: promo_name,
           number: itemsStore.clientNumber
         })
       }).then(res => res.json()).then(json => {
@@ -1882,6 +1884,7 @@ class CreateOrder extends React.Component {
                         label="Промокод"
                         variant="outlined"
                         size="small"
+                        id="promo_name"
                         
                         style={{ minWidth: 200, marginRight: 8 }}
                         
