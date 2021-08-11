@@ -663,6 +663,8 @@ class ItemsStore {
           
         let max_count = itemsStore.check_max_count( parseInt(id) );    
         
+        console.log( 'max_count ', max_count, ' count ', count )
+        
         if( parseInt(max_count) >= count ){
           let check_in_cart = my_cart.some( (item) => item.item_id == id );
             if( !check_in_cart ){
@@ -774,6 +776,9 @@ class ItemsStore {
         count = 0;
       }    
           
+      let max_count = 0;
+      let free_items = itemsStore.getFreeItems();
+      
       if( count >= 0 ){
         my_cart.map( (item, key) => {
           if( item.item_id == id ){
@@ -783,6 +788,19 @@ class ItemsStore {
         } )
         
         itemsStore.setItems(my_cart)
+        
+        setTimeout( () => {
+          my_cart.map( (item, key) => {
+            max_count = itemsStore.check_max_count(item.item_id)
+            
+            if( parseInt(max_count) < 0 ){
+              my_cart[key]['count'] = parseInt(item.count) + parseInt(max_count);
+              my_cart[key]['all_price'] = ( parseInt(item.count) + parseInt(max_count) ) * parseInt(item.one_price);
+            }
+          })
+          
+          itemsStore.setItems(my_cart)
+        }, 300 )
       }
     
       if( promo ){
@@ -824,6 +842,19 @@ class ItemsStore {
         } )
         
         itemsStore.setItems(my_cart)
+        
+        setTimeout( () => {
+          my_cart.map( (item, key) => {
+            max_count = itemsStore.check_max_count(item.item_id)
+            
+            if( parseInt(max_count) < 0 ){
+              my_cart[key]['count'] = parseInt(item.count) + parseInt(max_count);
+              my_cart[key]['all_price'] = ( parseInt(item.count) + parseInt(max_count) ) * parseInt(item.one_price);
+            }
+          })
+          
+          itemsStore.setItems(my_cart)
+        }, 300 )
       }
     
       if( promo ){
