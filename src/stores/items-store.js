@@ -927,6 +927,95 @@ class ItemsStore {
     
     let my_cart = itemsStore.getItems();
     let free_items = itemsStore.getFreeItems();
+    let all_items = itemsStore.getAllItems();
+    
+    let check_item = all_items.find( (item) => parseInt(item.id) == parseInt(item_id) );
+    
+    if( parseInt(check_item.type) != 3 || (parseInt(check_item.id) !== 17 && parseInt(check_item.id) !== 237) ){
+      return 99;
+    }
+    
+    if( !free_items ){
+      return 99;
+    }
+    
+    let all_max_count = 0;
+    let my_free_count = 0;
+    
+    my_cart.forEach((item_cart, key) => {
+      
+      let item_info = all_items.find( (item) => parseInt(item.id) == parseInt(item_cart['item_id']) );
+      let check_free = free_items.find( (item) => parseInt(item['this_item_id']) == parseInt(item_cart['item_id']) );
+      
+      if( check_free && check_free.max_count && parseInt(item_info.type) != 3 ){
+        all_max_count += parseInt(check_free.max_count);
+      }
+      
+      if( parseInt(item_info.id) == 17 || parseInt(item_info.id) == 237 ){
+        my_free_count += parseInt(item_cart['count']);
+      }
+      
+      free_items.forEach( (item) => {
+        if( parseInt(item_cart['item_id']) == parseInt(item['this_item_id']) ){
+          item['count_in_cart'] = parseInt(item_cart['count']);
+          
+          free_dops_in_cart.push( item );
+          unic_id.push( parseInt(item['item_id']) );
+        }
+      });
+    });
+    
+    unic_id = [...new Set(unic_id)];
+    
+    let new_free_dop = [];
+    
+    unic_id.forEach( (unic_item, key) => {
+      free_dops_in_cart.forEach( (item_free) => {
+        if( parseInt(unic_item) == parseInt(item_free['item_id']) ){
+          let check = false;
+          
+          new_free_dop.forEach( (el, k) => {
+            if( parseInt( el['item_id'] ) == parseInt(unic_item) ){
+              check = true;
+              new_free_dop[k]['count'] += item_free['count_in_cart'] * item_free['max_count'];
+            }
+          });
+          
+          if( !check ){
+            new_free_dop.push({
+              item_id: parseInt(unic_item),
+              count_in_cart: item_free['count_in_cart'],
+              count: item_free['count_in_cart'] * item_free['max_count']
+            });
+          }
+        }
+      })
+    });
+    
+    let max_count = 99;
+    
+    if( new_free_dop.length > 0 ){
+      
+      max_count = new_free_dop.find( (item) => parseInt(item['item_id']) == 17 );
+      if( max_count ){
+        max_count = parseInt(max_count['count']);
+        
+        if( my_free_count >= max_count ){
+          return max_count - my_free_count;
+        }
+        
+      }
+    }
+    
+    return max_count;
+  }
+  
+  check_max_count_old(item_id){
+    let free_dops_in_cart = [];
+    let unic_id = [];
+    
+    let my_cart = itemsStore.getItems();
+    let free_items = itemsStore.getFreeItems();
     
     if( !free_items ){
       return 99;
