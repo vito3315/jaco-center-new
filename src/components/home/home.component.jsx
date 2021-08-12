@@ -729,8 +729,6 @@ class CreateOrder extends React.Component {
           
           let allPrice = itemsStore.getAllPrice();
             
-          console.log( 'free_drive 1', cartData.orderAddr.free_drive, parseInt(itemsStore.free_drive) )
-          
           if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
             if( parseInt(allPrice) > 0 ){
                 itemsStore.setSumDiv(0);
@@ -740,10 +738,6 @@ class CreateOrder extends React.Component {
           }else{
             itemsStore.setSumDiv(parseInt(cartData.orderAddr ? cartData.orderAddr.sum_div : 0));
           }
-        }
-        
-        if( cartData.orderType && cartData.orderType == 1 ){
-          //itemsStore.setSumDiv(0);
         }
         
         if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
@@ -822,9 +816,6 @@ class CreateOrder extends React.Component {
             }
           }
         }
-        
-        
-       
         
         let my_cart = itemsStore.getItems();
         let all_items = itemsStore.getAllItems();
@@ -1111,9 +1102,6 @@ class CreateOrder extends React.Component {
               new_cart.push( item )
             }
           } )
-          
-          console.log( 'json.my_cart', json.my_cart )
-          console.log( 'new_cart', new_cart )
           
           this.setState({
             newOrder: {
@@ -2423,7 +2411,7 @@ class CreateOrder extends React.Component {
                       <Typography variant="h5" component="span" className="orderCheckText bold">Сумма заказа</Typography>
                     </td>
                     <td>
-                      <Typography variant="h5" component="span" className="namePrice orderCheckText">{ parseInt(itemsStore.getAllPrice()) + parseInt(itemsStore.getSumDiv()) } р</Typography>
+                      <Typography variant="h5" component="span" className="namePrice orderCheckText">{ parseInt(this.state.AllPrice) + parseInt(this.state.sumDiv) } р</Typography>
                     </td>
                   </tr>
                 </tfoot>
