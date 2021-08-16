@@ -582,17 +582,6 @@ class CreateOrder extends React.Component {
         let cartData = itemsStore.getCartData();
         let test = itemsStore.cart_data;
         
-        
-        console.log( 'free_drive', parseInt(itemsStore.free_drive) )
-        
-        
-        //let thisCity = 1;
-        //let cartData = itemsStore.getCartData();
-        
-        console.log( 'autorun' );
-        
-        console.log( 'point_id ', this.state.point_id );
-        
         this.loadTimeWait();
         
         if( parseInt(thisCity) != parseInt(this.state.cityID) ){
@@ -661,72 +650,42 @@ class CreateOrder extends React.Component {
                 date_pred: json.date_pred
             })
           });
-          
-          
-          
-          
         }
         
-        /*if( localStorage.getItem('promo_name') && localStorage.getItem('promo_name') != this.state.promo_name ){
-          let promo = localStorage.getItem('promo_name');
-          
-          setTimeout( ()=>{
-            this.setState({
-              promo_name: promo
-            })
-            
-            this.checkPromo( {target: {value: this.state.promo_name}} )
-          }, 500 )
-          
-        }*/
-        
         if( parseInt(this.state.typeTime) != parseInt(cartData.orderTimes) ){
-          console.log( 'autorun typeTime' );
+          this.setState({
+            typeTime: cartData.orderTimes
+          })
           
-          //if( this._isEdit === true ){
-            this.setState({
-              typeTime: cartData.orderTimes
-            })
-            
-            //console.log( 'cartData', cartData )
-            
-            
-            this.setState({
-              time: cartData.orderPredTime,
-              date: cartData.orderPredDay,
-              typeTime: cartData.orderTimes,
-            })
-            
-            
-            if( cartData.orderType == 0 ){
-              if( parseInt(cartData.orderTimes) == 1 ){
-                this.loadTimePred();
-              }else{
-                this.loadTimeWait();
-              }
+          this.setState({
+            time: cartData.orderPredTime,
+            date: cartData.orderPredDay,
+            typeTime: cartData.orderTimes,
+          })
+          
+          if( cartData.orderType == 0 ){
+            if( parseInt(cartData.orderTimes) == 1 ){
+              this.loadTimePred();
+            }else{
+              this.loadTimeWait();
+            }
+          }
+          
+          if( cartData.orderType == 1 ){
+            if( parseInt(cartData.orderTimes) == 1 ){
+              this.loadTimePred();
+            }else{
+              this.loadTimeWait();
             }
             
-            if( cartData.orderType == 1 ){
-              if( parseInt(cartData.orderTimes) == 1 ){
-                this.loadTimePred();
-              }else{
-                this.loadTimeWait();
-              }
-              
-              this.setState({
-                point_id: cartData.orderPic
-              })
-            }
-          //}
-          
-          //this._isEdit = true;
+            this.setState({
+              point_id: cartData.orderPic
+            })
+          }
         }
         
         
         if( cartData.orderType || cartData.orderType == 0 ){
-          
-          console.log( 'autorun orderType 111' );
-          
           let allPrice = itemsStore.getAllPrice();
             
           if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
@@ -781,12 +740,27 @@ class CreateOrder extends React.Component {
         let newPrice = itemsStore.getAllPrice();
         let newSumDiv = itemsStore.getSumDiv();
         
-        console.log( 'newSumDiv', newSumDiv )
-        
         if( parseInt(newPrice) != parseInt(this.state.AllPrice) ){
           this.setState({
             AllPrice: newPrice
           })
+          
+          setTimeout( () => {
+            if( document.getElementById('promo_name') && document.getElementById('promo_name').value.length > 0 ){
+              let promo = document.getElementById('promo_name').value;
+              
+              setTimeout( ()=>{
+                this.setState({
+                  promo_name: promo
+                })
+                
+                console.log( 'check_promo 11' )
+                
+                this.checkPromo( {target: {value: promo}} )
+              }, 100 )
+              
+            }
+          }, 300 )
         }
         
         if( parseInt( itemsStore.free_drive ) == 1 ){
