@@ -548,7 +548,7 @@ class CreateOrder extends React.Component {
       
       let allPrice = itemsStore.getAllPrice();
         
-      console.log( 'free_drive 1', cartData.orderAddr.free_drive, parseInt(itemsStore.free_drive) )
+      //console.log( 'free_drive 1', cartData.orderAddr.free_drive, parseInt(itemsStore.free_drive) )
       
       if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
         if( parseInt(allPrice) > 0 ){
