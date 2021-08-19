@@ -1160,11 +1160,7 @@ class CreateOrder extends React.Component {
     });
   }
   
-  clear(e){
-    
-    if( e.keyCode == 13 ){
-      return;
-    }
+  clear(){
     
     itemsStore.clientNumber = '';
     localStorage.removeItem('clientNumber')
