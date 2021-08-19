@@ -1152,7 +1152,6 @@ class CreateOrder extends React.Component {
           orderCheck: false,
           newOrderData: null
         })
-        itemsStore.clear = true;
         
         this.clear();
         
@@ -1161,7 +1160,12 @@ class CreateOrder extends React.Component {
     });
   }
   
-  clear(){
+  clear(e){
+    
+    if( e.keyCode == 13 ){
+      return;
+    }
+    
     itemsStore.clientNumber = '';
     localStorage.removeItem('clientNumber')
     localStorage.removeItem('promo_name')
@@ -1682,86 +1686,6 @@ class CreateOrder extends React.Component {
     })
   };
     
-  clear_(){
-    itemsStore.clientNumber = '';
-    localStorage.removeItem('clientNumber')
-    localStorage.removeItem('promo_name')
-    
-    itemsStore.setItems([]);
-    
-    let data = {
-      orderType: '0',
-      orderAddr: '',
-      orderPic: 0,
-      orderComment: '',
-      
-      orderTimes: 0,
-      orderPredDay: '',
-      orderPredTime: '',
-      
-      orderPay: '',
-      orderSdacha: '',
-      
-      dateTime: new Date()
-    };
-    
-    itemsStore.dateTimeDel = new Date();
-    
-    itemsStore.saveCartData(data);
-    
-    
-    setTimeout( () => {
-      itemsStore.setPromo(null, '');
-      this.checkPromo({ target: {value: ''} })
-    }, 300)
-    
-    
-    this.setState({
-      number: '',
-      promo_name: '',
-      orderPromoText: '',
-    })
-  }
-  
-  clear2(){
-    itemsStore.clientNumber = '';
-    localStorage.removeItem('clientNumber')
-    localStorage.removeItem('promo_name')
-    
-    itemsStore.setItems([]);
-    
-    let data = {
-      orderType: '0',
-      orderAddr: '',
-      orderPic: 0,
-      orderComment: '',
-      
-      orderTimes: 0,
-      orderPredDay: '',
-      orderPredTime: '',
-      
-      orderPay: '',
-      orderSdacha: '',
-      
-      dateTime: new Date()
-    };
-    
-    itemsStore.saveCartData(data);
-    
-    
-    setTimeout( () => {
-      itemsStore.setPromo(null, '');
-      this.checkPromo({ target: {value: ''} })
-    }, 300)
-    
-    
-    this.setState({
-      number: '',
-      promo_name: '',
-      orderPromoText: '',
-    })
-  }
-    
   changeCity(event){
     let city = event.target.value;
     
@@ -1798,7 +1722,6 @@ class CreateOrder extends React.Component {
       window.location.reload();
     }, 500 )
   }
-  
   
   render() {
     return (
