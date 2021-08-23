@@ -820,6 +820,10 @@ class CreateOrder extends React.Component {
           my_cart.map( (it) => {
             let cart_info = all_items.find( (item) => item.id == it.item_id );
             
+            if( !cart_info ){
+              alert('В корзине произошла ошибка');
+            }
+            
             if( cart_info && parseInt(cart_info.cat_id) == 7 ){
               dop_items.push( it );
             }else{
