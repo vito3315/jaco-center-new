@@ -1618,24 +1618,9 @@ class CreateOrder extends React.Component {
     itemsStore.clientNumber = number;
     localStorage.setItem('clientNumber', number)
     
-    this.getAddr();
-    
-    /*let number = event.target.value;
-          
-    if( number.length > 0 ){
-      number = number.split(' ').join('');
-      number = number.split('(').join('');
-      number = number.split(')').join('');
-      number = number.split('-').join('');
-      
-      number = number.slice(1);
-      
-      itemsStore.clientNumber = '8' + number;
-      localStorage.setItem('clientNumber', '8' + number)
-    }else{
-      itemsStore.clientNumber = '';
-      localStorage.setItem('clientNumber', '')
-    }*/
+    setTimeout( () => {
+      this.getAddr();
+    }, 300 )
   }
     
   checkPromo(event){
