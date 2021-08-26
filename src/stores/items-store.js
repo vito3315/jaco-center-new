@@ -647,6 +647,8 @@ class ItemsStore {
     let all_items = itemsStore.getAllItems();
     let promo = itemsStore.getPromo();
     
+    let free_items = itemsStore.getFreeItems();
+    
     if( all_items.length > 0 ){
       let cart_info = my_cart.find( (item) => item.item_id == id );
       let count_ = 0;
@@ -663,26 +665,55 @@ class ItemsStore {
           
         let max_count = itemsStore.check_max_count( parseInt(id) );    
         
-        console.log( 'max_count ', max_count, ' count ', count )
-        
         if( parseInt(max_count) >= count ){
-          let check_in_cart = my_cart.some( (item) => item.item_id == id );
-            if( !check_in_cart ){
-              my_cart.push({
-                name: item_info.name,
-                item_id: id,
-                count: count,
-                one_price: price,
-                all_price: count * price
-              })
-            }else{
-              my_cart.forEach((item, key) => {
-                if( item.item_id == id ){
-                  my_cart[key]['count'] = count;
-                  my_cart[key]['all_price'] = count * price;
-                }
-              });
+          
+          let check_add = free_items.filter( (item) => parseInt(item.this_item_id) == parseInt(id) && parseInt(item.is_add) == 1 );
+          
+          let check_in_cart = my_cart.some( (item) => parseInt(item.item_id) == parseInt(id) );
+          
+          if( !check_in_cart ){
+            my_cart.push({
+              name: item_info.name,
+              item_id: id,
+              count: count,
+              one_price: price,
+              all_price: count * price
+            })
+          }else{
+            my_cart.forEach((item, key) => {
+              if( parseInt(item.item_id) == parseInt(id) ){
+                my_cart[key]['count'] = count;
+                my_cart[key]['all_price'] = count * price;
+              }
+            });
+          }
+          
+          check_add.map( (add_item) => {
+            let check_item_add = all_items.find( (item) => parseInt(item.id) == parseInt(add_item.item_id) );
+            
+            if( check_item_add ){
+              
+              let check_in_cart = my_cart.some( (item) => parseInt(item.item_id) == parseInt(add_item.item_id) );
+          
+              if( !check_in_cart ){
+                my_cart.push({
+                  name: check_item_add.name,
+                  item_id: add_item.item_id,
+                  count: parseInt(add_item.count) * count,
+                  one_price: 0,
+                  all_price: 0
+                })
+              }else{
+                my_cart.forEach((item, key) => {
+                  if( parseInt(item.item_id) == parseInt(add_item.item_id) ){
+                    my_cart[key]['count'] = parseInt(add_item.count) * count;
+                    my_cart[key]['all_price'] = 0;
+                  }
+                });
+              }
+              
             }
+          } )
           
           itemsStore.setItems(my_cart);
           
@@ -706,14 +737,14 @@ class ItemsStore {
     let promo = itemsStore.getPromo();
     
     if( all_items.length > 0 ){
-      let cart_info = my_cart.find( (item) => item.item_id == id );
+      let cart_info = my_cart.find( (item) => parseInt(item.item_id) == parseInt(id) );
       let count_ = 0;
       
       if( cart_info ){
         count_ = parseInt(cart_info.count);
       }
       
-      let item_info = all_items.find( (item) => item.id == id );
+      let item_info = all_items.find( (item) => parseInt(item.id) == parseInt(id) );
       
       if(item_info){
         let count = parseInt(NewCount),
@@ -722,7 +753,7 @@ class ItemsStore {
         let max_count = itemsStore.check_max_count( parseInt(id) );    
         
         if( parseInt(max_count) >= count ){
-          let check_in_cart = my_cart.some( (item) => item.item_id == id );
+          let check_in_cart = my_cart.some( (item) => parseInt(item.item_id) == parseInt(id) );
             if( !check_in_cart ){
               my_cart.push({
                 name: item_info.name,
@@ -780,6 +811,10 @@ class ItemsStore {
       let free_items = itemsStore.getFreeItems();
       
       if( count >= 0 ){
+        
+        let check_add = free_items.filter( (item) => parseInt(item.this_item_id) == parseInt(id) && parseInt(item.is_add) == 1 );
+        
+        
         my_cart.map( (item, key) => {
           if( item.item_id == id ){
             my_cart[key]['count'] = count;
@@ -799,8 +834,38 @@ class ItemsStore {
             }
           })
           
+          
+          check_add.map( (add_item) => {
+            let check_item_add = all_items.find( (item) => parseInt(item.id) == parseInt(add_item.item_id) );
+            
+            if( check_item_add ){
+              
+              let check_in_cart = my_cart.some( (item) => parseInt(item.item_id) == parseInt(add_item.item_id) );
+          
+              if( !check_in_cart ){
+                my_cart.push({
+                  name: check_item_add.name,
+                  item_id: add_item.item_id,
+                  count: parseInt(add_item.count) * count,
+                  one_price: 0,
+                  all_price: 0
+                })
+              }else{
+                my_cart.forEach((item, key) => {
+                  if( parseInt(item.item_id) == parseInt(add_item.item_id) ){
+                    my_cart[key]['count'] = parseInt(add_item.count) * count;
+                    my_cart[key]['all_price'] = 0;
+                  }
+                });
+              }
+              
+            }
+          } )
+          
+          
           itemsStore.setItems(my_cart)
         }, 300 )
+        
       }
     
       if( promo ){

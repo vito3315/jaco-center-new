@@ -475,6 +475,9 @@ class CreateOrder extends React.Component {
       itemsStore.setAllItemsCat(json.arr);
       itemsStore.setAllItems(json.all_items);
       itemsStore.setFreeItems(json.free_items);
+      
+      console.log( 'json', json )
+      
     })
     .catch(err => { });
     
@@ -548,8 +551,6 @@ class CreateOrder extends React.Component {
       
       let allPrice = itemsStore.getAllPrice();
         
-      //console.log( 'free_drive 1', cartData.orderAddr.free_drive, parseInt(itemsStore.free_drive) )
-      
       if( parseInt(cartData.orderAddr ? cartData.orderAddr.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
         if( parseInt(allPrice) > 0 ){
             itemsStore.setSumDiv(0);
@@ -911,6 +912,10 @@ class CreateOrder extends React.Component {
     this.setState({ [type]: value });
     
     this.saveData();
+    
+    setTimeout( () => {
+      this.loadTimePred();
+    }, 300 )
   }
   
   saveData(){
@@ -1304,8 +1309,6 @@ class CreateOrder extends React.Component {
           
           let allPrice = itemsStore.getAllPrice();
     
-          console.log( 'free_drive 2', json.res.free_drive, parseInt(itemsStore.free_drive) )
-          
           if( parseInt(json.res ? json.res.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
               if( parseInt(allPrice) > 0 ){
                   itemsStore.setSumDiv(0);
@@ -1346,8 +1349,6 @@ class CreateOrder extends React.Component {
   chooseAddr(key, item, event){
     let allPrice = itemsStore.getAllPrice();
         
-    console.log( 'free_drive 3', item.free_drive, parseInt(itemsStore.free_drive) )
-    
     if( parseInt(item ? item.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
       if( parseInt(allPrice) > 0 ){
           itemsStore.setSumDiv(0);
@@ -1395,8 +1396,6 @@ class CreateOrder extends React.Component {
     
     let allPrice = itemsStore.getAllPrice();
         
-    console.log( 'free_drive 4', item.free_drive, parseInt(itemsStore.free_drive) )
-    
     if( parseInt(item ? item.free_drive : 0) == 1 || parseInt(itemsStore.free_drive) == 1 ){
       if( parseInt(allPrice) > 0 ){
           itemsStore.setSumDiv(0);

@@ -119,7 +119,7 @@ module.exports = {
     
     // development server configuration
     devServer: {
-        port: 5071,
+        port: 5072,
         historyApiFallback: true,
     },
 
