@@ -832,6 +832,12 @@ class CreateOrder extends React.Component {
             }
           } )
           
+          console.log( {
+            dop_items: dop_items,
+            main_items: main_items,
+            promo_items: cartPromoItems
+          } )
+          
           this.setState({
             dop_items: dop_items,
             main_items: main_items,

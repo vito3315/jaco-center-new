@@ -279,6 +279,9 @@ export class Header extends React.Component {
   };
     
   clear(){
+    
+    return ;
+    
     itemsStore.clientNumber = '';
     localStorage.removeItem('clientNumber')
     localStorage.removeItem('promo_name')
@@ -320,6 +323,9 @@ export class Header extends React.Component {
   }
   
   clear2(){
+    
+    return ;
+    
     itemsStore.clientNumber = '';
     localStorage.removeItem('clientNumber')
     localStorage.removeItem('promo_name')
