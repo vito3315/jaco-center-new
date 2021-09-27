@@ -1130,6 +1130,13 @@ class CreateOrder extends React.Component {
             })
           }, this.startOrderInterval * 1000)
         }else{
+          
+          if( json.type && json.type == 'new_pred' ){
+            this.setState({
+              timePred: json.times
+            })
+          }
+          
           this.setState({
             error: {
               title: 'Предупреждение', 
