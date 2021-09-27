@@ -395,12 +395,15 @@ class ItemsStore {
                       
                       count_sale -= (parseInt(el_cart.one_price) * parseInt(el_cart.count));
                       
+                      my_cart[ key_cart ].new_one_price = parseInt(el_cart.one_price)
                       my_cart[ key_cart ].all_price = all_price;
                     }
                   }else{
                     //проценты  
                     
                     all_price = parseInt(el_cart.all_price) - ((parseInt(el_cart.all_price) / 100) * parseInt(count_sale));
+                    
+                    my_cart[ key_cart ].new_one_price = parseInt(el_cart.one_price)
                     my_cart[ key_cart ].all_price = parseInt(all_price);
                   }
                 }
@@ -432,11 +435,14 @@ class ItemsStore {
                       
                       count_sale -= (parseInt(el_cart.one_price) * parseInt(el_cart.count));
                       
+                      my_cart[ key_cart ].new_one_price = parseInt(el_cart.one_price)
                       my_cart[ key_cart ].all_price = all_price;
                     }
                   }else{
                     //проценты  
                     all_price = parseInt(el_cart.all_price) - ((parseInt(el_cart.all_price) / 100) * parseInt(count_sale));
+                    
+                    my_cart[ key_cart ].new_one_price = parseInt(el_cart.one_price)
                     my_cart[ key_cart ].all_price = parseInt(all_price);
                   }
                 }
@@ -465,11 +471,14 @@ class ItemsStore {
                   
                   count_sale -= (parseInt(el_cart.one_price) * parseInt(el_cart.count));
                   
+                  my_cart[ key_cart ].new_one_price = parseInt(el_cart.one_price)
                   my_cart[ key_cart ].all_price = all_price;
                 }
               }else{
                 //проценты  
                 all_price = parseInt(el_cart.all_price) - ((parseInt(el_cart.all_price) / 100) * parseInt(count_sale));
+                
+                my_cart[ key_cart ].new_one_price = parseInt(el_cart.one_price)
                 my_cart[ key_cart ].all_price = parseInt(all_price);
               }
             }
@@ -482,6 +491,8 @@ class ItemsStore {
         allPrice = my_cart.reduce( (sum, item) => sum + item['all_price'], tmp );
         
         itemsStore.setAllPrice(allPrice);
+        
+        this.setItems(my_cart);
         
         return {
           st: true,

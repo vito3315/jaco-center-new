@@ -41,6 +41,7 @@ import { autorun } from "mobx"
 import RemoveIcon from '@material-ui/icons/Remove';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -196,6 +197,8 @@ class BlockTableItem extends React.Component {
       item: this.props.item,
       type: this.props.type,
     };
+    
+    console.log( this.props.item )
   }
   
   shouldComponentUpdate(nextProps, nextState) {
@@ -252,6 +255,8 @@ class BlockTableItem extends React.Component {
   }
   
   render(){
+    //{ parseInt(this.state.item.new_one_price) * parseInt(this.state.item.count) != parseInt(this.state.item.all_price) ? '' : '' }
+    
     return (
       <TableRow hover style={ this.state.item.count == 0 ? {display: 'none'} : {} }>
         <TableCell>{this.state.item.name}</TableCell>
@@ -270,7 +275,9 @@ class BlockTableItem extends React.Component {
           }
           
         </TableCell>
-        <TableCell>{this.state.item.all_price}</TableCell>
+        <TableCell>
+          {this.state.item.all_price}
+        </TableCell>
         <TableCell>
           { this.state.type !== 'promo' ?
             <CloseIcon style={{ cursor: 'pointer', marginTop: 5 }} onClick={ this.delItem.bind(this, this.state.item.item_id) } />
@@ -1497,6 +1504,8 @@ class CreateOrder extends React.Component {
   
   loadTimeWait(){
     let cartData = itemsStore.getCartData();
+    
+    console.log( itemsStore.getItems() );
     
     fetch(config.urlApi, {
       method: 'POST',
