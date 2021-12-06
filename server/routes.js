@@ -1,7 +1,7 @@
 const { Home } = require( '../src/components/home' );
 const { NotFound } = require( '../src/components/app' );
 const { Orders } = require( '../src/components/orders' );
-const { ordercook } = require( '../src/components/ordercook' );
+const { Ordercook } = require( '../src/components/ordercook' );
 const { Auth } = require( '../src/components/auth' );
 
 module.exports = [
@@ -22,7 +22,7 @@ module.exports = [
     {
         path: '/ordercook',
         exact: true,
-        component: ordercook,
+        component: Ordercook,
         title: 'Заказы на кухне',
         code: 200
     },
