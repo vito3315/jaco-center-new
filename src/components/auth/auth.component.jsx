@@ -24,6 +24,7 @@ export class Auth extends React.Component {
   }
     
   componentDidMount = () => {
+    document.title = "Авторизация";
   }
     
   login(){
@@ -63,12 +64,12 @@ export class Auth extends React.Component {
       <Grid
         container
         direction="column"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
-        style={{ height: '100vh' }}
+        style={{ height: '100vh', marginTop: -70 }}
       >
         <Grid container item xs={3}>
-          <img alt="Жако доставка роллов и пиццы" src="../assets/logo.png" style={{ height: 'auto', width: 'inherit' }} />
+          <img alt="Жако доставка роллов и пиццы" src="../assets/logo.png" style={{ height: 'max-content', width: '100%' }} />
         </Grid>
             
         <Grid container item xs={3} direction="column">

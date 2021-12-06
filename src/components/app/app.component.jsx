@@ -1,9 +1,9 @@
 import React from 'react';
-import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
+import { NavLink as Link, Routes, Route, Redirect, BrowserRouter } from 'react-router-dom';
 
 import { Home } from '../home';
 import { Orders } from '../orders';
-import { ordercook } from '../ordercook';
+import { OrderCook } from '../ordercook';
 import { Auth } from '../auth';
 
 import Grid from '@material-ui/core/Grid';
@@ -55,31 +55,33 @@ export class App extends React.Component {
         
         return (
             <Provider { ...stores }>
-                <Switch>
-                    <Route
-                        path='/'
-                        exact={ true }
-                        component={ Home }
-                    />
-                    <Route
-                        path='/orders'
-                        exact={ true }
-                        component={ Orders }
-                    />
-                    <Route
-                        path='/ordercook'
-                        exact={ true }
-                        component={ ordercook }
-                    />
-                    <Route
-                        path='/auth'
-                        exact={ true }
-                        component={ Auth }
-                    />
-                    <Route
-                        component={ NotFound }
-                    />
-                </Switch>
+                
+                    <Routes>
+                        <Route
+                            path='/'
+                            exact={ true }
+                            element={ <Home /> }
+                        />
+                        <Route
+                            path='/orders'
+                            exact={ true }
+                            element={ <Orders /> }
+                        />
+                        <Route
+                            path='/ordercook'
+                            exact={ true }
+                            element={ <OrderCook /> }
+                        />
+                        <Route
+                            path='/auth'
+                            exact={ true }
+                            element={ <Auth /> }
+                        />
+                        <Route
+                            element={ <NotFound /> }
+                        />
+                    </Routes>
+                
             </Provider>
         );
         

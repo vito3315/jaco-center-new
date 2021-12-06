@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import moment from "moment";
-import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
 
 import {Helmet} from "react-helmet";
 
@@ -64,6 +64,8 @@ import Drawer from '@material-ui/core/Drawer';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 //import { Header } from '../header';
 
@@ -290,6 +292,11 @@ class BlockTableItem extends React.Component {
   }
 }
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+
 class CreateOrder extends React.Component {
   _isMounted = false;
   _isEdit = false;
@@ -403,7 +410,12 @@ class CreateOrder extends React.Component {
       bottom: false,
       right: false,
       
-      thisDateTimeDel: null
+      thisDateTimeDel: null,
+
+      open: false,
+      vertical: 'top',
+      horizontal: 'right',
+      msgText: ''
     };
   }
   
@@ -439,6 +451,8 @@ class CreateOrder extends React.Component {
   componentDidMount = () => {
     this._isMounted = true;
     
+    document.title = "Оформление нового заказа";
+
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin(); 
     
@@ -1320,7 +1334,8 @@ class CreateOrder extends React.Component {
         })
       }).then(res => res.json()).then(json => {
         if( !json.st ){
-            alert( json.text )
+            //alert( json.text )
+            this.setState({ open: true, msgText: json.text })
         }else{
           this.setState({
             newAddrInfo: json.res,
@@ -1741,6 +1756,16 @@ class CreateOrder extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
         
+        <Snackbar
+          //anchorOrigin={ this.state.vertical, this.state.horizontal }
+          autoHideDuration={5000}
+          open={this.state.open}
+          onClose={ () => { this.setState({ open: false }) } }
+          key={this.state.vertical + this.state.horizontal}
+        >
+          <Alert severity="error">{this.state.msgText}</Alert>
+        </Snackbar>
+
         <Grid item xs={8} style={{ paddingRight: 16 }}>
           { this.state.cityList.length > 0 ? 
             <div className={this.state.classes.root}>
@@ -1988,7 +2013,7 @@ class CreateOrder extends React.Component {
               :
               this.state.activeTab == 1 ?
                 this.state.pic_point.length > 0 ? 
-                  <Grid container direction="column" justify="space-between" alignItems="stretch" spacing={3} className='container' style={{ paddingRight: 8 }}>
+                  <Grid container direction="column" justifyContent="space-between" alignItems="stretch" spacing={3} className='container' style={{ paddingRight: 8 }}>
                     { /* самовывоз */ }
                     { this.state.pic_point.map( (item, key) =>
                       <Button key={key} onClick={ this.choosePic.bind(this, item) } style={{ backgroundColor: this.state.orderPic == item.id ? '#6ab04c' : '#e5e5e5', color: this.state.orderPic == item.id ? '#fff' : '#000' }} className='boxPic'>{item.addr}</Button>
@@ -2025,7 +2050,7 @@ class CreateOrder extends React.Component {
                   label="Комментарий курьеру" 
                   variant="outlined" 
                   multiline
-                  rowsMax={2}
+                  maxRows={2}
                   variant="outlined"
                   value={ this.state.comment }
                   onChange={ this.changeData.bind(this, 'comment') }

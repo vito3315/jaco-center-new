@@ -256,6 +256,8 @@ class OrdersStat extends React.Component {
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin();
     
+    document.title = "Оформленные заказы";
+
     fetch(config.urlApi, {
       method: 'POST',
       headers: {
@@ -531,7 +533,7 @@ class OrdersStat extends React.Component {
         <Grid item xs={4}>
           
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-            <Grid container justify="space-around" style={{ alignItems: 'baseline' }}>
+            <Grid container justifyContent="space-around" style={{ alignItems: 'baseline' }}>
               
               <FormControl className={this.state.classes.formControl}>
                 <InputLabel>Город</InputLabel>

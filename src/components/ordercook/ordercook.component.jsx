@@ -149,7 +149,7 @@ function formatDate(date) {
   return [year, month, day].join('-');
 }
 
-class OrderCook extends React.Component {
+class OrderCook_ extends React.Component {
   interval = null;
   
   constructor(props) {
@@ -223,6 +223,8 @@ class OrderCook extends React.Component {
       spiner: true
     })
     
+    document.title = "Заказы на кухне";
+
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin();
     
@@ -441,12 +443,12 @@ class OrderCook extends React.Component {
   }
 }
 
-export function ordercook() {
+export function OrderCook() {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <OrderCook classes={classes} />
+      <OrderCook_ classes={classes} />
     </div>
   );
 }

@@ -187,6 +187,10 @@ class ItemsStore {
     let my_cart = this.getItems();  
     let allItems = this.getAllItems();
       
+    if( allItems.length == 0 || !allItems ){
+      return ;
+    }
+
     let new_my_cart = [];
       
     my_cart.forEach( (el_cart, key_cart) => {
@@ -222,11 +226,11 @@ class ItemsStore {
     
     if( by_time == 0 ){
       this_date = moment(new Date()).tz("Europe/Samara").format("YYYY-MM-DD");
-      this_time = moment(new Date()).tz("Europe/Samara").format("H:mm");
+      this_time = moment(new Date()).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(new Date()).tz("Europe/Samara").format("E"));
     }else{
       this_date = moment(by_time).tz("Europe/Samara").format("YYYY-MM-DD");
-      this_time = moment(by_time).tz("Europe/Samara").format("H:mm");
+      this_time = moment(by_time).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
     }
     
@@ -502,9 +506,14 @@ class ItemsStore {
       
       //добавление товара
       if( parseInt(promo_info.promo_action) == 2 ){
+ 
+        console.log('test111', promo_info.items_add)
+
         promo_info.items_add.forEach((el) => {
           this_item = allItems.find( (item) => item.id == el.item_id );
           
+          console.log('find_item', allItems)
+
           cart_new_promo.push({
             item_id: el.item_id,
             count: el.count,
