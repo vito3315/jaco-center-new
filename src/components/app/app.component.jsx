@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink as Link, Routes, Route, Redirect, BrowserRouter } from 'react-router-dom';
+import { NavLink as Link, Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 
 import { Home } from '../home';
 import { Orders } from '../orders';
@@ -56,31 +56,31 @@ export class App extends React.Component {
         return (
             <Provider { ...stores }>
                 
-                    <Routes>
+                    <Switch>
                         <Route
                             path='/'
                             exact={ true }
-                            element={ <Home /> }
+                            component={ Home }
                         />
                         <Route
                             path='/orders'
                             exact={ true }
-                            element={ <Orders /> }
+                            component={ Orders }
                         />
                         <Route
                             path='/ordercook'
                             exact={ true }
-                            element={ <OrderCook /> }
+                            component={ OrderCook }
                         />
                         <Route
                             path='/auth'
                             exact={ true }
-                            element={ <Auth /> }
+                            component={ Auth }
                         />
                         <Route
-                            element={ <NotFound /> }
+                            element={ NotFound }
                         />
-                    </Routes>
+                    </Switch>
                 
             </Provider>
         );

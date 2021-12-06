@@ -156,7 +156,7 @@ class ItemsStore {
       itemsStore.setPromo( JSON.stringify(json), promoName );
       let check_promo = itemsStore.checkPromo();
               
-      if( check_promo.st === false ){
+      if( check_promo.status_promo === false ){
         localStorage.removeItem('promo_name')
       }
       
