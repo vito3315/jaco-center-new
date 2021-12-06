@@ -27,9 +27,10 @@ module.exports = [
         code: 200
     },
     {
-        path: '*',
-        component: NotFound,
-        title: 'Страница не найдена',
-        code: 404
+        path: '/auth',
+        exact: true,
+        component: Auth,
+        title: 'Авторизация',
+        code: 200
     },
 ];
