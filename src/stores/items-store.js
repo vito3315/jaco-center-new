@@ -188,7 +188,7 @@ class ItemsStore {
     let allItems = this.getAllItems();
       
     if( allItems.length == 0 || !allItems ){
-      return ;
+      return ; 
     }
 
     let new_my_cart = [];
