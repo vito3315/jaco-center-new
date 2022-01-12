@@ -473,8 +473,8 @@ class OrdersStat extends React.Component {
         orderComment: this.state.showOrder.order.comment,
         
         orderTimes: parseInt(this.state.showOrder.order.is_preorder),
-        orderPredDay: this.state.showOrder.order.date_time_pred.date,
-        orderPredTime: this.state.showOrder.order.date_time_pred.time,
+        orderPredDay: parseInt(this.state.showOrder.order.is_preorder) == 1 ? this.state.showOrder.order.date_time_pred.date : '',
+        orderPredTime: parseInt(this.state.showOrder.order.is_preorder) == 1 ? this.state.showOrder.order.date_time_pred.time : '',
         
         orderPay: parseInt(this.state.showOrder.order.type_order_) == 1 ? 'cash' : 'in',
         orderSdacha: this.state.showOrder.order.sdacha,
