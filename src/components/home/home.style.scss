@@ -288,6 +288,10 @@ td, td > *{
   background-color: #CC0033!important;
   color: #fff!important;
 }
+.CardInCardItemYellow{
+  background-color: #ffcc00!important;
+  color: #000!important;
+}
 .DialogErrText{
   @include fons(1rem);
   text-align: center;

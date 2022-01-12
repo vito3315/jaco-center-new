@@ -936,13 +936,21 @@ class CreateOrder extends React.Component {
   changeData(type, data){
     let value = data.target.value;
     
+    if( type == 'sdacha' && isNaN(value) ){
+      return ;
+    }
+
     this.setState({ [type]: value });
     
     this.saveData();
     
-    setTimeout( () => {
-      this.loadTimePred();
-    }, 300 )
+    if( type != 'sdacha' || type != 'comment' ){
+      console.log( 'loadTimePred' )
+      setTimeout( () => {
+        this.loadTimePred();
+      }, 300 )
+    }
+    
   }
   
   saveData(){
@@ -1375,11 +1383,12 @@ class CreateOrder extends React.Component {
   changeDataOther(type, data){
     let value = data.target.value;
     
-    this.setState({ [type]: value });
+    if( !isNaN(value) ){
+      this.setState({ [type]: value });
     
-    this.saveDataOther();
+      this.saveDataOther();
+    }
   }
-  
   
   chooseAddr(key, item, event){
     let allPrice = itemsStore.getAllPrice();

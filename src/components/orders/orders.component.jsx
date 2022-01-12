@@ -463,18 +463,21 @@ class OrdersStat extends React.Component {
       }
     } )
     
+    itemsStore.clientNumber = this.state.showOrder.order.number;
+    localStorage.setItem('clientNumber', this.state.showOrder.order.number)
+
     let data = {
         orderType: parseInt(this.state.showOrder.order.type_order_) - 1,
         orderAddr: this.state.showOrder.street.name,
         orderPic: parseInt(this.state.showOrder.order.point_id),
-        orderComment: '',
+        orderComment: this.state.showOrder.order.comment,
         
-        orderTimes: '1',
-        orderPredDay: '',
-        orderPredTime: '',
+        orderTimes: parseInt(this.state.showOrder.order.is_preorder),
+        orderPredDay: this.state.showOrder.order.date_time_pred.date,
+        orderPredTime: this.state.showOrder.order.date_time_pred.time,
         
         orderPay: parseInt(this.state.showOrder.order.type_order_) == 1 ? 'cash' : 'in',
-        orderSdacha: '',
+        orderSdacha: this.state.showOrder.order.sdacha,
     };
     
     itemsStore.saveCartData(data);
@@ -515,6 +518,97 @@ class OrdersStat extends React.Component {
     }
   }
   
+  fakeUser(){
+    let type_check = 0;
+
+    if( parseInt(this.state.showOrder.order.check_pos) >= 0 ){
+      if( parseInt(this.state.showOrder.order.check_pos) <= 100 ){
+        type_check = 1;
+      }else{
+        type_check = 2;
+      }
+    }else{
+      type_check = 0;
+    }
+
+    //0 - не активно
+    //1 - сразу
+    //2 - уточнить
+
+    
+    if( parseInt(type_check) == 0 ){
+      alert('Создать обращение не возможно')
+      return ;
+    }
+
+    if( parseInt(type_check) == 1 ){
+      let text = prompt('Комментарий к ситуации', '');
+
+      if(text.length > 0){
+        fetch(config.urlApi, {
+          method: 'POST',
+          headers: {
+            'Content-Type':'application/x-www-form-urlencoded'},
+          body: queryString.stringify({
+            type: 'fake_user', 
+            token: itemsStore.getToken(),
+            text: text,
+            point_id: parseInt(this.state.showOrder.order.point_id),
+            order_id: parseInt(this.state.showOrder.order.order_id),
+          })
+        }).then(res => res.json()).then(json => {
+
+          console.log(json);
+
+          if(json['st'] == true){
+            alert('Обращение зафиксировано')
+          }else{
+            alert(json['text'])
+          }
+        })
+        .catch(err => { });
+
+      }else{
+        alert('надо указать комментарий')
+      }
+    }
+
+    if( parseInt(type_check) == 2 ){
+      const result = confirm('Курьер, предположительно, находиться далеко от клиента, точно оформить довоз ?');
+
+      if (result) {
+        var text = prompt('Комментарий к ситуации', '');
+
+        if(text.length > 0){
+          fetch(config.urlApi, {
+            method: 'POST',
+            headers: {
+              'Content-Type':'application/x-www-form-urlencoded'},
+            body: queryString.stringify({
+              type: 'fake_user', 
+              token: itemsStore.getToken(),
+              text: text,
+              point_id: parseInt(this.state.showOrder.order.point_id),
+              order_id: parseInt(this.state.showOrder.order.order_id),
+            })
+          }).then(res => res.json()).then(json => {
+  
+            console.log(json);
+  
+            if(json['st'] == true){
+              alert('Обращение зафиксировано')
+            }else{
+              alert(json['text'])
+            }
+          })
+          .catch(err => { });
+        }else{
+          alert('надо указать комментарий')
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <Grid container spacing={0}>
@@ -611,7 +705,7 @@ class OrdersStat extends React.Component {
                     
                     { this.state.orders.map( (item, key) =>
                       <TableRow key={key} className="order" id={item.id} datanumber={item.number} style={ item.is_delete == 1 ? { backgroundColor: 'red', color: '#fff' } : {} }>
-                        <TableCell style={{ color: 'inherit', cursor: 'pointer' }} onClick={ this.getOrder.bind(this, item.id) }>{item.id}</TableCell>
+                        <TableCell style={ parseInt(item.dist) >= 0 ? {backgroundColor: 'yellow', color: '#000', cursor: 'pointer'} : {color: 'inherit', cursor: 'pointer'} } onClick={ this.getOrder.bind(this, item.id) }>{item.id}</TableCell>
                         <TableCell style={{ color: 'inherit' }}>{item.type_user}</TableCell>
                         <TableCell style={{ color: 'inherit' }}>{item.number}</TableCell>
                         <TableCell style={{ color: 'inherit' }}>{item.street} {item.home}</TableCell>
@@ -768,6 +862,16 @@ class OrdersStat extends React.Component {
                 <MuiDialogActions style={{ justifyContent: 'flex-end', padding: '15px 0px' }}>
                   <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorderOther" style={{ marginRight: 24 }}>
                     <Button variant="contained" className="BtnCardMain CardInCardItem" onClick={ this.repeatOrder.bind(this, this.state.showOrder.order.order_id, this.state.showOrder.order.point_id) }>Повторить заказ</Button>
+                  </ButtonGroup>
+                </MuiDialogActions>
+                  :
+                null
+              }
+
+              { parseInt( this.state.showOrder.order.type_order_ ) == 1 && parseInt( this.state.showOrder.order.status_order ) > 4 && parseInt( this.state.showOrder.order.check_pos ) >= 0 ? 
+                <MuiDialogActions style={{ justifyContent: 'flex-end', padding: '15px 0px' }}>
+                  <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorderOther" style={{ marginRight: 24 }}>
+                    <Button variant="contained" className="BtnCardMain CardInCardItemYellow" onClick={ this.fakeUser.bind(this) }>Клиент не вышел на связь</Button>
                   </ButtonGroup>
                 </MuiDialogActions>
                   :
