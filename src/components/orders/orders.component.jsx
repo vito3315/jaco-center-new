@@ -33,9 +33,15 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import TableFooter from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Dialog from '@material-ui/core/Dialog';
 
@@ -203,6 +209,7 @@ class OrdersStat extends React.Component {
       activeCat: 0,
       
       orders: [],
+      ordersRender: [],
       orderCheck: false,
       
       showOrder: null,
@@ -330,6 +337,11 @@ class OrdersStat extends React.Component {
   }
   
   getOrders(){
+
+    this.setState({
+      number: ''
+    })
+
     setTimeout( () => {
       fetch(config.urlApi, {
         method: 'POST',
@@ -349,8 +361,8 @@ class OrdersStat extends React.Component {
         })
         
         setTimeout( () => {
-          this.changeNumber()
-        }, 100 )
+          this.filterNumber();
+        }, 300 )
       })
       .catch(err => { });
     }, 500 )
@@ -496,25 +508,31 @@ class OrdersStat extends React.Component {
     this.setState({ textDel: event.target.value })
   }
   
-  changeNumber(){
-    let orders = document.querySelectorAll('.order');
+  changeNumber(event){
+    let value = event.target.value;
     
-    var order = this.state.number;
-		
-		if( order.length == 0 ){
-			orders.forEach( item => {
-        item.classList.remove("dis_none");
-			});
-		}else{
-      orders.forEach( item => {
-        let number = item.getAttribute('datanumber');
-        
-				if( number.indexOf(order) >= 0 ){
-          item.classList.remove("dis_none");
-				}else{
-          item.classList.add("dis_none");
-        }
-      });
+    if( isNaN(value) ){
+      return ;
+    }
+
+    this.setState({ number: value })
+
+    setTimeout( () => {
+      this.filterNumber();
+    }, 300 )
+  }
+
+  filterNumber(){
+    if( this.state.number.length == 0 ){
+      this.setState({
+        ordersRender: this.state.orders
+      })
+    }else{
+      let renderOrders = this.state.orders.filter( (item) => item.number.indexOf(this.state.number) !== -1 );
+
+      this.setState({
+        ordersRender: renderOrders
+      })
     }
   }
   
@@ -665,8 +683,7 @@ class OrdersStat extends React.Component {
             //variant="inlined" 
             style={{ margin: '16px 8px 8px 8px', flex: 1 }}
             value={ this.state.number }
-            onChange={ (event) => this.setState({ number: event.target.value }) }
-            onBlur={this.changeNumber.bind(this)}
+            onChange={ this.changeNumber.bind(this) }
           />
         </Grid>
         
@@ -682,49 +699,55 @@ class OrdersStat extends React.Component {
           { this.state.points.map((cat, key) =>
             <TabPanel value={this.state.activeCat} index={key} key={key}>
               
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>#</TableCell>
-                      <TableCell>Оформил</TableCell>
-                      <TableCell>Телефон</TableCell>
-                      <TableCell>Адрес</TableCell>
-                      <TableCell>Оформлен</TableCell>
-                      <TableCell>Ко времени</TableCell>
-                      <TableCell>Закрыт на кухне</TableCell>
-                      <TableCell>Получен клиентом</TableCell>
-                      <TableCell>Тип</TableCell>
-                      <TableCell>Статус</TableCell>
-                      <TableCell>Сумма</TableCell>
-                      <TableCell>Оплата</TableCell>
-                      <TableCell>Курьер</TableCell>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>#</TableCell>
+                    <TableCell>Заказ</TableCell>
+                    <TableCell>Оформил</TableCell>
+                    <TableCell>Номер клиента</TableCell>
+                    <TableCell>Адрес доставки</TableCell>
+                    <TableCell>Время открытия заказа</TableCell>
+
+                    <TableCell>Ко времени</TableCell>
+                    <TableCell>Получен клиентом</TableCell>
+
+                    <TableCell>До просрочки</TableCell>
+                    <TableCell>Время обещ</TableCell>
+
+                    <TableCell>Тип</TableCell>
+                    <TableCell>Статус</TableCell>
+                    <TableCell>Оплата</TableCell>
+                    <TableCell>Водитель</TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  
+                  { this.state.ordersRender.map( (item, key) =>
+                    <TableRow key={key} style={ parseInt(item.is_delete) == 1 ? {backgroundColor: 'red', color: '#fff', fontWeight: 'bold'} : {} }>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{key+1}</TableCell>
+                      <TableCell style={ parseInt(item.dist) >= 0 ? {backgroundColor: 'yellow', color: '#000', cursor: 'pointer', fontWeight: 'inherit'} : {color: 'inherit', cursor: 'pointer', fontWeight: 'inherit'} } onClick={this.getOrder.bind(this, item.id)}>{item.id}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_user}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.number}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.street} {item.home}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.date_time_order}</TableCell>
+
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit', backgroundColor: parseInt(item.is_preorder) == 1 ? '#bababa' : 'inherit' }}>{item.need_time}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.close_order}</TableCell>
+
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.to_time}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.unix_time_to_client == '0' || parseInt(item.is_preorder) == 1 ? '' : item.unix_time_to_client}</TableCell>
+
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_order}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.status}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_pay}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.driver}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    
-                    { this.state.orders.map( (item, key) =>
-                      <TableRow key={key} className="order" id={item.id} datanumber={item.number} style={ item.is_delete == 1 ? { backgroundColor: 'red', color: '#fff' } : {} }>
-                        <TableCell style={ parseInt(item.dist) >= 0 ? {backgroundColor: 'yellow', color: '#000', cursor: 'pointer'} : {color: 'inherit', cursor: 'pointer'} } onClick={ this.getOrder.bind(this, item.id) }>{item.id}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.type_user}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.number}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.street} {item.home}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.date_time_order}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{ item.date_time_preorder == '00:00:00' ? '' : item.date_time_preorder }</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{ item.give_data_time == '00:00:00' ? '' : item.give_data_time }</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.close_order}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.type_order}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.status}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.order_price}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.type_pay}</TableCell>
-                        <TableCell style={{ color: 'inherit' }}>{item.driver}</TableCell>
-                      </TableRow>
-                    ) }
-                    
-                    
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                  ) }
+                
+                </TableBody>
+              </Table>
               
             </TabPanel>
           )}
@@ -748,104 +771,104 @@ class OrdersStat extends React.Component {
               </MuiDialogTitle>
               
               <MuiDialogContent className="showOrderDialogContent">
-                  <Typography variant="h6" component="span">{this.state.showOrder.order.type_order}: {this.state.showOrder.order.type_order_addr_new}</Typography>
-                  <Typography variant="h6" component="span">{this.state.showOrder.order.time_order_name}: {this.state.showOrder.order.time_order}</Typography>
                   
-                  <Grid container spacing={0}>
-                    { this.state.showOrder.order.number.length > 1 ? 
-                      <Grid item xs={12}>
-                        <Typography variant="h6" component="b">Телефон: </Typography> 
-                        <Typography variant="h6" component="span">{this.state.showOrder.order.number}</Typography> 
-                      </Grid>
-                        : 
-                      null
-                    }
+                <Grid container spacing={0}>
+                  <Grid item xs={12} className="MuiTEXT">
+                    <span>{this.state.showOrder.order.type_order}: {this.state.showOrder.order.type_order_addr_new}</span>
                   </Grid>
-                  
-                  
-                  { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: 'red' }}>Удален: {this.state.showOrder.order.date_time_delete}</Typography> : null}
-                  { this.state.showOrder.order.delete_reason.length > 0 ? <Typography variant="h6" component="span" style={{ color: 'red' }}>{this.state.showOrder.order.delete_reason}</Typography> : null}
+                  <Grid item xs={12} className="MuiTEXT">
+                    <span>{this.state.showOrder.order.time_order_name}: {this.state.showOrder.order.time_order}</span>
+                  </Grid>
+
+                  { this.state.showOrder.order.number.length > 1 ? 
+                    <Grid item xs={12} className="MuiTEXT">
+                      <b>Телефон: </b> 
+                      <span>{this.state.showOrder.order.number}</span> 
+                    </Grid>
+                      : 
+                    null
+                  }
+
+                  { this.state.showOrder.order.delete_reason.length > 0 ? <Grid item xs={12} className="MuiTEXT"><span style={{ color: 'red' }}>Удален: {this.state.showOrder.order.date_time_delete}</span></Grid> : null}
+                  { this.state.showOrder.order.delete_reason.length > 0 ? <Grid item xs={12} className="MuiTEXT"><span style={{ color: 'red' }}>{this.state.showOrder.order.delete_reason}</span></Grid> : null}
                   
                   { parseInt(this.state.showOrder.order.is_preorder) == 1 ? null :
-                    <Typography variant="h6" component="span">{this.state.showOrder.order.text_time}{this.state.showOrder.order.time_to_client}</Typography>
+                    <Grid item xs={12} className="MuiTEXT"><span>{this.state.showOrder.order.text_time}{this.state.showOrder.order.time_to_client}</span></Grid>
                   }
                   
-                  <Typography variant="h6" component="span">{this.state.showOrder.order.textTime}</Typography>
+                  <Grid item xs={12} className="MuiTEXT"><span>{this.state.showOrder.order.textTime}</span></Grid>
                   
-                  <Grid container spacing={0}>
-                    { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
-                      <>
-                        <Grid item xs={12}>
-                          <Typography variant="h6" component="b">Промокод: </Typography>
-                          <Typography variant="h6" component="span">{this.state.showOrder.order.promo_name}</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="h6" component="span" className="noSpace">{this.state.showOrder.order.promo_text}</Typography>
-                        </Grid>
-                      </>
-                    }
-                    
-                    { this.state.showOrder.order.comment == null || this.state.showOrder.order.comment.length == 0 ? null :
-                      <Grid item xs={12}>
-                        <Typography variant="h6" component="b">Комментарий: </Typography>
-                        <Typography variant="h6" component="span">{this.state.showOrder.order.comment}</Typography>
+                  
+                  { this.state.showOrder.order.promo_name == null || this.state.showOrder.order.promo_name.length == 0 ? null :
+                    <>
+                      <Grid item xs={12} className="MuiTEXT">
+                        <b>Промокод: </b>
+                        <span>{this.state.showOrder.order.promo_name}</span>
                       </Grid>
-                    }
-                    
-                    { this.state.showOrder.order.sdacha == null || parseInt(this.state.showOrder.order.sdacha) == 0 ? null :
-                      <Grid item xs={12}>
-                        <Typography variant="h6" component="b">Сдача: </Typography>
-                        <Typography variant="h6" component="span">{this.state.showOrder.order.sdacha}</Typography>
+                      <Grid item xs={12} className="MuiTEXT">
+                        <span className="noSpace">{this.state.showOrder.order.promo_text}</span>
                       </Grid>
-                    }
+                    </>
+                  }
+                  
+                  { this.state.showOrder.order.comment == null || this.state.showOrder.order.comment.length == 0 ? null :
+                    <Grid item xs={12} className="MuiTEXT">
+                      <b>Комментарий: </b>
+                      <span>{this.state.showOrder.order.comment}</span>
+                    </Grid>
+                  }
+                  
+                  { this.state.showOrder.order.sdacha == null || parseInt(this.state.showOrder.order.sdacha) == 0 ? null :
+                    <Grid item xs={12} className="MuiTEXT">
+                      <b>Сдача: </b>
+                      <span>{this.state.showOrder.order.sdacha}</span>
+                    </Grid>
+                  }
+                  
+                  <Grid item xs={12} className="MuiTEXT">
+                    <b>Сумма заказа: </b>
+                    <span>{this.state.showOrder.order.sum_order} р</span>
                   </Grid>
-                  
-                  <table className="tableOrderCheck">
-                      <tbody>
-                          {this.state.showOrder.order_items.map((item, key) => 
-                              <tr key={key}>
-                                  <td>
-                                      <Typography variant="h5" component="span">{item.name}</Typography>
-                                  </td>
-                                  <td>
-                                      <Typography variant="h5" component="span">{item.count}</Typography>
-                                  </td>
-                                  <td>
-                                      <Typography variant="h5" component="span">{item.price} р</Typography>
-                                  </td>
-                              </tr>
-                          )}
-                          
-                          { parseInt(this.state.showOrder.order.type_order_) == 1 ?
-                            <tr>
-                              <td>
-                                  <Typography variant="h5" component="span">Доставка</Typography>
-                              </td>
-                              <td>
-                                  <Typography variant="h5" component="span"></Typography>
-                              </td>
-                              <td>
-                                  <Typography variant="h5" component="span">{this.state.showOrder.order.sum_div} р</Typography>
-                              </td>
-                            </tr>
-                              :
-                            null
-                          }
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <th style={{ textAlign: 'left' }}>
-                            <Typography variant="h5" component="span">Сумма закза</Typography>
-                          </th>
-                          <td>
-                            <Typography variant="h5" component="span"></Typography>
-                          </td>
-                          <th style={{ textAlign: 'left' }}>
-                            <Typography variant="h5" component="span">{this.state.showOrder.order.sum_order} р</Typography>
-                          </th>
-                        </tr>
-                      </tfoot>
-                  </table>
+
+                  <Grid item xs={12}>
+                    <Table size={'small'} style={{ marginTop: 15 }}>
+                      <TableBody>
+                        { this.state.showOrder.order_items.map( (item, key) =>
+                          <TableRow key={key}>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.count}</TableCell>
+                            <TableCell>{item.price} р</TableCell>
+                          </TableRow>
+                        ) }
+                        <TableRow>
+                          <TableCell style={{fontWeight: 'bold', color: '#000'}}>Сумма закза</TableCell>
+                          <TableCell></TableCell>
+                          <TableCell style={{fontWeight: 'bold', color: '#000'}}>{this.state.showOrder.order.sum_order} р</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Grid>
+
+                  <Accordion style={{ width: '100%' }}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                    >
+                      <Typography>Расформировка</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Table size={'small'} style={{ marginTop: 15 }}>
+                        <TableBody>
+                          { this.state.showOrder.order_items_.map( (item, key) =>
+                            <TableRow key={key}>
+                              <TableCell>{item.name}</TableCell>
+                              <TableCell style={{ backgroundColor: parseInt(item.ready) > 0 ? '#6ab04c' : '#eb4d4b' }}></TableCell>
+                            </TableRow>
+                          ) }
+                        </TableBody>
+                      </Table>
+                    </AccordionDetails>
+                  </Accordion>
+                </Grid>    
                   
               </MuiDialogContent>
               
