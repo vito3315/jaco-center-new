@@ -286,6 +286,10 @@ class OrdersStat extends React.Component {
     
   handleDateChange(date){
     this.setState({
+      number: ''
+    })
+
+    this.setState({
       selectedDate: formatDate(date)
     })
     
@@ -295,6 +299,10 @@ class OrdersStat extends React.Component {
   };
   
   changeCity(event){
+    this.setState({
+      number: ''
+    })
+
     let city = event.target.value;
     
     this.setState({ selectedCity: city });
@@ -337,11 +345,6 @@ class OrdersStat extends React.Component {
   }
   
   getOrders(){
-
-    this.setState({
-      number: ''
-    })
-
     setTimeout( () => {
       fetch(config.urlApi, {
         method: 'POST',
@@ -702,7 +705,6 @@ class OrdersStat extends React.Component {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>#</TableCell>
                     <TableCell>Заказ</TableCell>
                     <TableCell>Оформил</TableCell>
                     <TableCell>Номер клиента</TableCell>
@@ -718,6 +720,8 @@ class OrdersStat extends React.Component {
 
                     <TableCell>Тип</TableCell>
                     <TableCell>Статус</TableCell>
+
+                    <TableCell>Сумма</TableCell>
                     <TableCell>Оплата</TableCell>
                     <TableCell>Водитель</TableCell>
                   </TableRow>
@@ -727,7 +731,6 @@ class OrdersStat extends React.Component {
                   
                   { this.state.ordersRender.map( (item, key) =>
                     <TableRow key={key} style={ parseInt(item.is_delete) == 1 ? {backgroundColor: 'red', color: '#fff', fontWeight: 'bold'} : {} }>
-                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{key+1}</TableCell>
                       <TableCell style={ parseInt(item.dist) >= 0 ? {backgroundColor: 'yellow', color: '#000', cursor: 'pointer', fontWeight: 'inherit'} : {color: 'inherit', cursor: 'pointer', fontWeight: 'inherit'} } onClick={this.getOrder.bind(this, item.id)}>{item.id}</TableCell>
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_user}</TableCell>
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.number}</TableCell>
@@ -743,6 +746,8 @@ class OrdersStat extends React.Component {
 
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_order}</TableCell>
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.status}</TableCell>
+
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.order_price}</TableCell>
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_pay}</TableCell>
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.driver}</TableCell>
                     </TableRow>
