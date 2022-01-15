@@ -710,6 +710,7 @@ class OrdersStat extends React.Component {
                     <TableCell>Время открытия заказа</TableCell>
 
                     <TableCell>Ко времени</TableCell>
+                    <TableCell>Закрыт на кухне</TableCell>
                     <TableCell>Получен клиентом</TableCell>
 
                     <TableCell>До просрочки</TableCell>
@@ -734,6 +735,7 @@ class OrdersStat extends React.Component {
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.date_time_order}</TableCell>
 
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit', backgroundColor: parseInt(item.is_preorder) == 1 ? '#bababa' : 'inherit' }}>{item.need_time}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.give_data_time == '00:00:00' ? '' : item.give_data_time}</TableCell>
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.close_order}</TableCell>
 
                       <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.to_time}</TableCell>
