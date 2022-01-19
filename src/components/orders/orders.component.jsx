@@ -223,7 +223,8 @@ class OrdersStat extends React.Component {
       textDel: '',
       typeDel: -1,
       
-      number: ''
+      number: '',
+      addr: ''
     };
   }
     
@@ -283,7 +284,8 @@ class OrdersStat extends React.Component {
     
   handleDateChange(date){
     this.setState({
-      number: ''
+      number: '',
+      addr: ''
     })
 
     this.setState({
@@ -297,7 +299,8 @@ class OrdersStat extends React.Component {
   
   changeCity(event){
     this.setState({
-      number: ''
+      number: '',
+      addr: ''
     })
 
     let city = event.target.value;
@@ -522,18 +525,30 @@ class OrdersStat extends React.Component {
     }, 300 )
   }
 
-  filterNumber(){
-    if( this.state.number.length == 0 ){
-      this.setState({
-        ordersRender: this.state.orders
-      })
-    }else{
-      let renderOrders = this.state.orders.filter( (item) => item.number.indexOf(this.state.number) !== -1 );
+  changeAddrSt(event){
+    let value = event.target.value;
+    
+    this.setState({ addr: value })
 
-      this.setState({
-        ordersRender: renderOrders
-      })
+    setTimeout( () => {
+      this.filterNumber();
+    }, 300 )
+  }
+
+  filterNumber(){
+    let renderOrders = this.state.orders;
+
+    if( this.state.number.length > 0 ){
+      renderOrders = renderOrders.filter( (item) => item.number.indexOf(this.state.number) !== -1 );
     }
+
+    if( this.state.addr.length > 0 ){
+      renderOrders = renderOrders.filter( (item) => (item.street + ' ' + item.home).toLowerCase() .indexOf(this.state.addr.toLowerCase()) !== -1 );
+    }
+
+    this.setState({
+      ordersRender: renderOrders
+    })
   }
   
   fakeUser(){
@@ -580,6 +595,7 @@ class OrdersStat extends React.Component {
 
           if(json['st'] == true){
             alert('Обращение зафиксировано')
+            this.closeDialog();
           }else{
             alert(json['text'])
           }
@@ -615,6 +631,7 @@ class OrdersStat extends React.Component {
   
             if(json['st'] == true){
               alert('Обращение зафиксировано')
+              this.closeDialog();
             }else{
               alert(json['text'])
             }
@@ -684,6 +701,16 @@ class OrdersStat extends React.Component {
             style={{ margin: '16px 8px 8px 8px', flex: 1 }}
             value={ this.state.number }
             onChange={ this.changeNumber.bind(this) }
+          />
+        </Grid>
+
+        <Grid item xs={3}>
+          <TextField 
+            label="Адрес" 
+            //variant="inlined" 
+            style={{ margin: '16px 8px 8px 8px', flex: 1 }}
+            value={ this.state.addr }
+            onChange={ this.changeAddrSt.bind(this) }
           />
         </Grid>
         
@@ -833,6 +860,12 @@ class OrdersStat extends React.Component {
                     <b>Сумма заказа: </b>
                     <span>{this.state.showOrder.order.sum_order} р</span>
                   </Grid>
+
+                  { this.state.showOrder.order.check_pos_drive == null || !this.state.showOrder.order.check_pos_drive ? null :
+                    <Grid item xs={12} className="MuiTEXT">
+                      <b>Довоз оформлен</b>
+                    </Grid>
+                  }
 
                   <Grid item xs={12}>
                     <Table size={'small'} style={{ marginTop: 15 }}>
