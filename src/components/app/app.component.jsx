@@ -5,6 +5,7 @@ import { Home } from '../home';
 import { Orders } from '../orders';
 import { OrderCook } from '../ordercook';
 import { Auth } from '../auth';
+import { CheckUserPromo } from '../check_user_promo';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -76,6 +77,11 @@ export class App extends React.Component {
                             path='/auth'
                             exact={ true }
                             component={ Auth }
+                        />
+                        <Route
+                            path='/check_user_promo'
+                            exact={ true }
+                            component={ CheckUserPromo }
                         />
                         <Route
                             element={ NotFound }

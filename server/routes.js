@@ -3,6 +3,9 @@ const { NotFound } = require( '../src/components/app' );
 const { Orders } = require( '../src/components/orders' );
 const { Ordercook } = require( '../src/components/ordercook' );
 const { Auth } = require( '../src/components/auth' );
+const { CheckUserPromo } = require( '../src/components/check_user_promo' );
+
+
 
 module.exports = [
     {
@@ -31,6 +34,13 @@ module.exports = [
         exact: true,
         component: Auth,
         title: 'Авторизация',
+        code: 200
+    },
+    {
+        path: '/check_user_promo',
+        exact: true,
+        component: CheckUserPromo,
+        title: 'Проверка промокода клиента',
         code: 200
     },
 ];

@@ -522,6 +522,16 @@ export class Header extends React.Component {
                 <Typography variant="body1">Заказы на кухне</Typography>
               </ListItem>
             </Link>
+
+            <Link
+              to={ '/check_user_promo' }
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button style={{ color: '#000' }}>
+                <Typography variant="body1">Проверка промокода клиента</Typography>
+              </ListItem>
+            </Link>
+
             <Divider />
             <List>
               <ListItem button onClick={this.logOut.bind(this)}>

@@ -1276,7 +1276,6 @@ class CreateOrder extends React.Component {
     itemsStore.setSumDiv(0);
   }
   
-  
   changeCat = (event, newValue) => {
     this.setState({
       activeCat: newValue
@@ -1303,7 +1302,6 @@ class CreateOrder extends React.Component {
     
   }
   
-  
   choosePic(point){
     this.setState({
       orderPic: point.id,
@@ -1323,7 +1321,6 @@ class CreateOrder extends React.Component {
       itemsStore.setSumDiv(0);
     }, 300 )
   }
-  
   
   checkNewAddr(){
     let street = document.querySelector('#newAddrStreet').value;
@@ -1462,7 +1459,6 @@ class CreateOrder extends React.Component {
       this.checkPromo( {target: {value: this.state.promo_name}} )
     }, 300 )
   }
-  
   
   changeTypeTime = (event, newValue) => {
     //if( this._isEdit === true ){
@@ -1629,7 +1625,6 @@ class CreateOrder extends React.Component {
     
     this._thisEdit = false;
   }
-  
   
   saveNumber(event){
     
