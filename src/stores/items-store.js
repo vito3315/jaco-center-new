@@ -590,15 +590,18 @@ class ItemsStore {
     let tmp = 0,
         allPrice = 0;
     
+    let promo = this.getPromo();
     let cart_new_promo = this.getItemsPromo();
         
-    allPrice = items.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
-    
-    tmp = 0;
-        
-    allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
-    
-    this.setAllPrice(allPrice);
+    if( !promo ){
+      allPrice = items.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+      
+      tmp = 0;
+          
+      allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+      
+      this.setAllPrice(allPrice);
+    }
     
     this.items = JSON.stringify(items);
     if (typeof window !== 'undefined') {
@@ -884,13 +887,15 @@ class ItemsStore {
           
           
           itemsStore.setItems(my_cart)
+
+          if( promo ){
+            itemsStore.checkPromo();
+          }
         }, 300 )
         
       }
     
-      if( promo ){
-        itemsStore.checkPromo();
-      }
+      
       
       return count;
     }else{

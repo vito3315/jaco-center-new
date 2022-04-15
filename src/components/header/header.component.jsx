@@ -1,53 +1,171 @@
 import * as React from "react"
-import clsx from 'clsx';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+
+import { NavLink as Link } from 'react-router-dom';
+
+import { useHistory } from "react-router-dom";
+
+import {Helmet} from "react-helmet";
+
+import { makeStyles } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
 import moment from "moment";
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import clsx from 'clsx';
 
 import itemsStore from '../../stores/items-store';
 import config from '../../stores/config';
 import { autorun } from "mobx"
 
-import CloseIcon from '@material-ui/icons/Close';
-import InputMask from "react-input-mask";
-
 const queryString = require('query-string');
 
-const HtmlTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}))(Tooltip);
+export class Header extends React.Component{
 
-export class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      classes: this.props.classes,
+      cityList: this.props.cityList,
+      city: itemsStore.getCity(),
+      page: '',
+      
+      updateMyPromos: null,
+      MyPromos: [],
+      
+      number: '',
+      
+      orderPromoText: '',
+      promo_name: '',
+      promoST: false,
+      
+      top: false,
+      left: false,
+      bottom: false,
+      right: false,
+      
+      thisDateTimeDel: null
+    };
+  }
+
+  componentDidMount = () => {
+    this._isMounted = true;
+    
+    autorun(() => {
+      if( this._isMounted ){
+        this.setState({
+          page: itemsStore.getPage()
+        })
+      }
+    })
+  }
+
+  toggleDrawer2(anchor, open){
+    this.setState({
+      [anchor]: open
+    })
+  };
+
+  logOut(){
+
+  }
+
+  render(){
+
+    if( this.state.page == 'auth' ){
+      return null;
+    }
+
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" style={{ backgroundColor: '#fff' }}>
+          <Toolbar >
+            <IconButton
+              size="large"
+              edge="start"
+              //color="#000"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={this.toggleDrawer2.bind(this, 'left', true)}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            
+
+          </Toolbar>
+        </AppBar>
+
+
+        <Drawer anchor={'left'} open={this.state.left} onClose={this.toggleDrawer2.bind(this, 'left', false)}>
+          <div
+            className={clsx(this.state.classes.list)}
+            role="presentation"
+          >
+            <Link
+              to={ '/' }
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button style={{ color: '#000' }}>
+                <Typography variant="body1">Оформить заказ</Typography>
+              </ListItem>
+            </Link>
+            <Link
+              to={ '/orders' }
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button style={{ color: '#000' }}>
+                <Typography variant="body1">Список заказов</Typography>
+              </ListItem>
+            </Link>
+            <Link
+              to={ '/ordercook' }
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button style={{ color: '#000' }}>
+                <Typography variant="body1">Заказы на кухне</Typography>
+              </ListItem>
+            </Link>
+
+            <Link
+              to={ '/check_user_promo' }
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button style={{ color: '#000' }}>
+                <Typography variant="body1">Проверка промокода клиента</Typography>
+              </ListItem>
+            </Link>
+
+            <Divider />
+            <List>
+              <ListItem button onClick={this.logOut.bind(this)}>
+                <ListItemText primary={'Выйти'} />
+              </ListItem>
+            </List>
+          </div>
+        </Drawer> 
+
+      </Box>
+    );
+  }
+}
+
+/*export class Header2 extends React.Component {
   
   constructor(props) {
     super(props);
@@ -211,23 +329,6 @@ export class Header extends React.Component {
     
     itemsStore.clientNumber = number;
     localStorage.setItem('clientNumber', number)
-    
-    /*let number = event.target.value;
-          
-    if( number.length > 0 ){
-      number = number.split(' ').join('');
-      number = number.split('(').join('');
-      number = number.split(')').join('');
-      number = number.split('-').join('');
-      
-      number = number.slice(1);
-      
-      itemsStore.clientNumber = '8' + number;
-      localStorage.setItem('clientNumber', '8' + number)
-    }else{
-      itemsStore.clientNumber = '';
-      localStorage.setItem('clientNumber', '')
-    }*/
   }
     
   checkPromo(event){
@@ -543,4 +644,4 @@ export class Header extends React.Component {
       </div>
     )
   }
-}
+}*/

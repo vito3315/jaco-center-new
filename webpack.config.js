@@ -43,7 +43,9 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ]
+                use: [
+                    MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'
+                ]
             },
             {
                 test: /\.(jpg|png|svg|ttf|otf)$/,
@@ -73,8 +75,10 @@ module.exports = {
 
         // extract css to external stylesheet file
         new MiniCssExtractPlugin( {
-            filename: 'build/styles.css',
-            //publicPath: '/'
+            //filename: 'build/styles.css',
+            filename: "[name].[contenthash].css",
+            chunkFilename: "[id].[contenthash].css",
+            experimentalUseImportModule: true
         } ),
 
         // prepare HTML file with assets
@@ -82,6 +86,7 @@ module.exports = {
             filename: 'index.html',
             template: path.resolve( __dirname, 'src/index.html' ),
             minify: false,
+            title: 'Caching'
         } ),
 
         // copy static files from `src` to `dist`
@@ -105,21 +110,31 @@ module.exports = {
         moduleIds: 'deterministic',
         runtimeChunk: 'single',
         splitChunks: {
+
+            chunks: 'async',
             cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all',
+
+                default: {
+                    minChunks: 2,
+                    reuseExistingChunk: true,
+                },
+
+                vendor_react: {
+                    test: /.*\/node_modules\/react\/index\.js/,
+                    name: 'vendor-react',
+                    chunks: 'initial',
+                    enforce: true,
                 },
             },
+
+            
        },
     },
     
     
-    
     // development server configuration
     devServer: {
-        port: 5074,
+        port: 5075,
         historyApiFallback: true,
     },
 

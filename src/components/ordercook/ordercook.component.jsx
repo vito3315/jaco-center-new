@@ -1,139 +1,72 @@
-import * as React from "react"
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import CachedIcon from '@material-ui/icons/Cached';
-import Grid from '@material-ui/core/Grid';
+import React from 'react';
 
 import {Helmet} from "react-helmet";
 
-import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
+import { makeStyles } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import { MySelect } from '../../stores/elements';
 
 import itemsStore from '../../stores/items-store';
 import config from '../../stores/config';
 
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
 const queryString = require('query-string');
 
-import { Header } from '../header';
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#c03',
+    }
+  },
+});
 
-const useStyles = makeStyles((theme) => ({
-  root2: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    '& > svg, form': {
-      borderRight: '0px!important'
-    }
-  },
-  root3: {
-    '& > *': {
-      margin: theme.spacing(1),
-      width: 50,
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '5px 10px'
-    }
-  },
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-  root: {
-    flexGrow: 1,
-    //margin: -8
-  },
-  title: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  paperCat: {
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    position: 'relative',
-    justifyContent: 'space-between',
-    height: 'calc(100% - 15px)',
-    cursor: 'pointer'
-  },
-  paperCatInfo: {
-    position: 'absolute',
-    top: 0,
-    right: 0
-  },
-  
-  size1: {
-    fontSize: '0.8rem'
-  },
-  scrollTable: {
-    maxHeight: 250,
-    overflow: 'auto',
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
+const useStyles = makeStyles({
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    //margin: theme.spacing(1),
+    width: '100%',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-}));
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
+  tableCel: {
+    textAlign: 'center',
+    borderRight: '1px solid #e5e5e5',
+    padding: 15,
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: "#e5e5e5",
+    },
+  },
+  tableCelHead: {
+    textAlign: 'center',
+    padding: 15
+  },
+  customCel: {
+    backgroundColor: "#bababa",
+    textAlign: 'center',
+    borderRight: '1px solid #e5e5e5',
+    padding: 15,
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: "#e5e5e5",
+    },
+  },
+  timePicker: {
+    width: '100%'
+  }
+});
 
 function formatDate(date) {
   var d = new Date(date),
@@ -189,82 +122,93 @@ class OrderCook_ extends React.Component {
     };
   }
     
-  componentWillUnmount(){
-    clearInterval(this.interval)
-  }
-  
-  checkLogin(){
-    fetch(config.urlApi, {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'check_login_center', 
-        token: itemsStore.getToken()
-      })
-    }).then(res => res.json()).then(json => {
-      if( json === true ){
-        
-      }else{
-        localStorage.removeItem('token');
-        clearInterval(this.interval)
-        setTimeout( () => {
-          //window.location.reload();
-          window.location.href = '/auth'
-        }, 500 )
-      }
-    })
-    .catch(err => { });
-  }
-  
-  componentDidMount = () => {
+  getData = (method, data = {}) => {
     
     this.setState({
       spiner: true
     })
     
+    data.type = method;
+    data.token = itemsStore.getToken();
+
+    return fetch(config.urlApi, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify( data ) 
+    }).then(res => res.json()).then(json => {
+      
+      if( json.st === false && json.type == 'redir' ){
+        this.state.history.push("/");
+        return;
+      }
+      
+      if( json.st === false && json.type == 'auth' ){
+        window.location.pathname = '/auth';
+        return;
+      }
+      
+      setTimeout( () => {
+        this.setState({
+          spiner: false
+        })
+      }, 300 )
+      
+      return json;
+    })
+    .catch(err => { 
+      console.log( err )
+      this.setState({
+        spiner: false
+      })
+    });
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.interval)
+  }
+  
+  async checkLogin(){
+    let data = {
+      token: itemsStore.getToken()
+    }
+
+    let res = await this.getData('check_login_center', data);
+
+    if( res === true ){
+        
+    }else{
+      localStorage.removeItem('token');
+      clearInterval(this.interval)
+      setTimeout( () => {
+        window.location.href = '/auth'
+      }, 500 )
+    }
+  }
+  
+  async componentDidMount(){
     document.title = "Заказы на кухне";
+    itemsStore.setPage('ordercook');
 
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin();
     
-    fetch(config.urlApi, {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'get_cat_center', 
-        city_id: 1
-      })
-    }).then(res => res.json()).then(json => {
-      this.setState({
-        cityList: json.city_list
-      })
+    let data = {
+      city_id: 1
+    }
+
+    let res = await this.getData('get_points_center', data);
+
+    console.log( res )
+
+    this.setState({
+      points: res,
+      selectedPoint: res[0].id
     })
-    .catch(err => { });
     
-    fetch(config.urlApi, {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'get_points', 
-        city_id: 1
-      })
-    }).then(res => res.json()).then(json => {
-      
-      console.log( json )
-      
-      this.setState({
-        points: json,
-        point: json[0]
-      })
-      
-      setTimeout( () => {
-        this.getCookOrders();
-      }, 500 )
-    })
-    .catch(err => { });
+    setTimeout( () => {
+      this.getCookOrders();
+    }, 500 )
   }
     
   changePoint(event){
@@ -276,41 +220,21 @@ class OrderCook_ extends React.Component {
     },500 )
   }
   
-  getCookOrders(){
+  async getCookOrders(){
+    let data = {
+      point_id: this.state.selectedPoint
+    }
+
+    let res = await this.getData('getCookOrders', data);
+
     this.setState({
-      spiner: true
+      data: res,
     })
-    
-    fetch(config.urlApi, {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/x-www-form-urlencoded'},
-      body: queryString.stringify({
-        type: 'getCookOrders', 
-        point_id: this.state.selectedPoint
-      })
-    }).then(res => res.json()).then(json => {
-      
-      console.log( json )
-      
-      this.setState({
-        data: json,
-        //spiner: false
-        //point: json[0]
-      })
-      
-      setTimeout( () => {
-        this.setState({
-          spiner: false
-        })
-      }, 500 )
-    })
-    .catch(err => { });
   }
   
   render() {
     return (
-      <Grid container spacing={0}>
+      <Grid container spacing={3}>
         
         <Helmet>
           <title>Заказы на кухне</title>
@@ -320,28 +244,14 @@ class OrderCook_ extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
         
-        <Grid item xs={12}>
-          { this.state.cityList.length > 0 ? <Header classes={this.state.classes} cityList={this.state.cityList} page="OrderCook" /> : null }
+        <Grid item xs={3}>
+          <MySelect classes={this.state.classes} data={this.state.points} value={this.state.selectedPoint} func={ this.changePoint.bind(this) } label='Точка' />
         </Grid>
-        
-        <Grid item xs={12} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <FormControl className={this.state.classes.formControl}>
-            <InputLabel>Точка</InputLabel>
-            <Select
-              value={this.state.selectedPoint}
-              onChange={ this.changePoint.bind(this) }
-            >
-              { this.state.points.map( (item, key) =>
-                <MenuItem key={key} value={item.id}>{item.addr}</MenuItem>
-              ) }
-            </Select>
-          </FormControl>
-          
-          <Button variant="contained" color="primary" className="btnClear" style={{ padding: '2px 6px', minWidth: 30 }} onClick={ this.getCookOrders.bind(this) }>
-            <CachedIcon />
-          </Button>
+
+        <Grid item xs={3}>
+          <Button variant="contained" onClick={this.getCookOrders.bind(this)}>Обновить</Button>
         </Grid>
-        
+
         <Grid item xs={12}>
           
           <TableContainer>
@@ -435,9 +345,6 @@ class OrderCook_ extends React.Component {
           </TableContainer>
         
         </Grid>
-        
-        
-        
       </Grid>
     )
   }

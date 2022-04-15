@@ -1,17 +1,15 @@
 import React from 'react';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
+import Button from '@mui/material/Button';
 
 const queryString = require('query-string');
 
 import itemsStore from '../../stores/items-store';
 import config from '../../stores/config';
 
+import { MyTextInput } from '../../stores/elements';
 
 export class Auth extends React.Component {
   constructor(props) {
@@ -25,10 +23,71 @@ export class Auth extends React.Component {
     
   componentDidMount = () => {
     document.title = "Авторизация";
+    itemsStore.setPage('auth');
   }
     
-  login(){
-    fetch(config.urlApi, {
+  getData = (method, data = {}) => {
+    
+    this.setState({
+      spiner: true
+    })
+    
+    data.type = method;
+    data.token = itemsStore.getToken();
+
+    return fetch(config.urlApi, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify( data ) 
+    }).then(res => res.json()).then(json => {
+      
+      if( json.st === false && json.type == 'redir' ){
+        this.state.history.push("/");
+        return;
+      }
+      
+      if( json.st === false && json.type == 'auth' ){
+        window.location.pathname = '/auth';
+        return;
+      }
+      
+      setTimeout( () => {
+        this.setState({
+          spiner: false
+        })
+      }, 300 )
+      
+      return json;
+    })
+    .catch(err => { 
+      console.log( err )
+      this.setState({
+        spiner: false
+      })
+    });
+  }
+
+  async login(){
+    let data = {
+      number: this.state.number,
+      pass: this.state.pass
+    }
+
+    let res = await this.getData('login_center', data);
+
+    if( res['st'] ){
+      itemsStore.setToken(res.token, res.name);
+     
+      setTimeout( () => {
+        window.location.href = '/';
+      }, 500 )
+      
+    }else{
+      alert(res.text)
+    }
+
+    /*fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -48,7 +107,7 @@ export class Auth extends React.Component {
       }else{
         alert(json.text)
       }
-    });
+    });*/
   }
   
   handleKeyPress(target) {
@@ -61,49 +120,29 @@ export class Auth extends React.Component {
   
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        style={{ height: '100vh', marginTop: -70 }}
-      >
-        <Grid container item xs={3}>
-          <img alt="Жако доставка роллов и пиццы" src="../assets/logo.png" style={{ height: 'max-content', width: '100%' }} />
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="column" spacing={2}>
+          
+            <Grid item xs={12} sm={4}>
+              <img alt="Жако доставка роллов и пиццы" src="../assets/logo.png" style={{ height: 'max-content', width: '100%' }} />
+            </Grid>
+                
+            <Grid item xs={12} sm={4}>
+              <MyTextInput label={'Номер телефона'} value={this.state.number} func={ (event) => { this.setState({ number: event.target.value }) } } />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MyTextInput label={'Пароль'} type={'password'} value={this.state.pass} func={ (event) => { this.setState({ pass: event.target.value }) } } />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <Button variant="contained" style={{ width: '100%' }} onClick={this.login.bind(this)}>Войти</Button>
+            </Grid>
+
+          </Grid>
         </Grid>
-            
-        <Grid container item xs={3} direction="column">
-          
-          <FormControl>
-            <InputLabel htmlFor="my-input">Номер телефона</InputLabel>
-            <Input 
-              id="my-input" 
-              type="login" 
-              aria-describedby="my-helper-text" 
-              value={ this.state.number } 
-              onChange={ (event) => { this.setState({ number: event.target.value }) } } 
-              onKeyPress={this.handleKeyPress}
-            />
-          </FormControl>
-          
-          <FormControl>
-            <InputLabel htmlFor="my-input2">Пароль</InputLabel>
-            <Input 
-              id="my-input2" 
-              type='password' 
-              aria-describedby="my-helper-text" 
-              value={ this.state.pass } 
-              onChange={ (event) => { this.setState({ pass: event.target.value }) } } 
-              onKeyPress={this.handleKeyPress}
-            />
-          </FormControl>
-          
-          <FormControl style={{ paddingTop: 8 }}>
-            <Button variant="contained" style={{ backgroundColor: '#CC0033', color: '#fff' }} onClick={this.login.bind(this)}>Войти</Button>
-          </FormControl>
-          
-        </Grid>
-            
+        
+
       </Grid>
     )
   }
