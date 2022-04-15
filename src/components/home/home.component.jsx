@@ -63,7 +63,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import AddIcon from '@mui/icons-material/Add';
 
 import Alert from '@mui/material/Alert';
-import et from "date-fns/esm/locale/et/index.js";
+//import et from "date-fns/esm/locale/et/index.js";
 
 const queryString = require('query-string');
 
