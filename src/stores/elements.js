@@ -254,7 +254,7 @@ export class MyDatePickerNew extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
+      classes: this.props.classes
     };
   }
   

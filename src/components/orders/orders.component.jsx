@@ -160,7 +160,7 @@ class Concenter_ extends React.Component {
       point_list: [],
       need_point_list: [],
       point_id: 0,
-      indexTab: 0,
+      indexTab: '0',
 
       orders: [],
       ordersRender: [],
@@ -216,11 +216,12 @@ class Concenter_ extends React.Component {
       cities: res.cities,
       point_list: res.points,
       need_point_list: need_points,
-      point_id: parseInt(need_points[0].id)
+      point_id: parseInt(need_points[0].id),
+      indexTab: 0
     })
     
     setTimeout( () => {
-      this.getOrders();
+      this.getOrders(parseInt(need_points[0].id), '0');
     }, 300 )
   }
   
@@ -280,12 +281,12 @@ class Concenter_ extends React.Component {
       city_id: data,
       need_point_list: need_points,
       point_id: parseInt(need_points[0].id),
-      indexTab: 0
+      indexTab: '0'
     })
 
-    setTimeout( () => {
-      this.getOrders();
-    }, 300 )
+    //setTimeout( () => {
+      this.getOrders(parseInt(need_points[0].id), 0);
+    //}, 300 )
   }
   
   changePoint(event, index){
@@ -297,9 +298,9 @@ class Concenter_ extends React.Component {
       indexTab: index
     })
 
-    setTimeout( () => {
-      this.getOrders();
-    }, 300 )
+    //setTimeout( () => {
+      this.getOrders(point_id, index);
+    //}, 300 )
     
   }
 
@@ -381,7 +382,7 @@ class Concenter_ extends React.Component {
           modalDialog: false,
         });
         
-        this.getOrders();
+        this.getOrders(this.state.point_id, this.state.indexTab);
       }else{
         alert( res['text'] );
       }
@@ -484,7 +485,7 @@ class Concenter_ extends React.Component {
     })
 
     setTimeout( () => {
-      this.getOrders();
+      this.getOrders(this.state.point_id, this.state.indexTab);
     }, 300 )
   }
 
