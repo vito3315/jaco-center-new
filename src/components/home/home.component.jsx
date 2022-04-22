@@ -1736,7 +1736,7 @@ class CreateOrder2 extends React.Component {
               }
                   
               { this.state.newOrder.typeOrder == 'Доставка' ?
-                this.state.newOrder.comment.length > 0 ?
+                this.state.newOrder.comment && this.state.newOrder.comment.length > 0 ?
                   <Typography variant="h5" component="span" className="nameSdacha orderCheckText">Комментарий: {this.state.newOrder.comment}</Typography>
                     :
                   null
@@ -1744,7 +1744,7 @@ class CreateOrder2 extends React.Component {
                 null
               }    
               { this.state.newOrder.typeOrder == 'Доставка' ?
-                this.state.newOrder.sdacha.length > 0 ?
+                this.state.newOrder.sdacha && this.state.newOrder.sdacha.length > 0 ?
                   <Typography variant="h5" component="span" className="nameSdacha orderCheckText">Сдача с: {this.state.newOrder.sdacha}р</Typography>
                     :
                   null
@@ -1755,10 +1755,10 @@ class CreateOrder2 extends React.Component {
               { this.state.newOrder.typeOrder == 'Доставка' ?
                 null
                   :
-                this.state.newOrder.dop_text.length > 0 ?
-                  <Typography variant="h5" component="span" style={{ fontWeight: 'bold' }} className="nameSdacha orderCheckText">{this.state.newOrder.dop_text}</Typography>
-                    :
-                  null
+                  this.state.newOrder.dop_text && this.state.newOrder.dop_text.length > 0 ?
+                    <Typography variant="h5" component="span" style={{ fontWeight: 'bold' }} className="nameSdacha orderCheckText">{this.state.newOrder.dop_text}</Typography>
+                      :
+                    null
               }     
                   
               <Table size="small">
