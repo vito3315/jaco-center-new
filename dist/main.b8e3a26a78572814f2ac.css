@@ -1,0 +1,13 @@
+body{margin:0px !important}
+
+.MuiTabs-flexContainer>.Mui-selected{background-color:#6ab04c;color:#fff !important}.boxPic{width:100%;background-color:#e5e5e5;padding:6px 12px !important;margin-bottom:10px !important;cursor:pointer !important}.boxPic:hover{background-color:#6ab04c !important;color:#fff !important}.boxPic.active{background-color:#6ab04c !important;color:#fff !important}.boxPic span:first-child{text-align:center !important}.boxPic span:last-child{text-align:center !important}.chooseDomTrue{width:100%}.chooseDomTrue button.active{background-color:#6ab04c;color:#fff}.chooseDomTrue button:not(.active){background-color:#fff;border:1px solid #6ab04c;color:#6ab04c}.chooseDomTrue>button{width:50%;border-color:#6ab04c !important}.chooseDomTrue span{font-size:0.8rem !important;width:100%;text-transform:none;white-space:nowrap}.chooseDomTrue .MuiButtonGroup-groupedContainedHorizontal:not(:last-child){border-right:none}.checkClearFalse{background-color:#6ab04c !important;color:#fff !important;margin:10px !important;width:calc(100% - 20px) !important;border-radius:10px !important}.checkClearFalse span{font-weight:bolder;text-align:center}.checkClearTrue{background-color:#8e0023 !important;color:#fff !important;margin:10px !important;width:calc(100% - 20px) !important;border-radius:10px !important}.checkClearTrue span{font-weight:bolder;text-align:center}.DialogOrderCheckDialog{position:relative}.DialogOrderCheckDialog .DialogOrderCheckDialogTitle{text-align:center;padding-bottom:0px}.DialogOrderCheckDialog .closeDialog{position:absolute;top:10px;right:10px;cursor:pointer;color:#8e0023}.DialogOrderCheckDialog .DialogOrderCheckDialogBody{display:flex;flex-direction:column;padding-top:10px}.DialogOrderCheckDialog .DialogOrderCheckDialogBody .orderCheckText{font-size:1.2rem;padding:2px 0px}.DialogOrderCheckDialog .tableOrderCheck tbody tr td{border-bottom:1px solid #96969A}
+
+.TabsOrders button.Mui-selected{border-radius:15px}
+
+.dis_none{display:none !important}
+
+
+
+
+
+/*# sourceMappingURL=main.b8e3a26a78572814f2ac.css.map*/

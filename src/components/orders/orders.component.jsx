@@ -160,7 +160,7 @@ class Concenter_ extends React.Component {
       point_list: [],
       need_point_list: [],
       point_id: 0,
-      indexTab: '0',
+      indexTab: 0,
 
       orders: [],
       ordersRender: [],
@@ -281,7 +281,7 @@ class Concenter_ extends React.Component {
       city_id: data,
       need_point_list: need_points,
       point_id: parseInt(need_points[0].id),
-      indexTab: '0'
+      indexTab: 0
     })
 
     //setTimeout( () => {
@@ -752,7 +752,7 @@ class Concenter_ extends React.Component {
           </Grid>
           
           <Grid item xs={12}>
-            <Tabs value={this.state.indexTab} indicatorColor="#6ab04c">
+            <Tabs value={this.state.indexTab} indicatorColor="#6ab04c" className='TabsOrders'>
               { this.state.need_point_list.map( (item, key) =>
                 <Tab key={key} label={item.name} onClick={this.getOrders.bind(this, parseInt(item.id), key)} {...a11yProps(parseInt(item.id))} />
               ) }
