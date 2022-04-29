@@ -887,7 +887,21 @@ class CreateOrder2 extends React.Component {
       let res = await this.getData('check_addr', data);
 
       if( parseInt(res.count) == 0 ){
-        alert('Адрес не найден');
+        this.setState({
+          openErr: true,
+          msgText: 'Адрес не найден'
+        })
+
+        this.setState({
+          newAddrInfo: null,
+          point_id: 0
+        })
+  
+        setTimeout( () => {
+          this.saveDataOther();
+        }, 300 )
+
+        return ;
       }
 
       if( parseInt(res.count) > 1 ){
