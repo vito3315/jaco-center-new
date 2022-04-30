@@ -1343,13 +1343,17 @@ class CreateOrder2 extends React.Component {
 
       checkClear: false,
 
-      clientAddr: []
+      clientAddr: [],
+      typeTime: 0
     })
     
     itemsStore.setSumDiv(0);
     itemsStore.setAllPrice(0);
 
-    this.changeTypeTime(null, 0);
+    setTimeout( () => {
+      this.changeTypeTime(null, 0);
+    }, 300 )
+    
   }
 
   changeTypeTime = (event, newValue) => {
@@ -1890,7 +1894,7 @@ class CreateOrder2 extends React.Component {
                   <MyAutocomplite id="newAddrStreet" onBlur={this.checkNewAddr.bind(this)} classes={this.state.classes} freeSolo={true} data={this.state.all_addr} value={this.state.newAddrStreet} func={ this.cheangeAddrCustom.bind(this) } multiple={false} label='Улица' />
                 </Grid>
                 <Grid item xs={4}>
-                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} classes={this.state.classes} value={this.state.newAddrHome} func={ event => this.setState({ newAddrHome: event.target.value }) } label='Дом'/>
+                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} classes={this.state.classes} value={this.state.newAddrHome} func={ event => this.setState({ newAddrHome: (event.target.value).toUpperCase() }) } label='Дом'/>
                 </Grid>
 
                 <Grid item xs={4}>

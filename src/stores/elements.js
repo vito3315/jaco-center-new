@@ -193,6 +193,7 @@ export class MyTextInput extends React.PureComponent {
         variant="outlined" 
         size={'small'} 
         color='primary'
+        autoComplete="off"
         placeholder={ this.props.placeholder ? this.props.placeholder : '' }
         multiline={this.props.multiline ? this.props.multiline : false}
         maxRows={this.props.maxRows ? this.props.maxRows : 1}
