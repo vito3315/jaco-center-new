@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -9,8 +8,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
-
-import { useHistory } from "react-router-dom";
 
 import { Home } from '../home';
 import { Orders } from '../orders';
@@ -49,91 +46,6 @@ const theme = createTheme({
     },
 });
 
-const drawerWidth = 300;
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-  },
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: 'none',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-    width: '100%',
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-});
-
 export function NotFound() {
   return (
     <Status code={404}>
@@ -148,19 +60,16 @@ export function NotFound() {
 }
 
 export function App () {
-    const classes = useStyles();
-    let history = useHistory();
-    
     return (
       <ThemeProvider theme={theme}>
         <Provider { ...stores }>
-          <div className={classes.root}>
-            <main className={classes.content}>
+          <div style={{ display: 'flex' }}>
+            <main style={{ flexGrow: 1, overflow: 'auto', }}>
 
               <CssBaseline />
-              <Header classes={classes} history={history} />
+              <Header />
 
-              <Container maxWidth={false} className={classes.container}>
+              <Container maxWidth={false} style={{ paddingTop: 32, paddingBottom: 32, width: '100%' }}>
 
                 <Switch>
                   <Route

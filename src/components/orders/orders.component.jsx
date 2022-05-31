@@ -1,10 +1,6 @@
 import React from 'react';
-import { useHistory } from "react-router-dom";
 
 import {Helmet} from "react-helmet";
-
-import { makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -48,50 +44,6 @@ import itemsStore from '../../stores/items-store';
 import config from '../../stores/config';
 
 const queryString = require('query-string');
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#c03',
-    }
-  },
-});
-
-const useStyles = makeStyles({
-  formControl: {
-    //margin: theme.spacing(1),
-    width: '100%',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  tableCel: {
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  tableCelHead: {
-    textAlign: 'center',
-    padding: 15
-  },
-  customCel: {
-    backgroundColor: "#bababa",
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  timePicker: {
-    width: '100%'
-  }
-});
 
 function formatDate(date) {
   var d = new Date(date),
@@ -138,15 +90,13 @@ function a11yProps(index) {
   };
 }
 
-class Concenter_ extends React.Component {
+export class Orders extends React.Component {
   interval = null;
 
   constructor(props) {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
-      history: this.props.history,
       module: 'concenter',
       module_name: '',
       is_load: false,
@@ -155,7 +105,7 @@ class Concenter_ extends React.Component {
       modalDialogDel: false,
       
       cities: [],
-      city_id: 1,
+      city_id: '',
       date: formatDate(new Date()),
       point_list: [],
       need_point_list: [],
@@ -242,7 +192,7 @@ class Concenter_ extends React.Component {
     }).then(res => res.json()).then(json => {
       
       if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
+        window.location.pathname = '/';
         return;
       }
       
@@ -295,13 +245,10 @@ class Concenter_ extends React.Component {
 
     this.setState({
       point_id: point_id,
-      indexTab: index
+      indexTab: parseInt(index)
     })
 
-    //setTimeout( () => {
-      this.getOrders(point_id, index);
-    //}, 300 )
-    
+    this.getOrders(point_id, index);
   }
 
   async getOrders(point_id, index){
@@ -309,7 +256,7 @@ class Concenter_ extends React.Component {
       ordersRender: [],
       orders: [],
       point_id: point_id,
-      indexTab: index
+      indexTab: parseInt(index)
     })
 
     let data = {
@@ -554,6 +501,16 @@ class Concenter_ extends React.Component {
                 <Grid item xs={12}>
                   <span>{this.state.showOrder.order.type_order}: {this.state.showOrder.order.type_order_addr_new}</span>
                 </Grid>
+                { parseInt(this.state.showOrder.order.type_order_) == 1 ?
+                  parseInt(this.state.showOrder.order.fake_dom) == 0 ?
+                    <Grid item xs={12}>
+                      <b>Домофон не работает</b>
+                    </Grid>
+                      :
+                    null
+                    :
+                  null
+                }
                 <Grid item xs={12}>
                   <span>{this.state.showOrder.order.time_order_name}: {this.state.showOrder.order.time_order}</span>
                 </Grid>
@@ -730,7 +687,7 @@ class Concenter_ extends React.Component {
         
         <Grid container spacing={3}>
           <Grid item xs={12} sm={3}>
-            <MySelect classes={this.state.classes} data={this.state.cities} value={this.state.city_id} func={ this.changeCity.bind(this) } label='Город' />
+            <MySelect data={this.state.cities} value={this.state.city_id} func={ this.changeCity.bind(this) } label='Город' />
           </Grid>
 
           <Grid item xs={12} sm={3}>
@@ -752,7 +709,7 @@ class Concenter_ extends React.Component {
           </Grid>
           
           <Grid item xs={12}>
-            <Tabs value={this.state.indexTab} indicatorColor="#6ab04c" className='TabsOrders'>
+            <Tabs value={this.state.indexTab} indicatorColor={null} className='TabsOrders'>
               { this.state.need_point_list.map( (item, key) =>
                 <Tab key={key} label={item.name} onClick={this.getOrders.bind(this, parseInt(item.id), key)} {...a11yProps(parseInt(item.id))} />
               ) }
@@ -822,14 +779,4 @@ class Concenter_ extends React.Component {
       </>
     )
   }
-}
-
-
-export function Orders () {
-  const classes = useStyles();
-  let history = useHistory();
-  
-  return (
-    <Concenter_ classes={classes} history={history} />
-  );
 }

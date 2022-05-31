@@ -47,7 +47,6 @@ export class MyDaterange extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   
@@ -81,7 +80,6 @@ export class MyAutocomplite extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   
@@ -95,7 +93,12 @@ export class MyAutocomplite extends React.PureComponent {
             disableCloseOnSelect={true}
             onBlur={this.props.onBlur ? this.props.onBlur : null}
             id={ this.props.id ?? null }
-            options={this.props.data}
+            //options={this.props.data}
+
+            
+            options={ this.props.type && this.props.type == 'MyPromos' ? this.props.data.map((option) => option.promo) : this.props.data }
+            
+
             //getOptionLabel={(option) => option.name}
             value={this.props.value}
             onChange={this.props.func}
@@ -148,7 +151,6 @@ export class MySelect extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   
@@ -177,7 +179,6 @@ export class MyTextInput extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
       type: 'text'
     };
   }
@@ -209,7 +210,6 @@ export class MyTimePicker extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   
@@ -222,7 +222,6 @@ export class MyTimePicker extends React.PureComponent {
         label={this.props.label}
         type="time"
         value={ this.props.value }
-        className={this.state.classes.timePicker}
         onChange={this.props.func}
         InputLabelProps={{
           shrink: true,
@@ -241,7 +240,6 @@ export class MyDatePicker extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   
@@ -274,7 +272,6 @@ export class MyDatePickerNew extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes
     };
   }
   
@@ -300,7 +297,6 @@ export class MyDatePickerTest extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   
@@ -320,7 +316,6 @@ export class MyCheckBox extends React.PureComponent {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
     };
   }
   

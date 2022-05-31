@@ -1,18 +1,16 @@
 import * as React from "react"
-import clsx from 'clsx';
 
 import { makeStyles, styled } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
 
 import moment from "moment";
-import { NavLink as Link } from 'react-router-dom';
 
 import {Helmet} from "react-helmet";
 
 import itemsStore from '../../stores/items-store';
 import config from '../../stores/config';
 import { autorun } from "mobx"
-import { MySelect, MyDatePickerNew, MyTextInput, MyAutocomplite } from '../../stores/elements';
+import { MySelect, MyTextInput, MyAutocomplite } from '../../stores/elements';
 
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -523,6 +521,9 @@ class CreateOrder2 extends React.Component {
         title: '',
         text: ''
       },
+
+      updateMyPromos: null,
+      MyPromos: [],
     };
   }
   
@@ -580,7 +581,50 @@ class CreateOrder2 extends React.Component {
         }
 
         
-        
+        if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
+          
+          console.log( 'autorun updateMyPromos' );
+          
+          let myPromos = itemsStore.getMyPromos();
+          let myPromosNew = [];
+          let checkDate = moment(new Date()).add(-7, 'days').format("YYYY-MM-DD");
+          
+          myPromos = myPromos.filter( (item) => item.date >= checkDate );
+          
+          localStorage.setItem('MyPromos', JSON.stringify(myPromos) );
+          
+          myPromos.forEach( element => {
+            let check = myPromosNew.find( (item) => item.promo == element.promo )
+            
+            console.log( myPromosNew, check, element.promo )
+
+            if( !check ){
+              element.count = 1;
+              
+              myPromosNew.push( element )
+            }else{
+              myPromosNew.forEach( (item, key) => {
+                if( item.promo == element.promo ){
+                  myPromosNew[key]['count'] ++;
+                }
+              } )
+            }
+          });
+          
+          myPromosNew = myPromosNew.filter( (item) => item.count > 1 );
+          
+          console.log( 'MyPromos 1', myPromosNew )
+
+          this.setState({
+            updateMyPromos: itemsStore.updateMyPromos,
+            MyPromos: myPromosNew
+          })
+        }
+
+
+
+
+
       }
     })
   }
@@ -746,7 +790,7 @@ class CreateOrder2 extends React.Component {
     }).then(res => res.json()).then(json => {
       
       if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
+        window.location.pathname = '/';
         return;
       }
       
@@ -1063,7 +1107,7 @@ class CreateOrder2 extends React.Component {
       newAddrDom: type
     })
 
-    this.changeDataOther('domTrue', {target: {value: type}})
+    this.changeDataOther('dom_true', {target: {value: type ? 1 : 0}})
   }
 
   changeData(type, data){
@@ -1275,6 +1319,36 @@ class CreateOrder2 extends React.Component {
         promoST: check_promo.st,
         promo_name: promo
       })
+
+      if( promo && promo.length > 0 ){
+        let arr = itemsStore.getMyPromos();
+        
+        let check = arr.find( (item) => item.promo == promo );
+
+        console.log( check, arr, promo )
+
+        if( !check ){
+          arr.push( {
+            date: moment(new Date()).format("YYYY-MM-DD"),
+            promo: promo,
+            name: promo,
+            count: 1
+          } );
+        }else{
+          let key = arr.findIndex( (item) => item.promo == promo );
+
+          arr[ key ]['count'] ++;
+        }
+          
+        itemsStore.setMyPromos( arr );
+
+        console.log( 'MyPromos 2', arr )
+
+        this.setState({
+          MyPromos: arr
+        })
+        
+      }
     }
 
   }
@@ -1513,10 +1587,18 @@ class CreateOrder2 extends React.Component {
           
           arr.push( {
             date: moment(new Date()).format("YYYY-MM-DD"),
-            promo: promo
+            promo: promo,
+            name: promo,
+            count: 1
           } );
           
           itemsStore.setMyPromos( arr );
+
+          console.log( 'MyPromos 3', arr )
+
+          this.setState({
+            MyPromos: arr
+          })
         }
         
         let new_cart = [];
@@ -1650,7 +1732,8 @@ class CreateOrder2 extends React.Component {
                   onBlur={ this.checkPromo.bind(this) } 
                   classes={this.state.classes} 
                   freeSolo={true} 
-                  data={this.state.promoList} 
+                  type={'MyPromos'}
+                  data={this.state.MyPromos}
                   value={ this.state.promo_name } 
                   func={ (event, val) => { this.setState({ promo_name: val }) } } 
                   multiple={false} 

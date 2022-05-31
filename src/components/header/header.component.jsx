@@ -14,7 +14,6 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import clsx from 'clsx';
 
 import itemsStore from '../../stores/items-store';
 import { autorun } from "mobx"
@@ -25,7 +24,6 @@ export class Header extends React.Component{
     super(props);
     
     this.state = {
-      classes: this.props.classes,
       cityList: this.props.cityList,
       city: itemsStore.getCity(),
       page: '',
@@ -98,10 +96,7 @@ export class Header extends React.Component{
 
 
         <Drawer anchor={'left'} open={this.state.left} onClose={this.toggleDrawer2.bind(this, 'left', false)}>
-          <div
-            className={clsx(this.state.classes.list)}
-            role="presentation"
-          >
+          <div role="presentation">
             <Link
               to={ '/' }
               style={{ textDecoration: 'none' }}

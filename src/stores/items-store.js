@@ -52,6 +52,8 @@ class ItemsStore {
   setMyPromos = (items) => {
     this.MyPromos = JSON.stringify( items );
     
+    console.log( 'setMyPromos' )
+
     this.updateMyPromos = new Date();
     
     localStorage.setItem('MyPromos', JSON.stringify(items) );

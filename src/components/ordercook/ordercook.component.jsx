@@ -2,9 +2,6 @@ import React from 'react';
 
 import {Helmet} from "react-helmet";
 
-import { makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
-
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
@@ -24,50 +21,6 @@ import config from '../../stores/config';
 
 const queryString = require('query-string');
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#c03',
-    }
-  },
-});
-
-const useStyles = makeStyles({
-  formControl: {
-    //margin: theme.spacing(1),
-    width: '100%',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  tableCel: {
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  tableCelHead: {
-    textAlign: 'center',
-    padding: 15
-  },
-  customCel: {
-    backgroundColor: "#bababa",
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  timePicker: {
-    width: '100%'
-  }
-});
-
 function formatDate(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
@@ -82,7 +35,7 @@ function formatDate(date) {
   return [year, month, day].join('-');
 }
 
-class OrderCook_ extends React.Component {
+export class OrderCook extends React.Component {
   interval = null;
   
   constructor(props) {
@@ -95,7 +48,7 @@ class OrderCook_ extends React.Component {
       
       data: [],
       
-      selectedPoint: 1,
+      selectedPoint: '',
       selectedDate: formatDate(new Date()),
       
       points: [],
@@ -139,7 +92,7 @@ class OrderCook_ extends React.Component {
     }).then(res => res.json()).then(json => {
       
       if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
+        window.location.pathname = '/';
         return;
       }
       
@@ -278,19 +231,19 @@ class OrderCook_ extends React.Component {
               
                 { this.state.data.ready ?
                    this.state.data.ready.map( (item, key) =>
-                    <TableRow key={key} style={{ backgroundColor: 'green' }}>
-                      <TableCell style={{ color: 'inherit' }}>{item.id}</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{item.type_order}</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{item.status}</TableCell>
+                    <TableRow key={key} style={{ backgroundColor: 'green', color: '#fff', fontWeight: '700' }}>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.id}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_order}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.status}</TableCell>
                       
-                      <TableCell style={{ color: 'inherit' }}>{ parseInt(item['preorder']) == 1 ? item.date_time_preorder_ : item.date_time_order }</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{item.unix_start_stol_or}</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{ item.give_data_time_ }</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ parseInt(item['preorder']) == 1 ? item.date_time_preorder_ : item.date_time_order }</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.unix_start_stol_or}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.give_data_time_ }</TableCell>
                       
-                      <TableCell style={{ color: 'inherit' }}>{ item.close_date_time_order }</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{item.time_}</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{item.test_time}</TableCell>
-                      <TableCell style={{ color: 'inherit' }}>{ parseInt(item['preorder']) == 0 ? item['unix_time_to_client'] : '' }</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.close_date_time_order }</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.time_}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.test_time}</TableCell>
+                      <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ parseInt(item['preorder']) == 0 ? item['unix_time_to_client'] : '' }</TableCell>
                     </TableRow>
                   )
                     :
@@ -299,19 +252,19 @@ class OrderCook_ extends React.Component {
                 
                 { this.state.data.onstol ?
                  this.state.data.onstol.map( (item, key) =>
-                  <TableRow key={key} style={{ backgroundColor: 'yellow' }}>
-                    <TableCell style={{ color: 'inherit' }}>{item.id}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.type_order}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.status}</TableCell>
+                  <TableRow key={key} style={{ backgroundColor: 'yellow', color: '#000', fontWeight: '700' }}>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.id}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_order}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.status}</TableCell>
                     
-                    <TableCell style={{ color: 'inherit' }}>{ parseInt(item['preorder']) == 1 ? item.date_time_preorder_ : item.date_time_order }</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.unix_start_stol_or}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{ item.give_data_time_ }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ parseInt(item['preorder']) == 1 ? item.date_time_preorder_ : item.date_time_order }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.unix_start_stol_or}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.give_data_time_ }</TableCell>
                     
-                    <TableCell style={{ color: 'inherit' }}>{ item.close_date_time_order }</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.time_}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.test_time}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{ parseInt(item['preorder']) == 0 ? item['unix_time_to_client'] : '' }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.close_date_time_order }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.time_}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.test_time}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ parseInt(item['preorder']) == 0 ? item['unix_time_to_client'] : '' }</TableCell>
                   </TableRow>
                 )
                   :
@@ -320,19 +273,19 @@ class OrderCook_ extends React.Component {
                 
                 { this.state.data.prestol_new ?
                  this.state.data.prestol_new.map( (item, key) =>
-                  <TableRow key={key}>
-                    <TableCell style={{ color: 'inherit' }}>{item.id}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.type_order}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.status}</TableCell>
+                  <TableRow key={key} style={{ backgroundColor: '#fff', color: '#000', fontWeight: '500' }}>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.id}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.type_order}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.status}</TableCell>
                     
-                    <TableCell style={{ color: 'inherit' }}>{ parseInt(item['preorder']) == 1 ? item.date_time_preorder : item.date_time_order }</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.time_start_order}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{ item.give_data_time_ }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ parseInt(item['preorder']) == 1 ? item.date_time_preorder : item.date_time_order }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.time_start_order}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.give_data_time_ }</TableCell>
                     
-                    <TableCell style={{ color: 'inherit' }}>{ item.close_date_time_order }</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.time_}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{item.test_time}</TableCell>
-                    <TableCell style={{ color: 'inherit' }}>{ parseInt(item['preorder']) == 0 ? item['unix_time_to_client'] : '' }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ item.close_date_time_order }</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.time_}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{item.test_time}</TableCell>
+                    <TableCell style={{ color: 'inherit', fontWeight: 'inherit' }}>{ parseInt(item['preorder']) == 0 ? item['unix_time_to_client'] : '' }</TableCell>
                   </TableRow>
                 )
                   :
@@ -348,14 +301,4 @@ class OrderCook_ extends React.Component {
       </Grid>
     )
   }
-}
-
-export function OrderCook() {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <OrderCook_ classes={classes} />
-    </div>
-  );
 }

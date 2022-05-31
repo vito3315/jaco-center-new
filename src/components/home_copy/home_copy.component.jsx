@@ -3543,7 +3543,7 @@ class CreateOrder extends React.Component {
                         label="Промокод"
                         variant="outlined"
                         size="small"
-                        id="promo_name"
+                        id="promo_name" 
                         
                         style={{ minWidth: 200, marginRight: 8 }}
                         

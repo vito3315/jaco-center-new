@@ -2,9 +2,6 @@ import React from 'react';
 
 import {Helmet} from "react-helmet";
 
-import { makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
-
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
@@ -25,58 +22,13 @@ import config from '../../stores/config';
 
 const queryString = require('query-string');
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#c03',
-    }
-  },
-});
-
-const useStyles = makeStyles({
-  formControl: {
-    //margin: theme.spacing(1),
-    width: '100%',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  tableCel: {
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  tableCelHead: {
-    textAlign: 'center',
-    padding: 15
-  },
-  customCel: {
-    backgroundColor: "#bababa",
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  timePicker: {
-    width: '100%'
-  }
-});
-
-class CheckUserPromo_ extends React.Component {
+export class CheckUserPromo extends React.Component {
   interval = null;
   
   constructor(props) {
     super(props);
         
     this.state = {
-      classes: this.props.classes,
       cityList: [],
       spiner: false,
       
@@ -120,7 +72,7 @@ class CheckUserPromo_ extends React.Component {
     }).then(res => res.json()).then(json => {
       
       if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
+        window.location.pathname = '/';
         return;
       }
       
@@ -186,7 +138,7 @@ class CheckUserPromo_ extends React.Component {
         </Backdrop>
         
         <Grid item xs={3}>
-          <MyTextInput classes={this.state.classes} value={this.state.number} func={ this.changeNumber.bind(this) } label='Номер телефона' />
+          <MyTextInput value={this.state.number} func={ this.changeNumber.bind(this) } label='Номер телефона' />
         </Grid>
 
         <Grid item xs={3}>
@@ -227,14 +179,4 @@ class CheckUserPromo_ extends React.Component {
       </Grid>
     )
   }
-}
-
-export function CheckUserPromo() {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <CheckUserPromo_ classes={classes} />
-    </div>
-  );
 }
