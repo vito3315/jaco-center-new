@@ -127,7 +127,9 @@ export class Orders extends React.Component {
       typeDel: -1,
 
       number: '',
-      addr: ''
+      addr: '',
+
+      allItems: []
     };
   }
   
@@ -167,7 +169,9 @@ export class Orders extends React.Component {
       point_list: res.points,
       need_point_list: need_points,
       point_id: parseInt(need_points[0].id),
-      indexTab: 0
+      city_id: parseInt(res.cities[0].id),
+      indexTab: 0,
+      allItems: res.all_items
     })
     
     setTimeout( () => {
@@ -217,7 +221,7 @@ export class Orders extends React.Component {
     });
   }
    
-  changeCity(event){
+  async changeCity(event){
     this.setState({
       number: '',
       addr: ''
@@ -237,6 +241,13 @@ export class Orders extends React.Component {
     //setTimeout( () => {
       this.getOrders(parseInt(need_points[0].id), 0);
     //}, 300 )
+
+
+    let res = await this.getData('get_center_all');
+
+    this.setState({
+      allItems: res.all_items
+    })
   }
   
   changePoint(event, index){
@@ -290,7 +301,7 @@ export class Orders extends React.Component {
       order_id: order_id
     };
 
-    let res = await this.getData('get_center_order', data);
+    let res = await this.getData('get_order', data);
 
     console.log( res )
 
@@ -301,22 +312,26 @@ export class Orders extends React.Component {
   }
 
   closeOrder(){
-    this.setState({ modalDialogDel: true })
+    this.setState({ 
+      modalDialogDel: true,
+      textDel: '',
+      typeDel: -1,
+    })
   }
 
   async closeOrderTrue(){
     let deltype = this.state.radiogroup_options.find( (item) => item.id == this.state.typeDel );
         
-    if( deltype.id == '4' ){
+    /*if( deltype.id == '4' ){
       deltype.label = this.state.textDel;
-    }
+    }*/
     
     if (confirm("Отменить заказ #"+this.state.showOrder.order.order_id)) {
       let data = {
         typeCreate: 'center',
         order_id: this.state.showOrder.order.order_id,
         point_id: this.state.showOrder.order.point_id,
-        ans: deltype.label
+        ans: parseInt(deltype.id) == 4 ? this.state.textDel : deltype.label
       };
   
       let res = await this.getData('close_order_center', data);
@@ -476,6 +491,59 @@ export class Orders extends React.Component {
     })
   }
 
+  repeatOrder(){
+    let my_cart = [];
+    let all_items = this.state.allItems;
+    let item_info = null;
+    
+    localStorage.setItem('cityID', this.state.city_id)
+    
+    this.state.showOrder.order_items.map( (item) => {
+      item_info = all_items.find( (item_) => item_.id == item.item_id );
+      
+      if( item_info ){
+        let price = parseInt(item_info.price),
+            all_price = parseInt(item.count) * parseInt(item_info.price);
+        
+        my_cart.push({
+          name: item.name,
+          item_id: item.item_id,
+          count: item.count,
+          
+          one_price: price,
+          all_price: all_price
+        })
+      }
+    } )
+    
+    localStorage.setItem('clientNumber', this.state.showOrder.order.number)
+
+    let data = {
+        orderType: parseInt(this.state.showOrder.order.type_order_) - 1 == 0 ? 0 : 1,
+        orderAddr: this.state.showOrder.street.name,
+        orderPic: parseInt(this.state.showOrder.order.point_id),
+        orderComment: this.state.showOrder.order.comment,
+        
+        orderTimes: parseInt(this.state.showOrder.order.is_preorder),
+        orderPredDay: parseInt(this.state.showOrder.order.is_preorder) == 1 ? this.state.showOrder.order.date_time_pred.date : '',
+        orderPredTime: parseInt(this.state.showOrder.order.is_preorder) == 1 ? this.state.showOrder.order.date_time_pred.time : '',
+        
+        orderPay: parseInt(this.state.showOrder.order.type_order_) == 1 ? 'cash' : 'in',
+        orderSdacha: this.state.showOrder.order.sdacha,
+    };
+    
+    itemsStore.saveCartData(data);
+    
+    if( this.state.showOrder.order.promo_name && this.state.showOrder.order.promo_name != '' ){
+      itemsStore.setPromo( this.state.showOrder.promo_info, this.state.showOrder.order.promo_name )
+    }
+    itemsStore.setItems(my_cart)
+    
+    setTimeout(()=>{
+      window.location.pathname = '/';
+    }, 500)
+  }
+
   render(){
     return (
       <>
@@ -568,7 +636,7 @@ export class Orders extends React.Component {
                 { this.state.showOrder.order.check_pos_drive == null || !this.state.showOrder.order.check_pos_drive ? null :
                   <Grid item xs={12}>
                     <b>Довоз оформлен: </b>
-                    <span>{this.state.showOrder.order.comment}</span>
+                    <span>{this.state.showOrder.order.check_pos_drive.comment}</span>
                   </Grid>
                 }
 
@@ -620,6 +688,16 @@ export class Orders extends React.Component {
               <DialogActions style={{ justifyContent: 'flex-end', padding: '15px 0px' }}>
                 <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorderOther" style={{ marginRight: 24 }}>
                   <Button variant="contained" className="BtnCardMain CardInCardItem" onClick={ this.closeOrder.bind(this) }>Отменить заказ</Button>
+                </ButtonGroup>
+              </DialogActions>
+                :
+              null
+            }
+
+            { parseInt( this.state.showOrder.order.is_delete ) == 1 || parseInt( this.state.showOrder.order.status_order ) == 6 ? 
+              <DialogActions style={{ justifyContent: 'flex-end', padding: '15px 0px' }}>
+                <ButtonGroup disableElevation={true} disableRipple={true} variant="contained" className="BtnBorderOther" style={{ marginRight: 24 }}>
+                  <Button variant="contained" className="BtnCardMain CardInCardItem" onClick={ this.repeatOrder.bind(this, this.state.showOrder.order.order_id, this.state.showOrder.order.point_id) }>Повторить заказ</Button>
                 </ButtonGroup>
               </DialogActions>
                 :

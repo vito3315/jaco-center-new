@@ -555,6 +555,14 @@ class CreateOrder2 extends React.Component {
     
     document.title = "Оформление нового заказа";
 
+    if( localStorage.getItem('cityID') ){
+      this.setState({
+        cityId: localStorage.getItem('cityID')
+      })
+    }else{
+      localStorage.setItem('cityID', 1);
+    }
+
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin(); 
   
@@ -688,7 +696,7 @@ class CreateOrder2 extends React.Component {
         pd: cartData.orderAddr && cartData.orderAddr.pd ? cartData.orderAddr.pd : '',
         et: cartData.orderAddr && cartData.orderAddr.et ? cartData.orderAddr.et : '',
         kv: cartData.orderAddr && cartData.orderAddr.kv ? cartData.orderAddr.kv : '',
-        newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 1 ? false : true,
+        newAddrDom: cartData.orderAddr && parseInt(cartData.orderAddr.dom_true) == 0 ? false : true,
 
         activeTab: 0
       })
@@ -1051,7 +1059,7 @@ class CreateOrder2 extends React.Component {
       pd: addr.pd,
       et: addr.et,
       kv: addr.kv,
-      newAddrDom: parseInt(addr.fake_dom) == 1 ? false : true
+      newAddrDom: parseInt(addr.fake_dom) == 0 ? false : true
     })
     
     this.setState({
@@ -1201,6 +1209,8 @@ class CreateOrder2 extends React.Component {
     this.setState({
       cityId: event.target.value
     })
+
+    localStorage.setItem('cityID', event.target.value)
 
     setTimeout( ()=>{
       this.start();
