@@ -1182,7 +1182,7 @@ class CreateOrder2 extends React.Component {
               kv: this.state.kv,
               pd: this.state.pd,
               et: this.state.et,
-              dom_true: this.state.newAddrDom ? 0 : 1,
+              dom_true: this.state.newAddrDom ? 1 : 0,
               free_drive: addrInfo.free_drive ? addrInfo.free_drive : 0,
               sum_div: addrInfo.sum_div ? addrInfo.sum_div : 0,
               point_id: addrInfo.point_id ? addrInfo.point_id : 0,
@@ -1863,7 +1863,7 @@ class CreateOrder2 extends React.Component {
                 <Typography variant="h5" component="span" className="orderCheckText">Самовывоз: {this.state.newOrder.point_name}</Typography>
               }
               { this.state.newOrder.typeOrder == 'Доставка' ?
-                this.state.newOrder.addr && parseInt(this.state.newOrder.addr.dom_true) == 1 ?
+                this.state.newOrder.addr && parseInt(this.state.newOrder.addr.dom_true) == 0 ?
                   <Typography variant="h5" component="span" className="orderCheckText">Домофон не работает</Typography>
                     :
                   null
