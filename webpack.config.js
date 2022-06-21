@@ -55,7 +55,7 @@ module.exports = {
                         limit: 25000
                     }
                 }
-            }
+            },
         ]
     },
 

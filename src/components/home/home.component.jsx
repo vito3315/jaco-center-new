@@ -247,8 +247,6 @@ class BlockTableItem extends React.Component {
         
         let this_item = my_cart.find( (item) => item.item_id == this.state.item.item_id );
         
-        console.log( this_item )
-
         this.setState({
           item: this_item
         })
@@ -528,6 +526,7 @@ class CreateOrder2 extends React.Component {
   }
   
   componentWillUnmount(){
+    console.log( 'umount' )
     this._isMounted = false;
     clearInterval(this.interval)
   }
@@ -552,7 +551,8 @@ class CreateOrder2 extends React.Component {
   
   componentDidMount = () => {
     this._isMounted = true;
-    
+    console.log( 'mount' )
+
     document.title = "Оформление нового заказа";
 
     if( localStorage.getItem('cityID') ){
@@ -570,6 +570,9 @@ class CreateOrder2 extends React.Component {
 
     autorun(() => {
       if( this._isMounted ){
+
+        console.log( 'is mounted autorun' )
+
         let allPrice = itemsStore.getAllPrice();
         let sumDiv = itemsStore.getSumDiv();
 
@@ -1333,19 +1336,19 @@ class CreateOrder2 extends React.Component {
       if( promo && promo.length > 0 ){
         let arr = itemsStore.getMyPromos();
         
-        let check = arr.find( (item) => item.promo == promo );
-
-        console.log( check, arr, promo )
+        let check = arr.find( (item) => item.promo.toLowerCase() == promo.toLowerCase() );
 
         if( !check ){
+          console.log( 'promo add' )
           arr.push( {
             date: moment(new Date()).format("YYYY-MM-DD"),
-            promo: promo,
-            name: promo,
+            promo: promo.toLowerCase(),
+            name: promo.toLowerCase(),
             count: 1
           } );
         }else{
-          let key = arr.findIndex( (item) => item.promo == promo );
+          console.log( 'promo change' )
+          let key = arr.findIndex( (item) => item.promo.toLowerCase() == promo.toLowerCase() );
 
           arr[ key ]['count'] ++;
         }

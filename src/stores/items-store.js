@@ -104,7 +104,7 @@ class ItemsStore {
     return this.cityName;
   };
 
-  setAllPrice = (price) => {
+  setAllPrice(price){
     this.AllPrice = price;
   };
   
@@ -588,7 +588,7 @@ class ItemsStore {
     return this.allItemsCat.length == 0 ? [] : JSON.parse(this.allItemsCat, true);
   };
 
-  setItems = (items) => {
+  setItems(items){
     let tmp = 0,
         allPrice = 0;
     
@@ -596,16 +596,23 @@ class ItemsStore {
     let cart_new_promo = this.getItemsPromo();
         
     if( !promo ){
-      allPrice = items.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+
+      try {
+        allPrice = items.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
       
-      tmp = 0;
-          
-      allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
-      
-      this.setAllPrice(allPrice);
+        tmp = 0;
+            
+        allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+        
+        this.setAllPrice(allPrice);
+      } catch(err) {
+        alert('При подсчете суммы произошла ошибка, попробуй перезагрузить страницу. ', err)
+      }
+
     }
     
     this.items = JSON.stringify(items);
+
     if (typeof window !== 'undefined') {
       let my_cart = items.filter( (item) => item.count > 0 );
       my_cart = JSON.stringify(my_cart);
