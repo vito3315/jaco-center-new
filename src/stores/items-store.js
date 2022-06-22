@@ -173,6 +173,8 @@ class ItemsStore {
   };
   
   getPromo(){
+    console.log( this.promo )
+
     return JSON.parse(this.promo, true);
     //localStorage.setItem('my_cart', this.items);
   };

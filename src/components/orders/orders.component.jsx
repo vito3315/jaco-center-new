@@ -498,6 +498,12 @@ export class Orders extends React.Component {
     
     localStorage.setItem('cityID', this.state.city_id)
     
+    if( this.state.showOrder.order.promo_name && this.state.showOrder.order.promo_name != '' ){
+      itemsStore.setPromo( JSON.stringify(this.state.showOrder.promo_info), this.state.showOrder.order.promo_name );
+
+      console.log( this.state.showOrder.promo_info, this.state.showOrder.order.promo_name )
+    }
+
     this.state.showOrder.order_items.map( (item) => {
       item_info = all_items.find( (item_) => item_.id == item.item_id );
       
@@ -534,9 +540,8 @@ export class Orders extends React.Component {
     
     itemsStore.saveCartData(data);
     
-    if( this.state.showOrder.order.promo_name && this.state.showOrder.order.promo_name != '' ){
-      itemsStore.setPromo( this.state.showOrder.promo_info, this.state.showOrder.order.promo_name )
-    }
+    
+
     itemsStore.setItems(my_cart)
     
     setTimeout(()=>{
