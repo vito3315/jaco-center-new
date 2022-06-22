@@ -153,8 +153,6 @@ class ItemsStore {
       })
   }).then(res => res.json()).then(json => {
     
-      console.log( json )
-    
       itemsStore.setPromo( JSON.stringify(json), promoName );
       let check_promo = itemsStore.checkPromo();
               
@@ -173,8 +171,6 @@ class ItemsStore {
   };
   
   getPromo(){
-    console.log( this.promo )
-
     return JSON.parse(this.promo, true);
     //localStorage.setItem('my_cart', this.items);
   };

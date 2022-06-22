@@ -500,8 +500,6 @@ export class Orders extends React.Component {
     
     if( this.state.showOrder.order.promo_name && this.state.showOrder.order.promo_name != '' ){
       itemsStore.setPromo( JSON.stringify(this.state.showOrder.promo_info), this.state.showOrder.order.promo_name );
-
-      console.log( this.state.showOrder.promo_info, this.state.showOrder.order.promo_name )
     }
 
     this.state.showOrder.order_items.map( (item) => {
