@@ -402,7 +402,7 @@ class BlockTable extends React.Component {
   render(){
     return (
       <Paper style={{ width: '100%' }}>
-        <TableContainer style={{ maxHeight: 350 }}>
+        <TableContainer style={{ maxHeight: 500 }}>
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
@@ -624,11 +624,21 @@ class CreateOrder2 extends React.Component {
           
           myPromosNew = myPromosNew.filter( (item) => item.count > 1 );
           
-          console.log( 'MyPromos 1', myPromosNew )
+          function findUnique(arr, predicate) {
+            var found = {};
+            arr.forEach(d => {
+              found[predicate(d)] = d;
+            });
+            return Object.keys(found).map(key => found[key]); 
+          }
+  
+          var result = findUnique(myPromosNew, d => d.name);
+
+          console.log( 'MyPromos 1', result )
 
           this.setState({
             updateMyPromos: itemsStore.updateMyPromos,
-            MyPromos: myPromosNew
+            MyPromos: result
           })
         }
 
@@ -1353,12 +1363,22 @@ class CreateOrder2 extends React.Component {
           arr[ key ]['count'] ++;
         }
           
-        itemsStore.setMyPromos( arr );
+        function findUnique(arr, predicate) {
+          var found = {};
+          arr.forEach(d => {
+            found[predicate(d)] = d;
+          });
+          return Object.keys(found).map(key => found[key]); 
+        }
 
-        console.log( 'MyPromos 2', arr )
+        var result = findUnique(arr, d => d.name);
+
+        itemsStore.setMyPromos( result );
+
+        console.log( 'MyPromos 2', result )
 
         this.setState({
-          MyPromos: arr
+          MyPromos: result
         })
         
       }
@@ -1605,12 +1625,23 @@ class CreateOrder2 extends React.Component {
             count: 1
           } );
           
-          itemsStore.setMyPromos( arr );
+          function findUnique(arr, predicate) {
+            var found = {};
+            arr.forEach(d => {
+              found[predicate(d)] = d;
+            });
+            return Object.keys(found).map(key => found[key]); 
+          }
+  
+          var result = findUnique(arr, d => d.name);
 
-          console.log( 'MyPromos 3', arr )
+
+          itemsStore.setMyPromos( result );
+
+          console.log( 'MyPromos 3', result )
 
           this.setState({
-            MyPromos: arr
+            MyPromos: result
           })
         }
         
@@ -1736,7 +1767,7 @@ class CreateOrder2 extends React.Component {
             <Grid container spacing={3}>
 
               <Grid item xs={2}>
-                <MySelect classes={this.state.classes} data={this.state.cityList} value={this.state.cityId} func={ this.changeCity.bind(this) } label='Город' />
+                <MySelect classes={this.state.classes} is_none={false} data={this.state.cityList} value={this.state.cityId} func={ this.changeCity.bind(this) } label='Город' />
               </Grid>
 
               <Grid item xs={2}>

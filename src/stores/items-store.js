@@ -604,11 +604,12 @@ class ItemsStore {
             
         allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
         
-        this.setAllPrice(allPrice);
+        
       } catch(err) {
         alert('При подсчете суммы произошла ошибка, попробуй перезагрузить страницу. ', err)
       }
 
+      this.setAllPrice(allPrice);
     }
     
     this.items = JSON.stringify(items);
