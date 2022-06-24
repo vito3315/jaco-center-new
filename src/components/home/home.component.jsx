@@ -566,7 +566,10 @@ class CreateOrder2 extends React.Component {
     this.interval = setInterval(() => this.checkLogin(), 1000*60*60);
     this.checkLogin(); 
   
-    this.start();
+    setTimeout( () => {
+      this.start();
+    }, 100 )
+    
 
     autorun(() => {
       if( this._isMounted ){
