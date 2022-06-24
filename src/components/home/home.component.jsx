@@ -593,6 +593,7 @@ class CreateOrder2 extends React.Component {
             if( cartData && cartData.orderTimes && parseInt(cartData.orderTimes) == 1 ){
               this.loadTimePred();
             }else{
+              console.log( 'load 1' )
               this.loadTimeWait();
             }
           }, 100 )
@@ -788,6 +789,7 @@ class CreateOrder2 extends React.Component {
         if( parseInt(cartData.orderTimes) == 1 ){
           this.loadTimePred();
         }else{
+          console.log( 'load 2' )
           this.loadTimeWait();
         }
       }
@@ -795,6 +797,7 @@ class CreateOrder2 extends React.Component {
       if( parseInt(cartData.orderTimes) == 1 ){
         this.loadTimePred();
       }else{
+        console.log( 'load 3' )
         this.loadTimeWait();
       }
     }
@@ -905,6 +908,7 @@ class CreateOrder2 extends React.Component {
     setTimeout( () => {
 
       if( parseInt(this.state.typeTime) == 0 ){
+        console.log( 'load 4' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -937,6 +941,7 @@ class CreateOrder2 extends React.Component {
       }
       
       if( parseInt(this.state.typeTime) == 0 ){
+        console.log( 'load 5' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -1008,11 +1013,15 @@ class CreateOrder2 extends React.Component {
           this.saveDataOther();
         //}, 300 )
 
-        if( parseInt(this.state.typeTime) == 0 ){
-          this.loadTimeWait();
-        }else{
-          this.loadTimePred();
-        }
+        setTimeout( () => {
+          if( parseInt(this.state.typeTime) == 0 ){
+            console.log( 'load 6' )
+            this.loadTimeWait();
+          }else{
+            this.loadTimePred();
+          }
+        }, 300 )
+        
 
         if( this.state.promo_name.length > 0 ){
           this.checkPromo( {target: {value: this.state.promo_name}} )
@@ -1057,6 +1066,7 @@ class CreateOrder2 extends React.Component {
       this.saveDataOther();
 
       if( parseInt(this.state.typeTime) == 0 ){
+        console.log( 'load 7' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -1108,6 +1118,7 @@ class CreateOrder2 extends React.Component {
       this.saveDataOther();
 
       if( parseInt(this.state.typeTime) == 0 ){
+        console.log( 'load 8' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -1475,6 +1486,7 @@ class CreateOrder2 extends React.Component {
     this.changeDataTime('typeTime', {target: {value: newValue}})
     
     if( parseInt(newValue) == 0 ){
+      console.log( 'load 9' )
       this.loadTimeWait();
     }else{
       this.loadTimePred();
@@ -1520,11 +1532,11 @@ class CreateOrder2 extends React.Component {
   async loadTimeWait(){
     let items = JSON.stringify( itemsStore.getItems() );
 
-    if( items == this.loadTimeCheck ){
+    /*if( items == this.loadTimeCheck ){
       return ;
     }
 
-    this.loadTimeCheck = items;
+    this.loadTimeCheck = items;*/
 
     let cartData = itemsStore.getCartData();
     
