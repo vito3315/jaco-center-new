@@ -585,13 +585,16 @@ class CreateOrder2 extends React.Component {
             AllPrice: allPrice
           });
 
-          let cartData = itemsStore.getCartData();
+          setTimeout( () => {
+            let cartData = itemsStore.getCartData();
 
-          if( cartData && cartData.orderTimes && parseInt(cartData.orderTimes) == 1 ){
-            this.loadTimePred();
-          }else{
-            this.loadTimeWait();
-          }
+            if( cartData && cartData.orderTimes && parseInt(cartData.orderTimes) == 1 ){
+              this.loadTimePred();
+            }else{
+              this.loadTimeWait();
+            }
+          }, 100 )
+          
         }
 
         
