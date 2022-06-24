@@ -440,6 +440,8 @@ class CreateOrder2 extends React.Component {
   startOrderInterval = 300;
   startOrderIntervalTimer = null;
 
+  loadTimeCheck = null;
+
   constructor(props) {
     super(props);
     
@@ -1516,6 +1518,14 @@ class CreateOrder2 extends React.Component {
   }
   
   async loadTimeWait(){
+    let items = JSON.stringify( itemsStore.getItems() );
+
+    if( items == this.loadTimeCheck ){
+      return ;
+    }
+
+    this.loadTimeCheck = items;
+
     let cartData = itemsStore.getCartData();
     
     let data = {
