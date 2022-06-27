@@ -1610,10 +1610,74 @@ class CreateOrder2 extends React.Component {
           
           this.clickOrderStart = false;
           
+          this.setState({ 
+            is_load: false
+          })
+
           return;
         }
       }
       
+      if( parseInt(cartData.orderType) == 0){
+        console.log( cartData.orderAddr );
+
+        if( cartData.orderAddr.et.length == 0 ){
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: 'Не указан этаж'
+            },
+            errorOpen: true,
+            spiner: false
+          })
+          
+          this.clickOrderStart = false;
+          
+          this.setState({ 
+            is_load: false
+          })
+
+          return;
+        }
+        if( cartData.orderAddr.pd.length == 0 ){
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: 'Не указан подъезд'
+            },
+            errorOpen: true,
+            spiner: false
+          })
+          
+          this.clickOrderStart = false;
+          
+          this.setState({ 
+            is_load: false
+          })
+
+          return;
+        }
+        if( cartData.orderAddr.kv.length == 0 ){
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: 'Не указана квартира'
+            },
+            errorOpen: true,
+            spiner: false
+          })
+          
+          this.clickOrderStart = false;
+          
+          this.setState({ 
+            is_load: false
+          })
+
+          return;
+        }
+      }
+
+
       let promo_name = this.state.promo_name;
       
       let data = {
@@ -1926,9 +1990,9 @@ class CreateOrder2 extends React.Component {
               }
               { this.state.newOrder.typeOrder == 'Доставка' ?
                 this.state.newOrder.addr && parseInt(this.state.newOrder.addr.dom_true) == 0 ?
-                  <Typography variant="h5" component="span" className="orderCheckText">Домофон не работает</Typography>
+                  <Typography variant="h5" component="span" className="orderCheckText" style={{ color: 'red', fontWeight: 900 }}>Домофон не работает</Typography>
                     :
-                  null
+                  <Typography variant="h5" component="span" className="orderCheckText" style={{ color: 'green', fontWeight: 900 }}>Домофон работает</Typography>
                   :
                 null
               }
