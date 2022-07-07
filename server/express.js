@@ -29,10 +29,6 @@ app.use( '*', async ( req, res ) => {
     // get matched route
     const matchRoute = routes.find( route => matchPath( req.originalUrl, route ) );
 
-
-    console.log( matchRoute )
-
-
     if( matchRoute ){
         // fetch data of the matched component
         /*let componentData = null;
@@ -46,7 +42,7 @@ app.use( '*', async ( req, res ) => {
         } );
 
         // get HTML string from the `App` component
-        let appHTML = ReactDOMServer.renderToString(
+        let appHTML = ReactDOMServer.renderToReadableStream(
             <StaticRouter location={ req.originalUrl }>
                 <App />
             </StaticRouter>
