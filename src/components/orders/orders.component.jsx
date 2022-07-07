@@ -161,7 +161,7 @@ export class Orders extends React.Component {
     this.checkLogin();
 
     let res = await this.getData('get_center_all');
-    
+
     let need_points = res.points.filter( (item, key) => parseInt(item.city_id) == parseInt(res.cities[0].id) );
 
     this.setState({

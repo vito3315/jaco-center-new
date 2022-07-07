@@ -402,7 +402,7 @@ class BlockTable extends React.Component {
   render(){
     return (
       <Paper style={{ width: '100%' }}>
-        <TableContainer style={{ maxHeight: 500 }}>
+        <TableContainer style={{ maxHeight: 420, overflow: 'auto' }}>
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
@@ -448,6 +448,8 @@ class CreateOrder2 extends React.Component {
     this.state = {
       classes: this.props.classes,
       is_load: false,
+
+      check_home_true: true,
 
       cityId: 1,
       sumDiv: 0,
@@ -581,7 +583,7 @@ class CreateOrder2 extends React.Component {
         let allPrice = itemsStore.getAllPrice();
         let sumDiv = itemsStore.getSumDiv();
 
-        if( parseInt(allPrice) != parseInt(this.state.allPrice) ){
+        if( parseInt(allPrice) != parseInt(this.state.allPrice) || parseInt(sumDiv) != parseInt(this.state.sumDiv) ){
           this.setState({
             sumDiv: sumDiv,
             AllPrice: allPrice
@@ -650,11 +652,6 @@ class CreateOrder2 extends React.Component {
             MyPromos: result
           })
         }
-
-
-
-
-
       }
     })
   }
@@ -952,6 +949,10 @@ class CreateOrder2 extends React.Component {
   }
 
   async checkNewAddr(){
+    this.setState({
+      check_home_true: true
+    })
+
     let street = document.querySelector('#newAddrStreet').value;
     
     if( street.length > 0 && this.state.newAddrHome.length > 0 ){
@@ -964,15 +965,18 @@ class CreateOrder2 extends React.Component {
   
       let res = await this.getData('check_addr', data);
 
+      console.log( 'checkNewAddr', res )
+
       if( parseInt(res.count) == 0 ){
         this.setState({
           openErr: true,
-          msgText: 'Адрес не найден'
+          msgText: 'Адрес не найден, или не входит в зону доставки'
         })
 
         this.setState({
           newAddrInfo: null,
-          point_id: 0
+          point_id: 0,
+          check_home_true: false
         })
   
         setTimeout( () => {
@@ -1428,7 +1432,11 @@ class CreateOrder2 extends React.Component {
       orderPay: '',
       orderSdacha: '',
       
-      dateTime: new Date()
+      dateTime: new Date(),
+
+      date: '',//дата предзаказа
+      time: '',//дата предзаказа
+      typeTime: 0,//0 - быстрее / 1 - пред
     };
     
     itemsStore.dateTimeDel = new Date();
@@ -1470,7 +1478,11 @@ class CreateOrder2 extends React.Component {
       checkClear: false,
 
       clientAddr: [],
-      typeTime: 0
+      typeTime: 0,
+
+      date: '',//дата предзаказа
+      time: '',//дата предзаказа
+      typeTime: 0,//0 - быстрее / 1 - пред
     })
     
     itemsStore.setSumDiv(0);
@@ -1586,6 +1598,8 @@ class CreateOrder2 extends React.Component {
       let new_cart = [];
       let cartItems = itemsStore.getItems();
       
+      let NewAllPrice = 0;
+
       cartItems.forEach( (item) => {
         if( item.count > 0 ){
           new_cart.push({
@@ -1594,9 +1608,24 @@ class CreateOrder2 extends React.Component {
             price: item.all_price,
             id: item.item_id,
           })
+
+          NewAllPrice += item.all_price
         }
       })
         
+      if( parseInt(this.state.AllPrice) == 0 ){
+
+        if( itemsStore.getAllPrice == 0 ){
+          this.setState({
+            AllPrice: NewAllPrice
+          })
+        }else{
+          this.setState({
+            AllPrice: itemsStore.getAllPrice
+          })
+        }
+      }
+
       if( parseInt( cartData.orderTimes ) !== 0 ){
         if( cartData.orderPredDay.length == 0 && cartData.orderPredTime.length == 0 ){
           this.setState({
@@ -1619,6 +1648,26 @@ class CreateOrder2 extends React.Component {
       }
       
       if( parseInt(cartData.orderType) == 0){
+
+        if( this.state.check_home_true === false ){
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: 'Адрес не найден, или не входит в зону доставки'
+            },
+            errorOpen: true,
+            spiner: false
+          })
+          
+          this.clickOrderStart = false;
+          
+          this.setState({ 
+            is_load: false
+          })
+
+          return;
+        }
+
         console.log( cartData.orderAddr );
 
         if( cartData.orderAddr.et.length == 0 ){

@@ -551,6 +551,7 @@ class ItemsStore {
           allPrice = 0;
           
           allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+
           itemsStore.setAllPrice(allPrice);
         }
       }
@@ -607,7 +608,9 @@ class ItemsStore {
         alert('При подсчете суммы произошла ошибка, попробуй перезагрузить страницу. ', err)
       }
 
-      this.setAllPrice(allPrice);
+      setTimeout( () => {
+        this.setAllPrice(allPrice);
+      }, 50 )
     }
     
     this.items = JSON.stringify(items);
