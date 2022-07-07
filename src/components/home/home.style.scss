@@ -107,3 +107,31 @@ table form > div.MuiTextField-root{
   margin: 0!important;
   padding: 0!important;
 }
+
+.root2{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  & > svg, form{
+    border-right: 0px!important
+  }
+}
+.root3{
+  & > *{
+    margin: 8px;
+    width: 50px;
+  }
+  & .MuiOutlinedInput-input{
+    padding: 5px 10px;
+  }
+}
+.paperCat{
+  padding: 0px;
+  text-align: center;
+  color: #000;
+  position: relative;
+  justify-content: space-between;
+  height: calc(100% - 15px);
+  cursor: pointer;
+}

@@ -1,8 +1,5 @@
 import * as React from "react"
 
-import { makeStyles, styled } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
-
 import moment from "moment";
 
 import {Helmet} from "react-helmet";
@@ -29,7 +26,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 
 import TextField from '@mui/material/TextField';
 
@@ -52,7 +49,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import Dialog from '@mui/material/Dialog';
-import Divider from '@mui/material/Divider';
 
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import CloseIcon from '@mui/icons-material/Close';
@@ -61,121 +57,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import AddIcon from '@mui/icons-material/Add';
 
 import Alert from '@mui/material/Alert';
-//import et from "date-fns/esm/locale/et/index.js";
 
 const queryString = require('query-string');
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#c03',
-    },
-    secondary: {
-      main: '#6ab04c',
-    }
-  },
-});
-
-const useStyles = makeStyles({
-  formControl: {
-    //margin: theme.spacing(1),
-    width: '100%',
-  },
-  tableCel: {
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  tableCelHead: {
-    textAlign: 'center',
-    padding: 15
-  },
-  customCel: {
-    backgroundColor: "#bababa",
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  timePicker: {
-    width: '100%'
-  },
-  root2: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    '& > svg, form': {
-      borderRight: '0px!important'
-    }
-  },
-  root3: {
-    '& > *': {
-      margin: theme.spacing(1),
-      width: 50,
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '5px 10px'
-    }
-  },
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-  root: {
-    flexGrow: 1,
-    //margin: -8
-  },
-  title: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  paperCat: {
-    padding: 0,
-    textAlign: 'center',
-    color: '#000',
-    position: 'relative',
-    justifyContent: 'space-between',
-    height: 'calc(100% - 15px)',
-    cursor: 'pointer',
-    '& svg': {
-      color: theme.palette.text.secondary
-    }
-  },
-  paperCatInfo: {
-    position: 'absolute',
-    top: 0,
-    right: 0 
-  },
-  
-  size1: {
-    //fontSize: '0.8rem'
-  },
-  scrollTable: {
-    maxHeight: 250,
-    overflow: 'auto',
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-});
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -215,7 +98,6 @@ class BlockTableItem extends React.Component {
     super(props);
     
     this.state = {
-      classes: this.props.classes,
       item: this.props.item,
       type: this.props.type,
     };
@@ -284,9 +166,9 @@ class BlockTableItem extends React.Component {
           { this.state.type == 'promo' ?
             <Typography component="span" style={{ padding: '11px 0', display: 'block', fontSize: '1rem' }}>{this.state.item.count}</Typography>
               :
-            <div className={this.state.classes.root2}>
+            <div className={'root2'}>
               <RemoveIcon onClick={ this.minus.bind(this) } style={{ cursor: 'pointer' }} />
-              <form className={this.state.classes.root3} noValidate autoComplete="off">
+              <form className={'root3'} noValidate autoComplete="off">
                 <TextField variant="outlined" onChange={ this.changeCount.bind(this) } value={ this.state.item.count } />
               </form>
               <AddIcon onClick={ this.add.bind(this) } style={{ cursor: 'pointer' }} />
@@ -312,18 +194,6 @@ class BlockTableItem extends React.Component {
   }
 }
 
-const HtmlTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}));
-
 class BlockTable extends React.Component {
   _isMounted = false;
 
@@ -331,8 +201,6 @@ class BlockTable extends React.Component {
     super(props);
     
     this.state = {
-      classes: this.props.classes,
-      
       main_items: [],
       dop_items: [],
       promo_items: [],
@@ -415,15 +283,15 @@ class BlockTable extends React.Component {
             </TableHead>
             <TableBody>
               { this.state.main_items.map( (item, key) =>
-                <BlockTableItem key={key} item={item} classes={this.state.classes} type="main" />
+                <BlockTableItem key={key} item={item} type="main" />
               )}
               
               { this.state.dop_items.map( (item, key) =>
-                <BlockTableItem key={key} item={item} classes={this.state.classes} type="dop" />
+                <BlockTableItem key={key} item={item} type="dop" />
               )}
               
               { this.state.promo_items.map( (item, key) =>
-                <BlockTableItem key={key} item={item} classes={this.state.classes} type="promo" />
+                <BlockTableItem key={key} item={item} type="promo" />
               )}
             </TableBody>
           </Table>
@@ -446,7 +314,6 @@ class CreateOrder2 extends React.Component {
     super(props);
     
     this.state = {
-      classes: this.props.classes,
       is_load: false,
 
       check_home_true: true,
@@ -1908,14 +1775,13 @@ class CreateOrder2 extends React.Component {
             <Grid container spacing={3}>
 
               <Grid item xs={2}>
-                <MySelect classes={this.state.classes} is_none={false} data={this.state.cityList} value={this.state.cityId} func={ this.changeCity.bind(this) } label='Город' />
+                <MySelect is_none={false} data={this.state.cityList} value={this.state.cityId} func={ this.changeCity.bind(this) } label='Город' />
               </Grid>
 
               <Grid item xs={2}>
                 <MyAutocomplite 
                   id="promoName" 
                   onBlur={ this.checkPromo.bind(this) } 
-                  classes={this.state.classes} 
                   freeSolo={true} 
                   type={'MyPromos'}
                   data={this.state.MyPromos}
@@ -1932,16 +1798,15 @@ class CreateOrder2 extends React.Component {
                   { this.state.orderPromoText.length == 0 ?
                     <Button style={{ height: 40, backgroundColor: '#bababa' }}> <QuestionMarkIcon /> </Button>
                       :
-                    <HtmlTooltip
+                    <Tooltip 
                       placement="bottom"
                       title={
                         <React.Fragment>
-                          <Typography color="inherit" className={this.state.classes.size1}>{this.state.orderPromoText}</Typography>
+                          <Typography color="inherit">{this.state.orderPromoText}</Typography>
                         </React.Fragment>
-                      }
-                    >
+                      }>
                       <Button variant="contained" color="primary" style={{ height: 40, backgroundColor: this.state.promoST === false && this.state.orderPromoText.length == 0 ? '#bababa' : this.state.promoST === false && this.state.orderPromoText.length > 0 ? 'red' : 'green' }}> <QuestionMarkIcon /> </Button>
-                    </HtmlTooltip>
+                    </Tooltip>
                   }
                   
                   <Button style={{ height: 40 }} onClick={ () => { this.setState({ checkClear: true }) } }> <CloseIcon /> </Button>
@@ -1949,7 +1814,7 @@ class CreateOrder2 extends React.Component {
               </Grid>
 
               <Grid item xs={2}>
-                <MyTextInput onBlur={ this.saveNumber.bind(this) } classes={this.state.classes} value={ this.state.number } func={ this.changeNumber.bind(this) } placeholder={"8 (999) 999-99-99"} label='Телефон'/>
+                <MyTextInput onBlur={ this.saveNumber.bind(this) } value={ this.state.number } func={ this.changeNumber.bind(this) } placeholder={"8 (999) 999-99-99"} label='Телефон'/>
               </Grid>
 
               <Grid item xs={1}>
@@ -2149,7 +2014,7 @@ class CreateOrder2 extends React.Component {
         
 
         <Grid item xs={8} style={{ paddingTop: 5 }}>
-          <BlockTable classes={this.state.classes} />
+          <BlockTable />
         </Grid>
 
         <Grid item xs={4} style={{ paddingTop: 5 }}>
@@ -2159,20 +2024,20 @@ class CreateOrder2 extends React.Component {
                 { /* адрес доставки */ }
                 
                 <Grid item xs={8}>
-                  <MyAutocomplite id="newAddrStreet" onBlur={this.checkNewAddr.bind(this)} classes={this.state.classes} freeSolo={true} data={this.state.all_addr} value={this.state.newAddrStreet} func={ this.cheangeAddrCustom.bind(this) } multiple={false} label='Улица' />
+                  <MyAutocomplite id="newAddrStreet" onBlur={this.checkNewAddr.bind(this)} freeSolo={true} data={this.state.all_addr} value={this.state.newAddrStreet} func={ this.cheangeAddrCustom.bind(this) } multiple={false} label='Улица' />
                 </Grid>
                 <Grid item xs={4}>
-                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} classes={this.state.classes} value={this.state.newAddrHome} func={ event => this.setState({ newAddrHome: event.target.value }) } label='Дом'/>
+                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} value={this.state.newAddrHome} func={ event => this.setState({ newAddrHome: event.target.value }) } label='Дом'/>
                 </Grid>
 
                 <Grid item xs={4}>
-                  <MyTextInput classes={this.state.classes} value={this.state.pd} func={ this.changeDataOther.bind(this, 'pd') } label='Подъезд'/>
+                  <MyTextInput value={this.state.pd} func={ this.changeDataOther.bind(this, 'pd') } label='Подъезд'/>
                 </Grid>
                 <Grid item xs={4}>
-                  <MyTextInput classes={this.state.classes} value={this.state.et} func={ this.changeDataOther.bind(this, 'et') } label='Этаж'/>
+                  <MyTextInput value={this.state.et} func={ this.changeDataOther.bind(this, 'et') } label='Этаж'/>
                 </Grid>
                 <Grid item xs={4}>
-                  <MyTextInput classes={this.state.classes} value={this.state.kv} func={ this.changeDataOther.bind(this, 'kv') } label='Квартира'/>
+                  <MyTextInput value={this.state.kv} func={ this.changeDataOther.bind(this, 'kv') } label='Квартира'/>
                 </Grid>
 
                 <Grid item xs={12}>
@@ -2230,10 +2095,10 @@ class CreateOrder2 extends React.Component {
           { (this.state.activeTab == 0 || this.state.activeTab == 2) && this.state.all_addr.length > 0 ?
             <Grid container spacing={2} marginTop={0}>
               <Grid item xs={12}>
-                <MyTextInput multiline={true} maxRows={2} classes={this.state.classes} value={this.state.comment} func={ this.changeData.bind(this, 'comment') } label='Комментарий курьеру'/>
+                <MyTextInput multiline={true} maxRows={2} value={this.state.comment} func={ this.changeData.bind(this, 'comment') } label='Комментарий курьеру'/>
               </Grid>
               <Grid item xs={4}>
-                <MyTextInput type="number" classes={this.state.classes} value={this.state.sdacha} func={ this.changeData.bind(this, 'sdacha') } label='Сдача'/>
+                <MyTextInput type="number" value={this.state.sdacha} func={ this.changeData.bind(this, 'sdacha') } label='Сдача'/>
               </Grid>
             </Grid>
               :
@@ -2259,10 +2124,10 @@ class CreateOrder2 extends React.Component {
                   :
                 <>
                   <Grid item xs={6}>
-                    <MySelect classes={this.state.classes} data={this.state.date_pred} value={this.state.date} func={ this.changeData.bind(this, 'date') } label='Дата' />
+                    <MySelect data={this.state.date_pred} value={this.state.date} func={ this.changeData.bind(this, 'date') } label='Дата' />
                   </Grid>
                   <Grid item xs={6}>
-                    <MySelect classes={this.state.classes} data={this.state.timePred} value={this.state.time} func={ this.changeData.bind(this, 'time') } label='Время' />
+                    <MySelect data={this.state.timePred} value={this.state.time} func={ this.changeData.bind(this, 'time') } label='Время' />
                   </Grid>
                 </>
             }
@@ -2289,7 +2154,7 @@ class CreateOrder2 extends React.Component {
 
         <Grid item xs={4}>
           {this.state.cats.length > 0 && this.state.allItems.length > 0 ?
-            <MyAutocomplite id="addItemsAll" classes={this.state.classes} data={this.state.allItems} value={this.state.thisItem} func={ this.addItemCustom.bind(this) } multiple={false} label='Товары' />
+            <MyAutocomplite id="addItemsAll" data={this.state.allItems} value={this.state.thisItem} func={ this.addItemCustom.bind(this) } multiple={false} label='Товары' />
               :
             null}
         </Grid>
@@ -2311,24 +2176,24 @@ class CreateOrder2 extends React.Component {
                   <Grid container spacing={2} className='container' style={{ paddingTop: 0 }}>
                     { cat.items.map( (item, k) =>
                       <Grid key={k} item xs={2}>
-                        <Paper className={this.state.classes.paperCat} style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around', position: 'relative' }} onClick={ this.addToCart.bind(this, item.id) }>
+                        <Paper className={'paperCat'} style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around', position: 'relative' }} onClick={ this.addToCart.bind(this, item.id) }>
                           
-                          <Typography component="span" className={this.state.classes.size1}>{item.name}</Typography>
-                          <Typography component="span" className={this.state.classes.size1}>{item.price} р.</Typography>
+                          <Typography component="span">{item.name}</Typography>
+                          <Typography component="span">{item.price} р.</Typography>
                           
-                          <HtmlTooltip
-                            className={this.state.classes.paperCatInfo}
-                            style={{ position: 'absolute', top: 0, right: 0 }}
+                          <Tooltip 
                             placement="top"
+                            style={{ position: 'absolute', top: 0, right: 0 }}
                             title={
                               <React.Fragment>
-                                <Typography color="inherit" className={this.state.classes.size1}>{item.tmp_desc}</Typography>
-                                <Typography color="inherit" className={this.state.classes.size1}>{item.info_weight}</Typography>
+                                <Typography color="inherit">{item.tmp_desc}</Typography>
+                                <Typography color="inherit">{item.info_weight}</Typography>
                               </React.Fragment>
-                            }
-                          >
+                            }>
                             <InfoIcon />
-                          </HtmlTooltip>
+                          </Tooltip>
+
+                          
                             
                         </Paper>
                       </Grid>
@@ -2349,11 +2214,9 @@ class CreateOrder2 extends React.Component {
 }
 
 export function Home() {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <CreateOrder2 classes={classes} />
+    <div style={{ flexGrow: 1 }}>
+      <CreateOrder2 />
     </div>
   );
 }
