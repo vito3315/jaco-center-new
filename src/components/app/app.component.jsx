@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route } from "react-router-dom";
 
 import { Home } from '../home';
 import { Orders } from '../orders';
@@ -71,36 +71,18 @@ export function App () {
 
               <Container maxWidth={false} style={{ paddingTop: 32, paddingBottom: 32, width: '100%' }}>
 
-                <Switch>
-                  <Route
-                    path='/'
-                    exact={ true }
-                    component={ Home }
-                  />
-                  <Route
-                    path='/orders'
-                    exact={ true }
-                    component={ Orders }
-                  />
-                  <Route
-                    path='/ordercook'
-                    exact={ true }
-                    component={ OrderCook }
-                  />
-                  <Route
-                    path='/auth'
-                    exact={ true }
-                    component={ Auth }
-                  />
-                  <Route
-                    path='/check_user_promo'
-                    exact={ true }
-                    component={ CheckUserPromo }
-                  />
-                  <Route
-                    element={ NotFound }
-                  />
-                </Switch>
+                <Routes>
+                  
+                  <Route index path="/" exact={ true } element={<Home />} />
+                  <Route path="/orders" exact={ true } element={<Orders />} />
+                  <Route path="/ordercook" exact={ true } element={<OrderCook />} />
+                  <Route path="/auth" exact={ true } element={<Auth />} />
+                  <Route path="/check_user_promo" exact={ true } element={<CheckUserPromo />} />
+                  <Route path="*" element={<NotFound />} />
+                  
+                </Routes>
+
+                
                   
               </Container>
             </main>

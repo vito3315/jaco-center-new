@@ -42,7 +42,7 @@ export class Auth extends React.Component {
     }).then(res => res.json()).then(json => {
       
       if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
+        window.location.pathname = '/';
         return;
       }
       
