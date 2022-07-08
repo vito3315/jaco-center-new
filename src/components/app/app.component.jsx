@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -9,11 +9,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { Routes, Route } from "react-router-dom";
 
-import { Home } from '../home';
-import { Orders } from '../orders';
-import { OrderCook } from '../ordercook';
-import { Auth } from '../auth';
-import { CheckUserPromo } from '../check_user_promo';
+
+//const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+
+//import { Home } from '../home';
+const Home = React.lazy(() => import("../home"));
+const Orders = React.lazy(() => import("../orders"));
+const OrderCook = React.lazy(() => import("../ordercook"));
+const Auth = React.lazy(() => import("../auth"));
+const CheckUserPromo = React.lazy(() => import("../check_user_promo"));
+
+//import { Orders } from '../orders';
+//import { OrderCook } from '../ordercook';
+//import { Auth } from '../auth';
+//import { CheckUserPromo } from '../check_user_promo';
 import { Header } from '../header';
 
 import { Provider } from 'mobx-react';
@@ -59,7 +68,7 @@ export function NotFound() {
   );
 }
 
-export function App () {
+export function App () {  
     return (
       <ThemeProvider theme={theme}>
         <Provider { ...stores }>
@@ -71,6 +80,7 @@ export function App () {
 
               <Container maxWidth={false} style={{ paddingTop: 32, paddingBottom: 32, width: '100%' }}>
 
+              <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                   
                   <Route index path="/" exact={ true } element={<Home />} />
@@ -81,7 +91,7 @@ export function App () {
                   <Route path="*" element={<NotFound />} />
                   
                 </Routes>
-
+              </Suspense>
                 
                   
               </Container>

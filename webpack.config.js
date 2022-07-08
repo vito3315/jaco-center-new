@@ -5,6 +5,11 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CompressionPlugin = require("compression-webpack-plugin");
 
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+
+const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
+const currentYear = new Date().getFullYear();
+
 const webpack = require('webpack');
 
 /*-------------------------------------------------*/
@@ -59,19 +64,34 @@ module.exports = {
         ]
     },
 
+    externals: {
+        // "node/npm module name": "name of exported library variable"
+        "react": "React",
+        "react-dom": "ReactDOM"
+    },
+
     // webpack plugins
     plugins: [
         new CompressionPlugin(),
         
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
+        //new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
         
+        new MomentLocalesPlugin({
+            localesToKeep: ['ru-ru'],
+        }),
+
         new BundleAnalyzerPlugin({
             analyzerMode: 'disabled',
             generateStatsFile: true,
             statsOptions: { source: false }
         }),
 
-        
+        new MomentTimezoneDataPlugin({
+            //matchZones: /^America/
+            matchZones: /^Europe/,
+            startYear: currentYear - 5,
+            endYear: currentYear + 5,
+        }),
 
         // extract css to external stylesheet file
         new MiniCssExtractPlugin( {
