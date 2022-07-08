@@ -9,6 +9,7 @@ const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 const currentYear = new Date().getFullYear();
+const supportedLocales = ['ru-ru', 'ru']
 
 const webpack = require('webpack');
 
@@ -70,6 +71,11 @@ module.exports = {
         
         //new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
         
+        new webpack.ContextReplacementPlugin(
+            /^date-fns[/\\]locale$/,
+            new RegExp(`\\.[/\\\\](${supportedLocales.join('|')})[/\\\\]index\\.js$`)
+        ),
+
         new MomentLocalesPlugin({
             localesToKeep: ['ru-ru'],
         }),
