@@ -64,12 +64,6 @@ module.exports = {
         ]
     },
 
-    externals: {
-        // "node/npm module name": "name of exported library variable"
-        "react": "React",
-        "react-dom": "ReactDOM"
-    },
-
     // webpack plugins
     plugins: [
         new CompressionPlugin(),
