@@ -816,6 +816,8 @@ class CreateOrder2 extends React.Component {
   }
 
   async checkNewAddr(){
+    this.clickOrderStart = true;
+
     this.setState({
       check_home_true: true
     })
@@ -830,7 +832,7 @@ class CreateOrder2 extends React.Component {
         //user_id: itemsStore.getToken()
       }
   
-      let res = await this.getData('check_addr', data);
+      let res = await this.getData('check_addr', data, false);
 
       console.log( 'checkNewAddr', res )
 
@@ -848,7 +850,9 @@ class CreateOrder2 extends React.Component {
   
         setTimeout( () => {
           this.saveDataOther();
-        }, 300 )
+
+          this.clickOrderStart = false;
+        }, 100 )
 
         return ;
       }
@@ -858,6 +862,10 @@ class CreateOrder2 extends React.Component {
           list_addr_for_choose: res.addrs,
           list_addr_choose: true
         })
+
+        setTimeout( () => {
+          this.clickOrderStart = false;
+        }, 100 )
       }
 
       if( parseInt(res.count) == 1 ){
@@ -891,6 +899,8 @@ class CreateOrder2 extends React.Component {
           }else{
             this.loadTimePred();
           }
+
+          this.clickOrderStart = false;
         }, 300 )
         
 
@@ -906,6 +916,8 @@ class CreateOrder2 extends React.Component {
 
       setTimeout( () => {
         this.saveDataOther();
+
+        this.clickOrderStart = false;
       }, 300 )
       
     }
@@ -1451,7 +1463,7 @@ class CreateOrder2 extends React.Component {
 
   async startOrderNext(){
 
-    if( this.clickOrderStart == false ){
+    if( this.clickOrderStart == false || this.state.is_load == true ){
       this.clickOrderStart = true;
         
       clearTimeout(this.startOrderIntervalTimer);
@@ -2027,7 +2039,7 @@ class CreateOrder2 extends React.Component {
                   <MyAutocomplite id="newAddrStreet" onBlur={this.checkNewAddr.bind(this)} freeSolo={true} data={this.state.all_addr} value={this.state.newAddrStreet} func={ this.cheangeAddrCustom.bind(this) } multiple={false} label='Улица' />
                 </Grid>
                 <Grid item xs={4}>
-                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} value={this.state.newAddrHome} func={ event => this.setState({ newAddrHome: event.target.value }) } label='Дом'/>
+                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} value={this.state.newAddrHome} func={ (event) => {this.setState({ newAddrHome: event.target.value }); setTimeout( () => { this.checkNewAddr() }, 10 ) } } label='Дом'/>
                 </Grid>
 
                 <Grid item xs={4}>
