@@ -1952,7 +1952,7 @@ class CreateOrder2 extends React.Component {
                       <TableRow key={key}>
                         <TableCell style={{ width: '60%', paddingLeft: 0, fontSize: '1rem' }}>{item.name}</TableCell>
                         <TableCell style={{fontSize: '1rem'}}>{item.count}</TableCell>
-                        <TableCell style={{fontSize: '1rem'}}>{item.new_full_price ? item.new_full_price : item.full_price} р</TableCell>
+                        <TableCell style={{fontSize: '1rem'}}>{item.new_full_price || item.new_full_price == 0 ? item.new_full_price : item.full_price} р</TableCell>
                       </TableRow>
                         :
                       null

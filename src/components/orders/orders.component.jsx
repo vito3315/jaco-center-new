@@ -492,6 +492,8 @@ export class Orders extends React.Component {
   }
 
   repeatOrder(){
+    //477425 6 июля ворошилова
+
     let my_cart = [];
     let all_items = this.state.allItems;
     let item_info = null;
@@ -500,6 +502,10 @@ export class Orders extends React.Component {
     
     if( this.state.showOrder.order.promo_name && this.state.showOrder.order.promo_name != '' ){
       itemsStore.setPromo( JSON.stringify(this.state.showOrder.promo_info), this.state.showOrder.order.promo_name );
+
+      if( parseInt(this.state.showOrder.promo_info.promo_action) == 2 ){
+
+      }
     }
 
     this.state.showOrder.order_items.map( (item) => {
@@ -520,6 +526,19 @@ export class Orders extends React.Component {
       }
     } )
     
+    if( this.state.showOrder.order.promo_name && this.state.showOrder.order.promo_name != '' ){
+      if( parseInt(this.state.showOrder.promo_info.promo_action) == 2 ){
+        this.state.showOrder.promo_info.items_add.map(( item_add, key ) => {
+          my_cart.map( (item_cart, key_cart) => {
+            if( parseInt(item_cart.item_id) == parseInt(item_add.item_id) ){
+              my_cart[ key_cart ]['count'] -= parseInt(item_add.count);
+              my_cart[ key_cart ]['all_price'] = parseInt(my_cart[ key_cart ]['count']) * parseInt(item_cart.price) ;
+            }
+          } )
+        })
+      }
+    }
+
     localStorage.setItem('clientNumber', this.state.showOrder.order.number)
 
     let data = {
