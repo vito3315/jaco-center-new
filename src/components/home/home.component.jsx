@@ -815,8 +815,11 @@ class CreateOrder2 extends React.Component {
     }, 300 )
   }
 
-  async checkNewAddr(){
-    this.clickOrderStart = true;
+  async checkNewAddr(is_check){
+    setTimeout( () => {
+      this.clickOrderStart = true;
+    }, 10 )
+    
 
     this.setState({
       check_home_true: true
@@ -837,10 +840,13 @@ class CreateOrder2 extends React.Component {
       console.log( 'checkNewAddr', res )
 
       if( parseInt(res.count) == 0 ){
-        this.setState({
-          openErr: true,
-          msgText: 'Адрес не найден, или не входит в зону доставки'
-        })
+
+        if( is_check === true ){
+          this.setState({
+            openErr: true,
+            msgText: 'Адрес не найден, или не входит в зону доставки'
+          })
+        }
 
         this.setState({
           newAddrInfo: null,
@@ -860,7 +866,8 @@ class CreateOrder2 extends React.Component {
       if( parseInt(res.count) > 1 ){
         this.setState({
           list_addr_for_choose: res.addrs,
-          list_addr_choose: true
+          list_addr_choose: true,
+          openErr: false
         })
 
         setTimeout( () => {
@@ -873,7 +880,8 @@ class CreateOrder2 extends React.Component {
 
         this.setState({
           newAddrInfo: res.addrs,
-          point_id: res.addrs.point_id
+          point_id: res.addrs.point_id,
+          openErr: false
         })
         
         let allPrice = itemsStore.getAllPrice();
@@ -1494,13 +1502,13 @@ class CreateOrder2 extends React.Component {
         
       if( parseInt(this.state.AllPrice) == 0 ){
 
-        if( itemsStore.getAllPrice == 0 ){
+        if( itemsStore.getAllPrice() == 0 ){
           this.setState({
             AllPrice: NewAllPrice
           })
         }else{
           this.setState({
-            AllPrice: itemsStore.getAllPrice
+            AllPrice: itemsStore.getAllPrice()
           })
         }
       }
@@ -2036,10 +2044,10 @@ class CreateOrder2 extends React.Component {
                 { /* адрес доставки */ }
                 
                 <Grid item xs={8}>
-                  <MyAutocomplite id="newAddrStreet" onBlur={this.checkNewAddr.bind(this)} freeSolo={true} data={this.state.all_addr} value={this.state.newAddrStreet} func={ this.cheangeAddrCustom.bind(this) } multiple={false} label='Улица' />
+                  <MyAutocomplite id="newAddrStreet" onBlur={this.checkNewAddr.bind(this, true)} freeSolo={true} data={this.state.all_addr} value={this.state.newAddrStreet} func={ this.cheangeAddrCustom.bind(this) } multiple={false} label='Улица' />
                 </Grid>
                 <Grid item xs={4}>
-                  <MyTextInput onBlur={this.checkNewAddr.bind(this)} value={this.state.newAddrHome} func={ (event) => {this.setState({ newAddrHome: event.target.value }); setTimeout( () => { this.checkNewAddr() }, 10 ) } } label='Дом'/>
+                  <MyTextInput onBlur={this.checkNewAddr.bind(this, true)} value={this.state.newAddrHome} func={ (event) => {this.setState({ newAddrHome: event.target.value }); setTimeout( () => { this.checkNewAddr(false) }, 10 ) } } label='Дом'/>
                 </Grid>
 
                 <Grid item xs={4}>
