@@ -392,12 +392,16 @@ class CreateOrder2 extends React.Component {
       },
 
       updateMyPromos: null,
-      MyPromos: [],
+      MyPromos: [{
+        date: moment(new Date()).format("YYYY-MM-DD"),
+        promo: 'ЛЕГКО',
+        name: 'ЛЕГКО',
+        count: 3
+      }],
     };
   }
   
   componentWillUnmount(){
-    console.log( 'umount' )
     this._isMounted = false;
     clearInterval(this.interval)
   }
@@ -422,8 +426,7 @@ class CreateOrder2 extends React.Component {
   
   componentDidMount = () => {
     this._isMounted = true;
-    console.log( 'mount' )
-
+    
     document.title = "Оформление нового заказа";
 
     if( localStorage.getItem('cityID') ){
@@ -445,8 +448,6 @@ class CreateOrder2 extends React.Component {
     autorun(() => {
       if( this._isMounted ){
 
-        console.log( 'is mounted autorun' )
-
         let allPrice = itemsStore.getAllPrice();
         let sumDiv = itemsStore.getSumDiv();
 
@@ -462,7 +463,6 @@ class CreateOrder2 extends React.Component {
             if( cartData && cartData.orderTimes && parseInt(cartData.orderTimes) == 1 ){
               this.loadTimePred();
             }else{
-              console.log( 'load 1' )
               this.loadTimeWait();
             }
           }, 100 )
@@ -470,7 +470,7 @@ class CreateOrder2 extends React.Component {
         }
 
         
-        if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
+        /*if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
           
           console.log( 'autorun updateMyPromos' );
           
@@ -518,7 +518,7 @@ class CreateOrder2 extends React.Component {
             updateMyPromos: itemsStore.updateMyPromos,
             MyPromos: result
           })
-        }
+        }*/
       }
     })
   }
@@ -653,7 +653,6 @@ class CreateOrder2 extends React.Component {
         if( parseInt(cartData.orderTimes) == 1 ){
           this.loadTimePred();
         }else{
-          console.log( 'load 2' )
           this.loadTimeWait();
         }
       }
@@ -661,7 +660,6 @@ class CreateOrder2 extends React.Component {
       if( parseInt(cartData.orderTimes) == 1 ){
         this.loadTimePred();
       }else{
-        console.log( 'load 3' )
         this.loadTimeWait();
       }
     }
@@ -704,7 +702,6 @@ class CreateOrder2 extends React.Component {
       return json;
     })
     .catch(err => { 
-      console.log( err )
       this.setState({
         is_load: false
       })
@@ -746,8 +743,6 @@ class CreateOrder2 extends React.Component {
     if( parseInt(newValue) == 0 || parseInt(newValue) == 2 ){
       let addr = this.state.newAddrInfo;
 
-      console.log(addr)
-
       if( addr ){
         let allPrice = itemsStore.getAllPrice();
 
@@ -772,7 +767,6 @@ class CreateOrder2 extends React.Component {
     setTimeout( () => {
 
       if( parseInt(this.state.typeTime) == 0 ){
-        console.log( 'load 4' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -805,7 +799,6 @@ class CreateOrder2 extends React.Component {
       }
       
       if( parseInt(this.state.typeTime) == 0 ){
-        console.log( 'load 5' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -836,8 +829,6 @@ class CreateOrder2 extends React.Component {
       }
   
       let res = await this.getData('check_addr', data, false);
-
-      console.log( 'checkNewAddr', res )
 
       if( parseInt(res.count) == 0 ){
 
@@ -902,7 +893,6 @@ class CreateOrder2 extends React.Component {
 
         setTimeout( () => {
           if( parseInt(this.state.typeTime) == 0 ){
-            console.log( 'load 6' )
             this.loadTimeWait();
           }else{
             this.loadTimePred();
@@ -957,7 +947,6 @@ class CreateOrder2 extends React.Component {
       this.saveDataOther();
 
       if( parseInt(this.state.typeTime) == 0 ){
-        console.log( 'load 7' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -970,7 +959,6 @@ class CreateOrder2 extends React.Component {
   }
 
   cheangeAddrCustom(event, val){
-    console.log( val ); 
     this.setState({ newAddrStreet: val })
   }
 
@@ -1009,7 +997,6 @@ class CreateOrder2 extends React.Component {
       this.saveDataOther();
 
       if( parseInt(this.state.typeTime) == 0 ){
-        console.log( 'load 8' )
         this.loadTimeWait();
       }else{
         this.loadTimePred();
@@ -1230,8 +1217,6 @@ class CreateOrder2 extends React.Component {
 
     let res = await this.getData('get_promo', data, false);
 
-    console.log( res )
-
     itemsStore.setPromo( JSON.stringify(res), promo );
     let check_promo = itemsStore.checkPromo();
       
@@ -1253,7 +1238,7 @@ class CreateOrder2 extends React.Component {
         promo_name: promo
       })
 
-      if( promo && promo.length > 0 ){
+      /*if( promo && promo.length > 0 ){
         let arr = itemsStore.getMyPromos();
         
         let check = arr.find( (item) => item.promo.toLowerCase() == promo.toLowerCase() );
@@ -1291,14 +1276,12 @@ class CreateOrder2 extends React.Component {
           MyPromos: result
         })
         
-      }
+      }*/
     }
 
   }
 
   clear(){
-    console.log( 'clear' )
-
     itemsStore.clientNumber = '';
     localStorage.removeItem('clientNumber')
     localStorage.removeItem('promo_name')
@@ -1385,7 +1368,6 @@ class CreateOrder2 extends React.Component {
     this.changeDataTime('typeTime', {target: {value: newValue}})
     
     if( parseInt(newValue) == 0 ){
-      console.log( 'load 9' )
       this.loadTimeWait();
     }else{
       this.loadTimePred();
@@ -1555,8 +1537,6 @@ class CreateOrder2 extends React.Component {
           return;
         }
 
-        console.log( cartData.orderAddr );
-
         if( cartData.orderAddr.et.length == 0 ){
           this.setState({
             error: {
@@ -1641,7 +1621,7 @@ class CreateOrder2 extends React.Component {
       
       if( json.st ){
         
-        if( localStorage.getItem('promo_name') && localStorage.getItem('promo_name').length > 0 ){
+        /*if( localStorage.getItem('promo_name') && localStorage.getItem('promo_name').length > 0 ){
           let promo = localStorage.getItem('promo_name');
           
           let arr = itemsStore.getMyPromos();
@@ -1671,7 +1651,7 @@ class CreateOrder2 extends React.Component {
           this.setState({
             MyPromos: result
           })
-        }
+        }*/
         
         let new_cart = [];
         
