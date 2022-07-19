@@ -56,6 +56,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import InfoIcon from '@mui/icons-material/Info';
 import AddIcon from '@mui/icons-material/Add';
 
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+
 import Alert from '@mui/material/Alert';
 
 const queryString = require('query-string');
@@ -190,6 +192,82 @@ class BlockTableItem extends React.Component {
           }
         </TableCell>
       </TableRow>
+    )
+  }
+}
+
+class MyToolTip extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      is_open: false,
+      tmp_desc: this.props.tmp_desc,
+      info_weight: this.props.info_weight
+    };
+  }
+
+  close(){
+    this.setState({
+      is_open: false
+    })
+  }
+
+  open(){
+    this.setState({
+      is_open: true
+    })
+  }
+
+  render(){
+    return(
+      <>
+        {this.state.is_open === true ?
+          <ClickAwayListener onClickAway={this.close.bind(this)}>
+            <Tooltip 
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={this.close.bind(this)}
+              open={this.state.is_open}
+              placement="top"
+              style={{ position: 'absolute', top: 0, right: 0 }}
+              title={
+                <React.Fragment>
+                  <Typography color="inherit">{this.state.tmp_desc}</Typography>
+                  <Typography color="inherit">{this.state.info_weight}</Typography>
+                </React.Fragment>
+              }>
+              <InfoIcon onClick={this.open.bind(this)} />
+            </Tooltip>
+          </ClickAwayListener>
+            :
+          <Tooltip 
+            disableFocusListener
+            disableHoverListener
+            disableTouchListener
+            PopperProps={{
+              disablePortal: true,
+            }}
+            onClose={this.close.bind(this)}
+            open={this.state.is_open}
+            placement="top"
+            style={{ position: 'absolute', top: 0, right: 0 }}
+            title={
+              <React.Fragment>
+                <Typography color="inherit">{this.state.tmp_desc}</Typography>
+                <Typography color="inherit">{this.state.info_weight}</Typography>
+              </React.Fragment>
+            }>
+            <InfoIcon onClick={this.open.bind(this)} />
+          </Tooltip>
+        }
+          
+
+      </>
     )
   }
 }
@@ -2176,25 +2254,13 @@ class CreateOrder2 extends React.Component {
                   <Grid container spacing={2} className='container' style={{ paddingTop: 0 }}>
                     { cat.items.map( (item, k) =>
                       <Grid key={k} item xs={2}>
-                        <Paper className={'paperCat'} style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around', position: 'relative' }} onClick={ this.addToCart.bind(this, item.id) }>
+                        <Paper className={'paperCat'} style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around', position: 'relative' }}>
                           
-                          <Typography component="span">{item.name}</Typography>
-                          <Typography component="span">{item.price} р.</Typography>
+                          <Typography component="span" style={{ marginRight: 24 }} onClick={ this.addToCart.bind(this, item.id) }>{item.name}</Typography>
+                          <Typography component="span" style={{ marginRight: 24 }} onClick={ this.addToCart.bind(this, item.id) }>{item.price} р.</Typography>
                           
-                          <Tooltip 
-                            placement="top"
-                            style={{ position: 'absolute', top: 0, right: 0 }}
-                            title={
-                              <React.Fragment>
-                                <Typography color="inherit">{item.tmp_desc}</Typography>
-                                <Typography color="inherit">{item.info_weight}</Typography>
-                              </React.Fragment>
-                            }>
-                            <InfoIcon />
-                          </Tooltip>
+                          <MyToolTip tmp_desc={item.tmp_desc} info_weight={item.info_weight} />
 
-                          
-                            
                         </Paper>
                       </Grid>
                     ) }
