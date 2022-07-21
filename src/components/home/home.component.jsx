@@ -787,6 +787,7 @@ class CreateOrder2 extends React.Component {
   }
 
   addToCart(item_id){
+    console.log( 'item_id', item_id )
     itemsStore.AddItem(item_id);
   }
 
@@ -2254,10 +2255,10 @@ class CreateOrder2 extends React.Component {
                   <Grid container spacing={2} className='container' style={{ paddingTop: 0 }}>
                     { cat.items.map( (item, k) =>
                       <Grid key={k} item xs={2}>
-                        <Paper className={'paperCat'} style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around', position: 'relative' }}>
+                        <Paper className={'paperCat'} style={{ display: 'flex', flexDirection: 'column', height: 70, justifyContent: 'space-around', position: 'relative' }}>
                           
-                          <Typography component="span" style={{ marginRight: 24 }} onClick={ this.addToCart.bind(this, item.id) }>{item.name}</Typography>
-                          <Typography component="span" style={{ marginRight: 24 }} onClick={ this.addToCart.bind(this, item.id) }>{item.price} р.</Typography>
+                          <Typography component="span" className={'bthCat'} onClick={ this.addToCart.bind(this, item.id) }>{item.name}</Typography>
+                          <Typography component="span" className={'bthCat'} onClick={ this.addToCart.bind(this, item.id) }>{item.price} р.</Typography>
                           
                           <MyToolTip tmp_desc={item.tmp_desc} info_weight={item.info_weight} />
 

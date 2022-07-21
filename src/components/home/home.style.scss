@@ -135,3 +135,13 @@ table form > div.MuiTextField-root{
   height: calc(100% - 15px);
   cursor: pointer;
 }
+
+.bthCat{
+  margin-right: 24px!important;
+  height: 50%;
+  line-height: 1!important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
