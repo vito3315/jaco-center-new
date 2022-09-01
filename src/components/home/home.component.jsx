@@ -787,7 +787,6 @@ class CreateOrder2 extends React.Component {
   }
 
   addToCart(item_id){
-    console.log( 'item_id', item_id )
     itemsStore.AddItem(item_id);
   }
 

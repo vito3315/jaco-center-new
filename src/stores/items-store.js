@@ -52,8 +52,6 @@ class ItemsStore {
   setMyPromos = (items) => {
     this.MyPromos = JSON.stringify( items );
     
-    console.log( 'setMyPromos' )
-
     this.updateMyPromos = new Date();
     
     localStorage.setItem('MyPromos', JSON.stringify(items) );
@@ -234,7 +232,12 @@ class ItemsStore {
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
     }
     
+    tmp = 0;
+    allPrice = 0;
     
+    allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+
+    itemsStore.setAllPrice(allPrice);
     
     if( promo_info ){
       if( !promo_info.status_promo ){
@@ -370,6 +373,8 @@ class ItemsStore {
       
       itemsStore.free_drive = parseInt(promo_info.limits.free_drive);
       
+      
+
       let all_price = 0,
           count_sale = 0,
           this_item = null;
@@ -507,13 +512,9 @@ class ItemsStore {
       //добавление товара
       if( parseInt(promo_info.promo_action) == 2 ){
  
-        console.log('test111', promo_info.items_add)
-
         promo_info.items_add.forEach((el) => {
           this_item = allItems.find( (item) => item.id == el.item_id );
           
-          console.log('find_item', allItems)
-
           cart_new_promo.push({
             item_id: el.item_id,
             count: el.count,
