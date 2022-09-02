@@ -175,7 +175,7 @@ class ItemsStore {
 
   checkPromo(){
     let orderInfo = itemsStore.getCartData();
-    itemsStore.setItemsPromo([]);
+    
     
     let tmp = 0,
         allPrice = 0,
@@ -520,6 +520,8 @@ class ItemsStore {
             count: el.count,
             one_price: this_item['price'],
             all_price: el.price,
+            new_one_price: parseInt(el.price),
+            name: this_item['name'],
           });
         });
         

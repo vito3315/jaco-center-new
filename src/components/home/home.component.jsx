@@ -105,7 +105,7 @@ class BlockTableItem extends React.Component {
     };
   }
   
-  shouldComponentUpdate(nextProps, nextState) {
+  /*shouldComponentUpdate(nextProps, nextState) {
     
     if( !nextState.item ){
       return false;
@@ -113,9 +113,10 @@ class BlockTableItem extends React.Component {
     
     return (
       parseInt(this.state.item.all_price) !== parseInt(nextState.item.all_price) ||
-      parseInt(this.state.item.count) !== parseInt(nextState.item.count)
+      parseInt(this.state.item.count) !== parseInt(nextState.item.count) ||
+      parseInt(this.state.item.id) !== parseInt(nextState.item.id)
     );
-  }
+  }*/
   
   componentWillUnmount(){
     this._isMounted = false;
@@ -125,12 +126,16 @@ class BlockTableItem extends React.Component {
     this._isMounted = true;
     
     autorun(() => {
-      if( this._isMounted === true && this.state.item.item_id ){
-
+      if( this._isMounted === true && this.state.item ){
         let my_cart = itemsStore.getItems();
+        let promoItems = itemsStore.getItemsPromo();
+
+        let this_item = my_cart.find( (item) => item.item_id == this.state.item.id );
         
-        let this_item = my_cart.find( (item) => item.item_id == this.state.item.item_id );
-        
+        if( !this_item ){
+          this_item = promoItems.find( (item) => item.item_id == this.state.item.id );
+        }
+
         this.setState({
           item: this_item
         })
@@ -160,8 +165,12 @@ class BlockTableItem extends React.Component {
   }
   
   render(){
+    if( !this.state.item ){
+      return null;
+    }
+
     return (
-      <TableRow hover style={ this.state.item.count == 0 ? {display: 'none'} : {} }>
+      <TableRow hover style={ this.state.item && this.state.item.count == 0 ? {display: 'none'} : {} }>
         <TableCell style={{fontSize: '1rem'}}>{this.state.item.name}</TableCell>
         <TableCell style={{ textAlign: 'center', fontSize: '1rem' }}>
           
@@ -1286,6 +1295,8 @@ class CreateOrder2 extends React.Component {
   }
 
   async checkPromo(event){
+    itemsStore.setItemsPromo([]);
+    
     let promo = event.target.value;
     
     let data = {
