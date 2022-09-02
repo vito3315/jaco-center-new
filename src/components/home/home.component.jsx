@@ -133,6 +133,10 @@ class BlockTableItem extends React.Component {
         let this_item = my_cart.find( (item) => item.item_id == this.state.item.id );
         
         if( !this_item ){
+          this_item = my_cart.find( (item) => item.item_id == this.state.item.item_id );
+        }
+
+        if( !this_item ){
           this_item = promoItems.find( (item) => item.item_id == this.state.item.id );
         }
 
