@@ -175,7 +175,7 @@ class ItemsStore {
 
   checkPromo(){
     let orderInfo = itemsStore.getCartData();
-    
+    itemsStore.setItemsPromo([]);
     
     let tmp = 0,
         allPrice = 0,

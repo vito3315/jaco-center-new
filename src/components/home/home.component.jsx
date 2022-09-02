@@ -105,7 +105,7 @@ class BlockTableItem extends React.Component {
     };
   }
   
-  /*shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     
     if( !nextState.item ){
       return false;
@@ -113,10 +113,10 @@ class BlockTableItem extends React.Component {
     
     return (
       parseInt(this.state.item.all_price) !== parseInt(nextState.item.all_price) ||
-      parseInt(this.state.item.count) !== parseInt(nextState.item.count) ||
-      parseInt(this.state.item.id) !== parseInt(nextState.item.id)
+      parseInt(this.state.item.count) !== parseInt(nextState.item.count) //||
+      //parseInt(this.state.item.id) !== parseInt(nextState.item.id)
     );
-  }*/
+  }
   
   componentWillUnmount(){
     this._isMounted = false;
@@ -1301,6 +1301,8 @@ class CreateOrder2 extends React.Component {
   async checkPromo(event){
     itemsStore.setItemsPromo([]);
     
+    console.log( 'checkPromo' )
+
     let promo = event.target.value;
     
     let data = {
