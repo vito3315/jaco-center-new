@@ -135,6 +135,16 @@ export class Header extends React.Component{
               </ListItem>
             </Link>
 
+            <Link
+              to={ '/map' }
+              style={{ textDecoration: 'none' }}
+              onClick={this.toggleDrawer2.bind(this, 'left', false)}
+            >
+              <ListItem button style={{ color: '#000' }}>
+                <Typography variant="body1">Карта</Typography>
+              </ListItem>
+            </Link>
+
             <Divider />
             <List>
               <ListItem button onClick={this.logOut.bind(this)}>

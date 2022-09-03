@@ -18,6 +18,7 @@ const Orders = React.lazy(() => import("../orders"));
 const OrderCook = React.lazy(() => import("../ordercook"));
 const Auth = React.lazy(() => import("../auth"));
 const CheckUserPromo = React.lazy(() => import("../check_user_promo"));
+const Map = React.lazy(() => import("../map"));
 
 //import { Orders } from '../orders';
 //import { OrderCook } from '../ordercook';
@@ -88,6 +89,7 @@ export function App () {
                   <Route path="/ordercook" exact={ true } element={<OrderCook />} />
                   <Route path="/auth" exact={ true } element={<Auth />} />
                   <Route path="/check_user_promo" exact={ true } element={<CheckUserPromo />} />
+                  <Route path="/map" exact={ true } element={<Map />} />
                   <Route path="*" element={<NotFound />} />
                   
                 </Routes>
