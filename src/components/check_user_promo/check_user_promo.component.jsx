@@ -33,7 +33,8 @@ export class CheckUserPromo extends React.Component {
       spiner: false,
       
       number: '',
-      promos: []
+      promos: [],
+      promos_sms: []
     };
   }
     
@@ -118,10 +119,11 @@ export class CheckUserPromo extends React.Component {
       number: this.state.number
     }
 
-    let res = await this.getData('check_user_promo', data);
+    let res = await this.getData('check_user_promo_new', data);
 
     this.setState({
-      promos: res
+      promos: res.promo_lk,
+      promos_sms: res.promo_sms
     })
   }
   
@@ -148,6 +150,7 @@ export class CheckUserPromo extends React.Component {
         
         <Grid item xs={12}>
           
+          <span>Промокоды из ЛК</span>
           <TableContainer>
             <Table>
               <TableHead>
@@ -176,6 +179,34 @@ export class CheckUserPromo extends React.Component {
           </TableContainer>
 
         </Grid>
+        <Grid item xs={12}>
+          
+          <span>Отправленные в смс промокоды</span>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Телефон</TableCell>
+                  <TableCell>Сообщение</TableCell>
+                  <TableCell>Дата время</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                
+                { this.state.promos_sms.map( (item, key) =>
+                  <TableRow key={key}>
+                    <TableCell style={{ color: 'inherit' }}>{item.phone}</TableCell>
+                    <TableCell style={{ color: 'inherit' }}>{item.text}</TableCell>
+                    <TableCell style={{ color: 'inherit' }}>{item.date_time}</TableCell>
+                  </TableRow>
+                )}
+              
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+        </Grid>
+
       </Grid>
     )
   }
