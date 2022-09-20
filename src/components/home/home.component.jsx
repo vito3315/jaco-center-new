@@ -945,7 +945,7 @@ class CreateOrder2 extends React.Component {
         return ;
       }
 
-      if( parseInt(res.count) > 1 ){
+      if( parseInt(res.count) > 1 && is_check === true ){
         this.setState({
           list_addr_for_choose: res.addrs,
           list_addr_choose: true,
@@ -1555,6 +1555,14 @@ class CreateOrder2 extends React.Component {
       
       let cartData = itemsStore.getCartData();
       
+      /*if( cartData.orderAddr.street.length == 0 || cartData.orderAddr.home.length == 0 ){
+        this.checkNewAddr(true);
+
+        cartData = itemsStore.getCartData();
+      }
+
+      console.log( 'cartData', cartData )*/
+
       this.setState({ 
         is_load: true
       })
@@ -1614,6 +1622,9 @@ class CreateOrder2 extends React.Component {
       if( parseInt(cartData.orderType) == 0){
 
         if( this.state.check_home_true === false ){
+
+          //this.checkNewAddr(true);
+
           this.setState({
             error: {
               title: 'Предупреждение', 
