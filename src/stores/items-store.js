@@ -1161,7 +1161,7 @@ class ItemsStore {
     
     if( new_free_dop.length > 0 ){
       
-      max_count = new_free_dop.find( (item) => parseInt(item['item_id']) == 17 );
+      max_count = new_free_dop.find( (item) => parseInt(item['item_id']) == 17 || parseInt(item['item_id']) == 237 );
       
       if( max_count ){
         max_count = parseInt(max_count['count']);
