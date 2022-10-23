@@ -537,12 +537,17 @@ class CreateOrder2 extends React.Component {
     
 
     autorun(() => {
+      console.log( '_isMounted', this._isMounted )
+
       if( this._isMounted ){
 
         let allPrice = itemsStore.getAllPrice();
         let sumDiv = itemsStore.getSumDiv();
 
+        console.log( 'get', allPrice, parseInt(this.state.allPrice) )
+
         if( parseInt(allPrice) != parseInt(this.state.allPrice) || parseInt(sumDiv) != parseInt(this.state.sumDiv) ){
+          console.log( 'set', allPrice )
           this.setState({
             sumDiv: sumDiv,
             AllPrice: allPrice

@@ -7,7 +7,7 @@ const queryString = require('query-string');
 import { configure } from "mobx"
 
 configure({
-  enforceActions: "never",
+  enforceActions: "observed",
   useProxies: "ifavailable"
 })
 
@@ -102,7 +102,8 @@ class ItemsStore {
     return this.cityName;
   };
 
-  setAllPrice(price){
+  setAllPrice(price, test = ''){
+    console.log( 'price', price, test )
     this.AllPrice = price;
   };
   
@@ -185,6 +186,18 @@ class ItemsStore {
     let my_cart = this.getItems();  
     let allItems = this.getAllItems();
       
+    tmp = 0;
+    allPrice = 0;
+    
+    allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+
+    //itemsStore.setAllPrice(allPrice, 1);
+
+    setTimeout( () => {
+      itemsStore.setAllPrice(allPrice, 1);
+    }, 10 )
+    
+
     if( allItems.length == 0 || !allItems ){
       return ; 
     }
@@ -232,12 +245,7 @@ class ItemsStore {
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
     }
     
-    tmp = 0;
-    allPrice = 0;
     
-    allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
-
-    itemsStore.setAllPrice(allPrice);
     
     if( promo_info ){
       if( !promo_info.status_promo ){
@@ -499,7 +507,7 @@ class ItemsStore {
         
         allPrice = my_cart.reduce( (sum, item) => sum + item['all_price'], tmp );
         
-        itemsStore.setAllPrice(allPrice);
+        itemsStore.setAllPrice(allPrice, 2);
         
         this.setItems(my_cart);
         
@@ -535,7 +543,7 @@ class ItemsStore {
         allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
         
         itemsStore.setItemsPromo(cart_new_promo);
-        itemsStore.setAllPrice(allPrice);
+        itemsStore.setAllPrice(allPrice, 3);
       }
       
       //товар за цену
@@ -555,7 +563,7 @@ class ItemsStore {
           
           allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
 
-          itemsStore.setAllPrice(allPrice);
+          itemsStore.setAllPrice(allPrice, 4);
         }
       }
       
@@ -612,7 +620,7 @@ class ItemsStore {
       }
 
       setTimeout( () => {
-        this.setAllPrice(allPrice);
+        this.setAllPrice(allPrice, 5);
       }, 50 )
     }
     
@@ -1384,7 +1392,7 @@ class ItemsStore {
       }
     }
     
-    makeAutoObservable (this);
+    makeAutoObservable(this);
   }
 }
 
