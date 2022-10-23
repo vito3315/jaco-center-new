@@ -111,6 +111,22 @@ class ItemsStore {
     return this.AllPrice;
   };
 
+  reChangePrice(){
+    let my_cart = this.getItems();
+    let cart_new_promo = this.getItemsPromo();
+
+    let tmp = 0,
+        allPrice = 0;
+    
+    allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+    
+    tmp = 0;
+    
+    allPrice += cart_new_promo.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
+    
+    itemsStore.setAllPrice(allPrice, 55);
+  }
+
   setPage = (activePage) => {
     this.activePage = activePage;
   };
@@ -190,8 +206,6 @@ class ItemsStore {
     allPrice = 0;
     
     allPrice = my_cart.reduce( (sum, item) => sum + parseInt(item['all_price']), tmp );
-
-    //itemsStore.setAllPrice(allPrice, 1);
 
     setTimeout( () => {
       itemsStore.setAllPrice(allPrice, 1);

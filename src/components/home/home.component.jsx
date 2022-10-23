@@ -626,6 +626,11 @@ class CreateOrder2 extends React.Component {
 
     let res = await this.getData('get_cat_center_new', data);
 
+    let items = itemsStore.getItems();
+
+    //console.log( 'items', items )
+    //console.log( 'newallitems', res.all_items )
+
     this.setState({
       cats: res.arr,
       cityList: res.city_list,
@@ -635,6 +640,15 @@ class CreateOrder2 extends React.Component {
     itemsStore.setAllItems(res.all_items);
     itemsStore.setFreeItems(res.free_items);
 
+    items.map( (item, key) => {
+      res.all_items.map( (it) => {
+        if( parseInt( item.item_id ) == parseInt( it.id ) ){
+          items[ key ]['one_price'] = parseInt(it.price);
+          items[ key ]['all_price'] = parseInt(it.price) * parseInt(item.count);
+        }
+      } )
+    });
+
     data = {
       city_id: this.state.cityId,//itemsStore.getCity(),
       user_id: itemsStore.getToken()
@@ -642,7 +656,6 @@ class CreateOrder2 extends React.Component {
 
     res = await this.getData('get_by_mi_new', data);
 
-    
     this.setState({
       pic_point: res.get_addr_pic.points,
       all_addr: res.get_addr,
@@ -650,7 +663,9 @@ class CreateOrder2 extends React.Component {
     })
 
     setTimeout( () => {
+      
       this.loadSavedData();
+      itemsStore.setItems(items);
     }, 300 )
     
   }
@@ -1220,6 +1235,10 @@ class CreateOrder2 extends React.Component {
 
     setTimeout( ()=>{
       this.start();
+
+      setTimeout( () => {
+        itemsStore.reChangePrice();
+      }, 300 )
     }, 300 )
   }
 
