@@ -50,7 +50,7 @@ export class Header extends React.Component{
     this._isMounted = true;
     
     if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
-      window.location.href = 'https://jacocallcenter.ru/'+window.location.pathname;
+      window.location.href = 'https://jacocallcenter.ru'+window.location.pathname;
     }
 
     autorun(() => {

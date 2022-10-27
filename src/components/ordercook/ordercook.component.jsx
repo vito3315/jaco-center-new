@@ -141,7 +141,7 @@ export class OrderCook extends React.Component {
   
   async componentDidMount(){
     if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
-      window.location.href = 'https://jacocallcenter.ru/'+window.location.pathname;
+      window.location.href = 'https://jacocallcenter.ru'+window.location.pathname;
     }
 
     document.title = "Заказы на кухне";
