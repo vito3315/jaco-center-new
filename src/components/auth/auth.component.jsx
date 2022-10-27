@@ -23,6 +23,10 @@ export class Auth extends React.Component {
   componentDidMount = () => {
     document.title = "Авторизация";
     itemsStore.setPage('auth');
+
+    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
+      window.location.href = 'https://jacocallcenter.ru/'+window.location.pathname;
+    }
   }
     
   getData = (method, data = {}) => {

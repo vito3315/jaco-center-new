@@ -108,6 +108,10 @@ export class CheckUserPromo extends React.Component {
     this.checkLogin();
     
     document.title = "Проверка промокода клиента";
+
+    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
+      window.location.href = 'https://jacocallcenter.ru/'+window.location.pathname;
+    }
   }
     
   changeNumber(event){

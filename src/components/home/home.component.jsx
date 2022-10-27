@@ -518,6 +518,10 @@ class CreateOrder2 extends React.Component {
   componentDidMount = () => {
     this._isMounted = true;
     
+    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
+      window.location.href = 'https://jacocallcenter.ru/'+window.location.pathname;
+    }
+
     document.title = "Оформление нового заказа";
 
     if( localStorage.getItem('cityID') ){
