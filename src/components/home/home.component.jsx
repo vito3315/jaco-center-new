@@ -113,10 +113,12 @@ class BlockTableItem extends React.Component {
       return false;
     }
     
+    console.log(  )
+
     return (
       (parseInt(this.state.item.all_price) !== parseInt(nextState.item.all_price) ||
       parseInt(this.state.item.count) !== parseInt(nextState.item.count)) &&
-      this.lastType == this.state.type
+      (this.lastType == this.state.type || this.lastType == '')
       //parseInt(this.state.item.id) !== parseInt(nextState.item.id)
     );
   }
