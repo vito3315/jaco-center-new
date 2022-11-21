@@ -96,6 +96,8 @@ function a11yProps(index) {
 class BlockTableItem extends React.Component {
   _isMounted = false;
   
+  lastType = '';
+
   constructor(props) {
     super(props);
     
@@ -112,8 +114,9 @@ class BlockTableItem extends React.Component {
     }
     
     return (
-      parseInt(this.state.item.all_price) !== parseInt(nextState.item.all_price) ||
-      parseInt(this.state.item.count) !== parseInt(nextState.item.count) //||
+      (parseInt(this.state.item.all_price) !== parseInt(nextState.item.all_price) ||
+      parseInt(this.state.item.count) !== parseInt(nextState.item.count)) &&
+      this.lastType == this.state.type
       //parseInt(this.state.item.id) !== parseInt(nextState.item.id)
     );
   }
@@ -157,15 +160,20 @@ class BlockTableItem extends React.Component {
     
     if( count.length > 0 ){
       itemsStore.AddCountItem(item_id, count)
+      this.lastType = this.state.type;
     }
   }
   
   add(){
     itemsStore.AddItem(this.state.item.item_id);
+
+    this.lastType = this.state.type;
   }
 
   minus(){
     itemsStore.MinusItem(this.state.item.item_id);
+
+    this.lastType = this.state.type;
   }
   
   render(){
@@ -541,17 +549,12 @@ class CreateOrder2 extends React.Component {
     
 
     autorun(() => {
-      console.log( '_isMounted', this._isMounted )
-
       if( this._isMounted ){
 
         let allPrice = itemsStore.getAllPrice();
         let sumDiv = itemsStore.getSumDiv();
 
-        console.log( 'get', allPrice, parseInt(this.state.allPrice) )
-
         if( parseInt(allPrice) != parseInt(this.state.allPrice) || parseInt(sumDiv) != parseInt(this.state.sumDiv) ){
-          console.log( 'set', allPrice )
           this.setState({
             sumDiv: sumDiv,
             AllPrice: allPrice
@@ -1002,24 +1005,25 @@ class CreateOrder2 extends React.Component {
             itemsStore.setSumDiv(parseInt(res.addrs.sum_div));
         }
 
-        //setTimeout( () => {
-          this.saveDataOther();
-        //}, 300 )
-
         setTimeout( () => {
-          if( parseInt(this.state.typeTime) == 0 ){
-            this.loadTimeWait();
-          }else{
-            this.loadTimePred();
-          }
+          this.saveDataOther();
 
-          this.clickOrderStart = false;
-        }, 300 )
+          setTimeout( () => {
+            if( parseInt(this.state.typeTime) == 0 ){
+              this.loadTimeWait();
+            }else{
+              this.loadTimePred();
+            }
+  
+            this.clickOrderStart = false;
+
+            if( this.state.promo_name.length > 0 ){
+              this.checkPromo( {target: {value: this.state.promo_name}} )
+            }
+          }, 300 )
         
+        }, 100 )
 
-        if( this.state.promo_name.length > 0 ){
-          this.checkPromo( {target: {value: this.state.promo_name}} )
-        }
       }
     }else{
       this.setState({
@@ -1032,7 +1036,6 @@ class CreateOrder2 extends React.Component {
 
         this.clickOrderStart = false;
       }, 300 )
-      
     }
   }
 
@@ -1329,8 +1332,6 @@ class CreateOrder2 extends React.Component {
   async checkPromo(event){
     itemsStore.setItemsPromo([]);
     
-    console.log( 'checkPromo' )
-
     let promo = event.target.value;
     
     let data = {
