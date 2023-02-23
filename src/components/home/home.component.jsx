@@ -1079,10 +1079,14 @@ class CreateOrder2 extends React.Component {
   }
 
   cheangeAddrCustom(event, val){
+    console.log( val )
+
     this.setState({ newAddrStreet: val })
   }
 
   chooseAddrFull(addr, key = -1){
+    console.log( addr )
+
     this.setState({
       newAddrStreet: addr.street,
       newAddrHome: addr.home,
