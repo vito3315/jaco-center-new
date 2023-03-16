@@ -1732,7 +1732,19 @@ class CreateOrder2 extends React.Component {
 
           return;
         }
+
+        if( this.state.newAddrHome != cartData.orderAddr.home ){
+          this.setState({
+            error: {
+              title: 'Предупреждение', 
+              text: 'Что-то не то с адресом, попробуй еще раз, или перезагрузи страницу'
+            },
+            errorOpen: true,
+            spiner: false
+          })
+        }
       }
+
 
 
       let promo_name = this.state.promo_name;
