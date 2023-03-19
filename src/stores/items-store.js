@@ -196,8 +196,14 @@ class ItemsStore {
     
     let tmp = 0,
         allPrice = 0,
-        by_time = !orderInfo.orderTimes || parseInt( orderInfo.orderTimes ) == 1 ? 0 : orderInfo.orderPredDay + ' ' + orderInfo.orderPredTime;   
+        by_time = !orderInfo.orderTimes || parseInt( orderInfo.orderTimes ) == 0 ? 0 : orderInfo.orderPredDay + ' ' + orderInfo.orderPredTime;   
         
+    console.log( orderInfo )
+
+    setTimeout( () => {
+      console.log( itemsStore.getCartData() )
+    }, 1000 )
+
     let promo_info = this.getPromo();
     let my_cart = this.getItems();  
     let allItems = this.getAllItems();
@@ -250,13 +256,18 @@ class ItemsStore {
         this_dow = '';
     
     if( by_time == 0 ){
+      console.log( 'dow by_time=0' )
+
       this_date = moment(new Date()).tz("Europe/Samara").format("YYYY-MM-DD");
       this_time = moment(new Date()).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(new Date()).tz("Europe/Samara").format("E"));
+      console.log( 'dow - ', this_dow, this_date, by_time )
     }else{
+      console.log( 'dow by_time!=0' )
       this_date = moment(by_time).tz("Europe/Samara").format("YYYY-MM-DD");
       this_time = moment(by_time).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
+      console.log( 'dow - ', this_dow, this_date, by_time )
     }
     
     
