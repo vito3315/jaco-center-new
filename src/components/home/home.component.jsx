@@ -113,7 +113,7 @@ class BlockTableItem extends React.Component {
       return false;
     }
     
-    console.log(  )
+    //console.log(  )
 
     return (
       (parseInt(this.state.item.all_price) !== parseInt(nextState.item.all_price) ||
@@ -135,14 +135,25 @@ class BlockTableItem extends React.Component {
         let my_cart = itemsStore.getItems();
         let promoItems = itemsStore.getItemsPromo();
 
-        let this_item = my_cart.find( (item) => item.item_id == this.state.item.id );
+        //let this_item = my_cart.find( (item) => item.item_id == this.state.item.id );
         
-        if( !this_item ){
+        let this_item = null;
+
+        if( this.state.type == 'promo' ){
+          this_item = promoItems.find( (item) => item.item_id == this.state.item.id );
+        }else{
           this_item = my_cart.find( (item) => item.item_id == this.state.item.item_id );
         }
 
+
+        console.log( 'check_render_table_item', this_item )
+
         if( !this_item ){
           this_item = promoItems.find( (item) => item.item_id == this.state.item.id );
+        }
+
+        if( !this_item ){
+          this_item = my_cart.find( (item) => item.item_id == this.state.item.item_id );
         }
 
         this.setState({
@@ -179,6 +190,9 @@ class BlockTableItem extends React.Component {
   }
   
   render(){
+
+    console.log( 'render_item', this.state.item, this.state.type )
+
     if( !this.state.item ){
       return null;
     }
@@ -358,6 +372,8 @@ class BlockTable extends React.Component {
             }
           } )
           
+          console.log( 'for_render_promo', cartPromoItems )
+
           this.setState({
             dop_items: dop_items,
             main_items: main_items,
@@ -1742,6 +1758,8 @@ class CreateOrder2 extends React.Component {
             errorOpen: true,
             spiner: false
           })
+
+          return ;
         }
       }
 

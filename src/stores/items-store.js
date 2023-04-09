@@ -548,6 +548,9 @@ class ItemsStore {
         promo_info.items_add.forEach((el) => {
           this_item = allItems.find( (item) => item.id == el.item_id );
           
+          console.log( 'add_item_promo', this_item )
+          console.log( 'add_item_promo__', el )
+
           cart_new_promo.push({
             item_id: el.item_id,
             count: el.count,
@@ -558,6 +561,8 @@ class ItemsStore {
           });
         });
         
+        console.log( 'promo_info.items_add', cart_new_promo )
+
         tmp = 0;
         allPrice = 0;
         
