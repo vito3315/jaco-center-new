@@ -1753,7 +1753,7 @@ class CreateOrder2 extends React.Component {
           this.setState({
             error: {
               title: 'Предупреждение', 
-              text: 'Что-то не то с адресом, попробуй еще раз, или перезагрузи страницу'
+              text: 'Что-то не то с адресом, попробуй еще раз, или перезагрузи страницу \n '+this.state.newAddrHome.toLowerCase() + ' != ' + cartData.orderAddr.home.toLowerCase()
             },
             errorOpen: true,
             spiner: false
