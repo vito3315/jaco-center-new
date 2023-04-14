@@ -1749,7 +1749,7 @@ class CreateOrder2 extends React.Component {
           return;
         }
 
-        if( this.state.newAddrHome != cartData.orderAddr.home ){
+        if( this.state.newAddrHome.toLowerCase() != cartData.orderAddr.home.toLowerCase() ){
           this.setState({
             error: {
               title: 'Предупреждение', 
@@ -1759,6 +1759,12 @@ class CreateOrder2 extends React.Component {
             spiner: false
           })
 
+          this.clickOrderStart = false;
+          
+          this.setState({ 
+            is_load: false
+          })
+          
           return ;
         }
       }
