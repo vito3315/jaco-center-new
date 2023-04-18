@@ -1672,9 +1672,11 @@ class CreateOrder2 extends React.Component {
       
       if( parseInt(cartData.orderType) == 0){
 
-        if( this.state.check_home_true === false ){
+        if( this.state.check_home_true === false && this.clickOrderStart == false ){
 
           //this.checkNewAddr(true);
+
+          console.log( 'cartData', cartData )
 
           this.setState({
             error: {
@@ -1693,6 +1695,8 @@ class CreateOrder2 extends React.Component {
 
           return;
         }
+
+        console.log( 'cartData 1111', cartData )
 
         if( cartData.orderAddr.et.length == 0 ){
           this.setState({
