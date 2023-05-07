@@ -1082,15 +1082,17 @@ class CreateOrder2 extends React.Component {
     setTimeout( () => {
       this.saveDataOther();
 
-      if( parseInt(this.state.typeTime) == 0 ){
-        this.loadTimeWait();
-      }else{
-        this.loadTimePred();
-      }
+      setTimeout( () => {
+        if( parseInt(this.state.typeTime) == 0 ){
+          this.loadTimeWait();
+        }else{
+          this.loadTimePred();
+        }
 
-      if( this.state.promo_name.length > 0 ){
-        this.checkPromo( {target: {value: this.state.promo_name}} )
-      }
+        if( this.state.promo_name.length > 0 ){
+          this.checkPromo( {target: {value: this.state.promo_name}} )
+        }
+      }, 300 )
     }, 300 )
   }
 
@@ -1136,15 +1138,17 @@ class CreateOrder2 extends React.Component {
     setTimeout( () => {
       this.saveDataOther();
 
-      if( parseInt(this.state.typeTime) == 0 ){
-        this.loadTimeWait();
-      }else{
-        this.loadTimePred();
-      }
+      setTimeout( () => {
+        if( parseInt(this.state.typeTime) == 0 ){
+          this.loadTimeWait();
+        }else{
+          this.loadTimePred();
+        }
 
-      if( this.state.promo_name.length > 0 ){
-        this.checkPromo( {target: {value: this.state.promo_name}} )
-      }
+        if( this.state.promo_name.length > 0 ){
+          this.checkPromo( {target: {value: this.state.promo_name}} )
+        }
+      }, 300)
     }, 300 )
   }
 

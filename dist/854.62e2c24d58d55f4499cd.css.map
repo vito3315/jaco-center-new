@@ -1,1 +1,0 @@
-{"version":3,"file":"854.62e2c24d58d55f4499cd.css","mappings":"AAAA,gCACI,kBAAmB,CACnB,wBAAyB,CACzB,UAAW","sources":["webpack://react-ssr/./src/components/orders/orders.style.scss"],"sourcesContent":[".TabsOrders button.Mui-selected{\n    border-radius: 15px;\n    background-color: #6ab04c;\n    color: #fff;\n}"],"names":[],"sourceRoot":""}
