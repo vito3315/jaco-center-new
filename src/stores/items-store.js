@@ -166,12 +166,12 @@ class ItemsStore {
           city_id: itemsStore.getCity(),
           promo_name: promoName
       })
-  }).then(res => res.json()).then(json => {
+    }).then(res => res.json()).then(json => {
     
       itemsStore.setPromo( JSON.stringify(json), promoName );
       let check_promo = itemsStore.checkPromo();
               
-      if( check_promo.status_promo === false ){
+      if( check_promo?.status_promo === false ){
         localStorage.removeItem('promo_name')
       }
       
@@ -230,7 +230,8 @@ class ItemsStore {
         item_id: el_cart.item_id,
         count: el_cart.count,
         one_price: el_cart.one_price,
-        all_price: parseInt(el_cart.one_price) * parseInt(el_cart.count)
+        all_price: parseInt(el_cart.one_price) * parseInt(el_cart.count),
+        type: 'us'
       });
     })
     
@@ -261,13 +262,13 @@ class ItemsStore {
       this_date = moment(new Date()).tz("Europe/Samara").format("YYYY-MM-DD");
       this_time = moment(new Date()).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(new Date()).tz("Europe/Samara").format("E"));
-      console.log( 'dow - ', this_dow, this_date, by_time )
+      console.log( 'dow - ', '1'+this_dow, ', 2'+this_date, ', 3'+by_time )
     }else{
       console.log( 'dow by_time!=0' )
       this_date = moment(by_time).tz("Europe/Samara").format("YYYY-MM-DD");
       this_time = moment(by_time).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
-      console.log( 'dow - ', this_dow, this_date, by_time )
+      console.log( 'dow - ', '1'+this_dow, ', 2'+this_date, ', 3'+by_time )
     }
     
     
@@ -722,6 +723,10 @@ class ItemsStore {
     let all_items = itemsStore.getAllItems();
     let promo = itemsStore.getPromo();
     
+    console.log( 'my_cart', my_cart )
+    console.log( 'all_items', all_items )
+    console.log( 'promo', promo )
+
     let free_items = itemsStore.getFreeItems();
     
     if( all_items.length > 0 ){
