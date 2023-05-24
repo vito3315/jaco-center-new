@@ -254,10 +254,13 @@ class ItemsStore {
     
     let this_date = '',
         this_time = '',
-        this_dow = '';
+        this_dow = '',
+        check_time = '';
     
     if( by_time == 0 ){
       console.log( 'dow by_time=0' )
+
+      check_time = '1 - ' + (new Date());
 
       this_date = moment(new Date()).tz("Europe/Samara").format("YYYY-MM-DD");
       this_time = moment(new Date()).tz("Europe/Samara").format("HH:mm");
@@ -265,6 +268,9 @@ class ItemsStore {
       console.log( 'dow - ', '1'+this_dow, ', 2'+this_date, ', 3'+by_time )
     }else{
       console.log( 'dow by_time!=0' )
+
+      check_time = '2 - ' + (by_time);
+
       this_date = moment(by_time).tz("Europe/Samara").format("YYYY-MM-DD");
       this_time = moment(by_time).tz("Europe/Samara").format("HH:mm");
       this_dow = parseInt(moment(by_time).tz("Europe/Samara").format("E"));
@@ -298,7 +304,7 @@ class ItemsStore {
         }else{
           return {
             st: false,
-            text: this_time+' Действует с '+promo_info.limits.time.min+' по '+promo_info.limits.time.max+' '+promo_info.promo_text.false
+            text: check_time+' Действует с '+promo_info.limits.time.min+' по '+promo_info.limits.time.max+' '+promo_info.promo_text.false
           }
         }
       }
