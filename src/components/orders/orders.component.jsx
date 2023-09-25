@@ -595,6 +595,10 @@ export class Orders extends React.Component {
                 <Grid item xs={12}>
                   <span>{this.state.showOrder.order.type_order}: {this.state.showOrder.order.type_order_addr_new}</span>
                 </Grid>
+                <Grid item xs={12}>
+                  <b>{this.state.showOrder.order.type_create}</b>
+                </Grid>
+
                 { parseInt(this.state.showOrder.order.type_order_) == 1 ?
                   parseInt(this.state.showOrder.order.fake_dom) == 0 ?
                     <Grid item xs={12}>
