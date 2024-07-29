@@ -963,7 +963,7 @@ class CreateOrder2 extends React.Component {
         city_id: this.state.cityId,
         street: street,
         home: this.state.newAddrHome,
-        //user_id: itemsStore.getToken()
+        number: this.state.number
       }
   
       let res = await this.getData('check_addr', data, false);
