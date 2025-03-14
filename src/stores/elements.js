@@ -350,6 +350,7 @@ export class MyDatePickerNew extends React.PureComponent {
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
         <DatePicker
           multiple={true}
+          views={['year', 'month', 'day']}
           mask="____-__-__"
           inputFormat="yyyy-MM-dd"
           label={this.props.label}

@@ -7,7 +7,7 @@ import {Helmet} from "react-helmet";
 import itemsStore from '../../stores/items-store';
 import config from '../../stores/config';
 import { autorun } from "mobx"
-import { MySelect, MyTextInput, MyAutocomplite } from '../../stores/elements';
+import { MySelect, MyTextInput, MyAutocomplite, MyDatePickerNew } from '../../stores/elements';
 
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -420,6 +420,22 @@ class BlockTable extends React.Component {
   }
 }
 
+function formatDate(date) {
+  const year = date.getFullYear();
+  
+  // Месяцы в JS начинаются с 0, поэтому добавляем 1
+  const month = date.getMonth() + 1;
+  
+  // День месяца
+  const day = date.getDate();
+
+  // Дополняем месяц и день ведущим нулём, если надо
+  const monthString = String(month).padStart(2, '0');
+  const dayString = String(day).padStart(2, '0');
+
+  return `${year}-${monthString}-${dayString}`;
+}
+
 class CreateOrder2 extends React.Component {
   interval = null;
   clickOrderStart = false;
@@ -517,6 +533,15 @@ class CreateOrder2 extends React.Component {
         name: 'ЛЕГКО',
         count: 3
       }],
+
+      number_is_reg: false,
+      number_last_order: '',
+
+      gender: null,
+      genderList: [ {id: 'm', name: 'М'}, {id: 'w', name: 'Ж'}, {id: 'none', name: 'Не указывать'} ],
+      dateBirth: '',
+      userName: '',
+      userFam: ''
     };
   }
   
@@ -592,56 +617,6 @@ class CreateOrder2 extends React.Component {
           
         }
 
-        
-        /*if( itemsStore.updateMyPromos != this.state.updateMyPromos ){
-          
-          console.log( 'autorun updateMyPromos' );
-          
-          let myPromos = itemsStore.getMyPromos();
-          let myPromosNew = [];
-          let checkDate = moment(new Date()).add(-7, 'days').format("YYYY-MM-DD");
-          
-          myPromos = myPromos.filter( (item) => item.date >= checkDate );
-          
-          localStorage.setItem('MyPromos', JSON.stringify(myPromos) );
-          
-          myPromos.forEach( element => {
-            let check = myPromosNew.find( (item) => item.promo == element.promo )
-            
-            console.log( myPromosNew, check, element.promo )
-
-            if( !check ){
-              element.count = 1;
-              
-              myPromosNew.push( element )
-            }else{
-              myPromosNew.forEach( (item, key) => {
-                if( item.promo == element.promo ){
-                  myPromosNew[key]['count'] ++;
-                }
-              } )
-            }
-          });
-          
-          myPromosNew = myPromosNew.filter( (item) => item.count > 1 );
-          
-          function findUnique(arr, predicate) {
-            var found = {};
-            arr.forEach(d => {
-              found[predicate(d)] = d;
-            });
-            return Object.keys(found).map(key => found[key]); 
-          }
-  
-          var result = findUnique(myPromosNew, d => d.name);
-
-          console.log( 'MyPromos 1', result )
-
-          this.setState({
-            updateMyPromos: itemsStore.updateMyPromos,
-            MyPromos: result
-          })
-        }*/
       }
     })
   }
@@ -760,6 +735,7 @@ class CreateOrder2 extends React.Component {
 
       setTimeout( () => {
         this.getAddr();
+        this.getNumberInfo();
       }, 300 )
     }
 
@@ -1322,6 +1298,8 @@ class CreateOrder2 extends React.Component {
     }else{
       setTimeout( () => {
         this.getAddr();
+
+        this.getNumberInfo();
       }, 300 )
     }
   }
@@ -1357,6 +1335,20 @@ class CreateOrder2 extends React.Component {
     })
   }
 
+  async getNumberInfo(){
+    let data = {
+      city_id: this.state.cityId,
+      clientNumber: this.state.number
+    }
+
+    let res = await this.getData('get_user_info', data, false);
+
+    this.setState({
+      number_is_reg: res.is_user_reg,
+      number_last_order: res.max_date,
+    })
+  }
+
   async checkPromo(event){
     itemsStore.setItemsPromo([]);
     
@@ -1364,7 +1356,8 @@ class CreateOrder2 extends React.Component {
     
     let data = {
       city_id: this.state.cityId,
-      promo_name: promo
+      promo_name: promo,
+      phone: this.state.number
     }
 
     let res = await this.getData('get_promo', data, false);
@@ -1389,46 +1382,6 @@ class CreateOrder2 extends React.Component {
         promoST: check_promo.st,
         promo_name: promo
       })
-
-      /*if( promo && promo.length > 0 ){
-        let arr = itemsStore.getMyPromos();
-        
-        let check = arr.find( (item) => item.promo.toLowerCase() == promo.toLowerCase() );
-
-        if( !check ){
-          console.log( 'promo add' )
-          arr.push( {
-            date: moment(new Date()).format("YYYY-MM-DD"),
-            promo: promo.toLowerCase(),
-            name: promo.toLowerCase(),
-            count: 1
-          } );
-        }else{
-          console.log( 'promo change' )
-          let key = arr.findIndex( (item) => item.promo.toLowerCase() == promo.toLowerCase() );
-
-          arr[ key ]['count'] ++;
-        }
-          
-        function findUnique(arr, predicate) {
-          var found = {};
-          arr.forEach(d => {
-            found[predicate(d)] = d;
-          });
-          return Object.keys(found).map(key => found[key]); 
-        }
-
-        var result = findUnique(arr, d => d.name);
-
-        itemsStore.setMyPromos( result );
-
-        console.log( 'MyPromos 2', result )
-
-        this.setState({
-          MyPromos: result
-        })
-        
-      }*/
     }
 
   }
@@ -1939,6 +1892,87 @@ class CreateOrder2 extends React.Component {
     }
   }
 
+  async saveUser(){
+    let dateBirth = this.state.dateBirth;
+
+    if( this.state.userName.length == 0 ){
+      this.setState({
+        openErr: true,
+        msgText: 'Имя обязательно к заполнению'
+      })
+
+      return ;
+    }
+
+    if( this.state.number.length == 0 ){
+      this.setState({
+        openErr: true,
+        msgText: 'Не указан номер телефона'
+      })
+
+      return ;
+    }
+
+    if( dateBirth.length > 0 ){
+      const now = new Date(); // сегодняшняя дата
+      const pickedDate = new Date(dateBirth);
+
+      // 1. Проверяем, чтобы дата не была больше сегодняшней
+      if (pickedDate > now) {
+        this.setState({
+          openErr: true,
+          msgText: 'Дата не может быть больше сегодняшней'
+        })
+        // Можно обнулить поле или оставить прежнее значение
+        return;
+      }
+
+      // 2. Проверяем, чтобы дата не была старше 100 лет
+      const minDate = new Date();
+      minDate.setFullYear(minDate.getFullYear() - 100);
+      if (pickedDate < minDate) {
+        alert("Дата не может быть старше 100 лет!");
+        this.setState({
+          openErr: true,
+          msgText: 'Дата не может быть старше 100 лет'
+        })
+        return;
+      }
+
+      dateBirth = formatDate(dateBirth);
+    }
+    
+    const data = {
+      name: this.state.userName,
+      fam: this.state.userFam,
+      phone: this.state.number,
+      gender: this.state.gender,
+      dateBirth: dateBirth ? formatDate(dateBirth) : '',
+    }
+
+    let json = await this.getData('createUserCustom', data);
+
+    if( json.st == true ){
+      this.setState({ 
+        orderRegUser: false,
+        userName: '',
+        userFam: '',
+        gender: null,
+        dateBirth: ''
+      })
+
+      this.getNumberInfo();
+      this.checkPromo( { target: { value: this.state.promo_name } } )
+    }else{
+      this.setState({
+        openErr: true,
+        msgText: 'Ошибка регистрации'
+      })
+    }
+
+    console.log( data )
+  }
+
   render(){
     return (
       <Grid container spacing={3}>
@@ -2000,9 +2034,28 @@ class CreateOrder2 extends React.Component {
                 </ButtonGroup>
               </Grid>
 
-              <Grid item xs={2}>
+              <Grid item xs={2} style={{ display: 'flex', flexDirection: 'row' }}>
                 <MyTextInput onBlur={ this.saveNumber.bind(this) } value={ this.state.number } func={ this.changeNumber.bind(this) } placeholder={"8 (999) 999-99-99"} label='Телефон'/>
+
+                <ButtonGroup disableElevation variant="contained">
+
+                  { this.state.number_last_order.length == 0 ?
+                    <Button style={{ height: 40, backgroundColor: '#bababa' }}> <QuestionMarkIcon /> </Button>
+                      :
+                    <Tooltip 
+                      placement="bottom"
+                      title={
+                        <React.Fragment>
+                          <Typography color="inherit">{ this.state.number_is_reg === true ? 'Клиент зарегистрирован' : 'Клиент НЕ зарегистрирован' }</Typography>
+                          <Typography color="inherit">{this.state.number_last_order}</Typography>
+                        </React.Fragment>
+                      }>
+                      <Button variant="contained" color="primary" style={{ height: 40, backgroundColor: this.state.number_is_reg === false ? 'red' : 'green' }} onClick={ () => { this.state.number_is_reg === false ? this.setState({ orderRegUser: true }) : null } }> <QuestionMarkIcon /> </Button>
+                    </Tooltip>
+                  }
+                </ButtonGroup>
               </Grid>
+              
 
               <Grid item xs={1}>
               </Grid>
@@ -2054,6 +2107,49 @@ class CreateOrder2 extends React.Component {
           
           </List>
         </Dialog>
+
+        <Dialog
+          open={this.state.orderRegUser}
+          fullWidth={true}
+          onClose={() => this.setState({ orderRegUser: false })}
+          className="DialogOrderCheckDialog"
+        >
+          <DialogTitle className="DialogOrderCheckDialogTitle">
+            <Typography variant="h5" component="span" className="orderCheckTitle">Регистрация {this.state.number}</Typography>
+          </DialogTitle>
+
+          <CloseIcon className="closeDialog" onClick={() => this.setState({ orderRegUser: false })} />
+
+          <DialogContent className="DialogOrderCheckDialogBody">
+
+            <Grid container spacing={2}>
+
+              <Grid item xs={6} style={{ display: 'flex', flexDirection: 'row' }}>
+                <MyTextInput placeholder={"Иван"} label='Имя' value={this.state.userName} func={event => { this.setState({ userName: event.target.value }) }} />
+              </Grid>
+              <Grid item xs={6} style={{ display: 'flex', flexDirection: 'row' }}>
+                <MyTextInput placeholder={"Иванов"} label='Фамилия' value={this.state.userFam} func={event => { this.setState({ userFam: event.target.value }) }}/>
+              </Grid>
+
+              <Grid item xs={8} style={{ display: 'flex', flexDirection: 'row' }}>
+                <MyDatePickerNew label={'Дата рождения'} value={this.state.dateBirth} func={ data => { this.setState({ dateBirth: data }) } } />
+              </Grid>
+              <Grid item xs={4} style={{ display: 'flex', flexDirection: 'row' }}>
+                <MySelect data={this.state.genderList} value={this.state.gender} func={ event => { this.setState({ gender: event.target.value }) } } label='Пол' />
+              </Grid>
+
+            </Grid>
+
+          </DialogContent>
+          <DialogActions style={{ padding: '12px 24px', justifyContent: 'space-between' }}>
+            
+            <Button variant="contained" className="BtnCardMain CardInCardItem" onClick={() => this.setState({ orderRegUser: false })}>Отменить</Button>
+
+            <Button variant="contained" className="BtnCardMain CardInCardItem" style={{ backgroundColor: 'green' }} onClick={this.saveUser.bind(this)}>Сохранить</Button>
+            
+          </DialogActions>
+        </Dialog>
+
 
         { this.state.orderCheck === true ?
           <Dialog

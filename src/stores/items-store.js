@@ -156,6 +156,31 @@ class ItemsStore {
     return this.userToken;
   };
 
+  checkUserNumber(){
+    return fetch(config.urlApi, {
+      method: 'POST',
+      headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+      body: queryString.stringify({
+          type: 'checkUserNumber', 
+          city_id: itemsStore.getCity(),
+          clientNumber: this.clientNumber
+      })
+    }).then(res => res.json())
+    .then(json => {
+      console.log(json);
+      return json; // Пробрасываем данные дальше
+    })
+  }
+
+  check_test(){
+    return this.checkUserNumber().then(data => {
+      console.log('Результат1:', data);
+      //console.log('Результат:', data);
+      return data;
+    })
+  }
+
   getInfoPromo(promoName){
     fetch(config.urlApi, {
       method: 'POST',
@@ -164,7 +189,8 @@ class ItemsStore {
       body: queryString.stringify({
           type: 'get_promo', 
           city_id: itemsStore.getCity(),
-          promo_name: promoName
+          promo_name: promoName,
+          phone: itemsStore.clientNumber,
       })
     }).then(res => res.json()).then(json => {
     
@@ -378,6 +404,32 @@ class ItemsStore {
           return {
             st: false,
             text: 'Указанный вами промокод действителен только при оплате на кассе.'
+          }
+        }
+      }
+
+      //тут
+      if( promo_info.limits.only_first_order ){
+        if( parseInt( promo_info.limits.only_first_order ) == 1 ){
+          if( this.clientNumber.length == 0 || this.clientNumber == '' ){
+            return {
+              st: false,
+              text: 'Надо ввести номер телефона'
+            }
+          }else{
+            if( promo_info.limits.user_counts.is_user_orders == true ){
+              return {
+                st: false,
+                text: 'У клиента уже есть заказы'
+              }
+            }else{
+              if( promo_info.limits.user_counts.is_user_reg == false ){
+                return {
+                  st: false,
+                  text: 'Клиента надо зарегистрировать'
+                }
+              }
+            }
           }
         }
       }
