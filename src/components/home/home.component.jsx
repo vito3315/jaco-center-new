@@ -1295,11 +1295,15 @@ class CreateOrder2 extends React.Component {
       this.setState({
         clientAddr: []
       })
+      setTimeout( () => {
+        this.checkPromo( { target: { value: this.state.promo_name } } )
+      }, 300 )
     }else{
       setTimeout( () => {
         this.getAddr();
 
         this.getNumberInfo();
+        this.checkPromo( { target: { value: this.state.promo_name } } )
       }, 300 )
     }
   }
