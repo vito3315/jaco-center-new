@@ -433,6 +433,24 @@ class ItemsStore {
           }
         }
       }
+
+      if( promo_info.limits.once_number ){
+        if( parseInt( promo_info.limits.once_number ) == 1 ){
+          if( this.clientNumber.length == 0 || this.clientNumber == '' ){
+            return {
+              st: false,
+              text: 'Надо ввести номер телефона'
+            }
+          }else{
+            if( promo_info.limits.user_counts.is_user_orders == true ){
+              return {
+                st: false,
+                text: 'У клиента уже есть заказы'
+              }
+            }
+          }
+        }
+      }
       
       if( promo_info.limits.items.length > 0 ){
         let check = 0;
