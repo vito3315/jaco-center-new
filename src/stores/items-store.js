@@ -445,7 +445,7 @@ class ItemsStore {
             if( promo_info.limits.user_counts.is_user_orders == true ){
               return {
                 st: false,
-                text: 'У клиента уже есть заказы'
+                text: 'У клиента уже есть заказы c этим промокодом'
               }
             }
           }
