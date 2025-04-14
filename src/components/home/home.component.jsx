@@ -1249,7 +1249,7 @@ class CreateOrder2 extends React.Component {
 
       setTimeout( () => {
         itemsStore.reChangePrice();
-      }, 300 )
+      }, 1000 )
     }, 300 )
   }
 
