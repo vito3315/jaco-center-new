@@ -385,9 +385,9 @@ class ItemsStore {
               type_ = 'Только самовывоз';
             }else{
               if( parseInt( promo_info.limits.type_order ) == 4 ){
-                type_ = 'Только доставка';
-              }else{
                 type_ = 'Только в зале';
+              }else{
+                type_ = 'Только доставка';
               }
             }
           }
@@ -446,6 +446,24 @@ class ItemsStore {
               return {
                 st: false,
                 text: 'У клиента уже есть заказы c этим промокодом'
+              }
+            }
+          }
+        }
+      }
+
+      if( promo_info.limits.for_registred ){
+        if( parseInt( promo_info.limits.for_registred ) == 1 ){
+          if( this.clientNumber.length == 0 || this.clientNumber == '' ){
+            return {
+              st: false,
+              text: 'Надо ввести номер телефона'
+            }
+          }else{
+            if( promo_info.limits.user_counts.is_user_reg == false ){
+              return {
+                st: false,
+                text: 'Промокод действителен только для зарегистрированных клиентов'
               }
             }
           }
