@@ -939,7 +939,8 @@ class CreateOrder2 extends React.Component {
         city_id: this.state.cityId,
         street: street,
         home: this.state.newAddrHome,
-        number: this.state.number
+        number: this.state.number,
+        pd: this.state.pd
       }
   
       let res = await this.getData('check_addr', data, false);
@@ -2318,7 +2319,7 @@ class CreateOrder2 extends React.Component {
                 </Grid>
 
                 <Grid item xs={4}>
-                  <MyTextInput value={this.state.pd} func={ this.changeDataOther.bind(this, 'pd') } label='Подъезд'/>
+                  <MyTextInput onBlur={this.checkNewAddr.bind(this, true)} value={this.state.pd} func={ this.changeDataOther.bind(this, 'pd') } label='Подъезд'/>
                 </Grid>
                 <Grid item xs={4}>
                   <MyTextInput value={this.state.et} func={ this.changeDataOther.bind(this, 'et') } label='Этаж'/>
