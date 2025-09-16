@@ -5,6 +5,8 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 //const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CompressionPlugin = require("compression-webpack-plugin");
 
+const TerserPlugin = require('terser-webpack-plugin');
+
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
@@ -43,9 +45,37 @@ module.exports = {
                 exclude: /node_modules/,
                 use: [ 'babel-loader' ]
             },
+            // {
+            //     test: /\.scss$/,
+            //     use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ]
+            // },
+            // {
+            //     test: /\.(scss|sass)$/,
+            //     use: [
+            //         MiniCssExtractPlugin.loader,
+            //         { loader: 'css-loader', options: { sourceMap: true } },
+            //         {
+            //             loader: 'sass-loader',
+            //             options: {
+            //                 sourceMap: true,
+            //                 implementation: require('sass'),
+            //                 sassOptions: { api: 'modern' },
+            //             },
+            //         },
+            //     ],
+            // },
             {
                 test: /\.scss$/,
-                use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ]
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            api: 'modern-compiler',     // новый API + embedded-движок
+                        }
+                    }
+                ]
             },
             {
                 test: /\.css$/,
@@ -126,29 +156,61 @@ module.exports = {
     },
 
     // webpack optimizations
-    optimization: {
-        moduleIds: 'deterministic',
-        runtimeChunk: 'single',
-        splitChunks: {
+    // optimization: {
+    //     moduleIds: 'deterministic',
+    //     runtimeChunk: 'single',
+    //     splitChunks: {
 
-            chunks: 'async',
-            cacheGroups: {
+    //         chunks: 'async',
+    //         cacheGroups: {
 
-                default: {
-                    minChunks: 2,
-                    reuseExistingChunk: true,
-                },
+    //             default: {
+    //                 minChunks: 2,
+    //                 reuseExistingChunk: true,
+    //             },
 
-                vendor_react: {
-                    test: /.*\/node_modules\/react\/index\.js/,
-                    name: 'vendor-react',
-                    chunks: 'initial',
-                    enforce: true,
-                },
-            },
+    //             vendor_react: {
+    //                 test: /.*\/node_modules\/react\/index\.js/,
+    //                 name: 'vendor-react',
+    //                 chunks: 'initial',
+    //                 enforce: true,
+    //             },
+    //         },
 
             
-       },
+    //    },
+    // },
+
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                react:  { test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/, name: 'vendor-react', priority: 30, reuseExistingChunk: true },
+                mui:    { test: /[\\/]node_modules[\\/]@mui[\\/]/,                name: 'vendor-mui',   priority: 25, reuseExistingChunk: true },
+                vendors:{ test: /[\\/]node_modules[\\/]/,                          name: 'vendor',       priority: 10, reuseExistingChunk: true },
+            },
+        },
+        runtimeChunk: 'single',
+        usedExports: true,
+        concatenateModules: true,
+
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    compress: {
+                    passes: 3,
+                    drop_console: true,      // если можно — вырубить консоли
+                    pure_funcs: ['console.debug'],
+                    module: true,
+                    toplevel: true,
+                    },
+                    mangle: { toplevel: true },
+                    format: { comments: false },
+                },
+            }),
+        ],
     },
     
     

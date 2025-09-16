@@ -469,6 +469,24 @@ class ItemsStore {
           }
         }
       }
+
+      if( promo_info.limits.for_number ){
+        if( parseInt( promo_info.limits.for_number ) == 1 ){
+          if( this.clientNumber.length == 0 || this.clientNumber == '' ){
+            return {
+              st: false,
+              text: 'Надо ввести номер телефона'
+            }
+          }else{
+            if( promo_info.limits.for_number_check == false ){
+              return {
+                st: false,
+                text: 'Данный промокод для другого клиента'
+              }
+            }
+          }
+        }
+      }
       
       if( promo_info.limits.items.length > 0 ){
         let check = 0;
