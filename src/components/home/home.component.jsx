@@ -361,16 +361,18 @@ class BlockTable extends React.Component {
         
         if( all_items.length > 0 ){
           my_cart.map( (it) => {
-            let cart_info = all_items.find( (item) => item.id == it.item_id );
-            
-            if( !cart_info ){
-              alert('В корзине произошла ошибка');
-            }
-            
-            if( cart_info && parseInt(cart_info.cat_id) == 7 ){
-              dop_items.push( it );
-            }else{
-              main_items.push( it );
+            if( parseInt(it.item_id) != 359 ){
+              let cart_info = all_items.find( (item) => item.id == it.item_id );
+              
+              if( !cart_info ){
+                alert('В корзине произошла ошибка');
+              }
+              
+              if( cart_info && parseInt(cart_info.cat_id) == 7 ){
+                dop_items.push( it );
+              }else{
+                main_items.push( it );
+              }
             }
           } )
           
